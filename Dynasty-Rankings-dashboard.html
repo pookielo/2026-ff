@@ -72,10 +72,21 @@ svg { width:100%; max-width:100%; min-width:0; height:auto; display:block; }
 .current-auction { border:1px solid #111827; border-radius:8px; background:#111827; color:white; padding:14px; margin:10px 0; }
 .current-auction h3 { margin:0 0 5px; font-size:24px; }
 .current-auction .small { color:#cbd5e1; }
+.current-auction .metric { background:#f8fafc; color:var(--ink); }
+.current-auction .metric span { color:#475569; }
+.current-auction .metric strong { color:var(--ink); }
 .winning-bid { display:flex; align-items:flex-end; justify-content:space-between; gap:12px; border:1px solid rgba(255,255,255,.2); border-radius:8px; background:rgba(255,255,255,.08); padding:12px; margin:12px 0; }
 .winning-bid span { display:block; color:#cbd5e1; font-size:12px; font-weight:850; text-transform:uppercase; }
 .winning-bid strong { display:block; margin-top:2px; font-size:38px; line-height:1; }
 .winning-bid em { color:#cbd5e1; font-style:normal; font-size:13px; text-align:right; }
+.position-list { display:grid; grid-template-columns:repeat(auto-fit, minmax(260px, 1fr)); gap:12px; margin:12px 0; }
+.position-group { border:1px solid var(--line); border-radius:8px; background:#f8fafc; overflow:hidden; }
+.position-group h3 { margin:0; padding:9px 10px; background:#eef2f7; font-size:15px; }
+.position-player-row { display:grid; grid-template-columns:1fr auto; gap:8px; padding:8px 10px; border-top:1px solid #e2e8f0; }
+.position-player-row strong { display:block; }
+.position-player-row span { color:var(--muted); font-size:12px; }
+.mix-toolbar { margin-top:-4px; padding-top:0; }
+.mix-toolbar .inline-control input { width:72px; }
 .mock-board { display:grid; grid-template-columns:repeat(4, minmax(120px, 1fr)); gap:8px; margin-top:10px; }
 .team-tile { border:1px solid var(--line); border-radius:8px; background:#f8fafc; padding:9px; min-width:0; }
 .team-tile.human { border-color:var(--blue); box-shadow:0 0 0 2px rgba(37,99,235,.16); }
@@ -136,8 +147,8 @@ svg { width:100%; max-width:100%; min-width:0; height:auto; display:block; }
 <section id="players" class="panel"><div class="toolbar"><input id="playerSearch" type="search" placeholder="Search players, teams, positions, comments"><select id="posFilter"><option value="">All positions</option></select><select id="teamFilter"><option value="">All teams</option></select><button id="resetPlayers">Reset</button></div><p class="small">Upside is the source ceiling score; Downside is the source miss-risk score. Higher numbers mean more of that trait. Auction values assume 12 teams, $200 budgets, superflex, PPR, and TE premium. Bid+ means an analyst target signal; Bid++ means a stronger signal such as Harmon SUPER BUY or multiple target signals. Hover or click a Bid marker for the source.</p><div class="grid"><div class="card"><h2>Filtered Top Fpts</h2><div class="toolbar"><select id="filteredTopLimit"><option value="10">Top 10</option><option value="20" selected>Top 20</option><option value="50">Top 50</option><option value="100">Top 100</option></select></div><div id="chartFilteredPpr"></div></div><div class="card"><h2>Filtered Position Mix</h2><div id="chartFilteredPos"></div></div></div><div class="table-wrap"><table id="playersTable"></table></div></section>
 <section id="cheatsheets" class="panel"><div class="toolbar"><input id="cheatSearch" type="search" placeholder="Search cheatsheets"><select id="rankMode"><option value="waldman">Waldman ranks</option><option value="kyle">Kyle ranks</option><option value="harmon">Harmon WR ranks</option><option value="combined">Combined rank</option><option value="compare">Differences</option></select><select id="buildFilter"><option value="">All builds</option><option>Win-Now</option><option>Long Build</option></select><select id="cheatPosFilter"><option value="">All positions</option></select><select id="harmonMarketFilter"><option value="">All Harmon markets</option></select><label class="age-range-filter">Age <span id="cheatAgeRangeLabel">20-50</span><span class="range-row"><input id="cheatAgeMin" type="range" min="20" max="50" value="20"><input id="cheatAgeMax" type="range" min="20" max="50" value="50"></span></label></div><p class="small" id="cheatModeNote">Waldman mode keeps workbook tier colors. Kyle mode uses the supplied rankings and tier shading. Harmon mode uses WR-only Reception Perception ranks with action and market tags.</p><div class="legend" id="tierLegend"></div><div class="table-wrap"><table id="cheatsTable"></table></div></section>
 
-<section id="auctionBuilder" class="panel"><div class="card"><h2>Best Team Builder</h2><div class="toolbar"><label class="inline-control">Premium<select id="optimizerPremium"><option value="0">At bid</option><option value="0.05" selected>5% over</option><option value="0.1">10% over</option><option value="0.15">15% over</option></select></label><label class="inline-control">Budget<input id="optimizerBudget" type="number" min="25" max="200" step="1" value="200"></label><button id="runOptimizer" type="button">Build team</button></div><p class="small">Builds a 25-player roster using tier-banded bid values plus the selected premium. Starters use 1 QB, 1 RB, 1 WR, 1 TE, 5 Flex, and 1 Superflex.</p><div id="optimizerSummary" class="metric-grid"></div><div id="optimizerRoster" class="roster-slots"></div></div></section>
-<section id="mockAuction" class="panel"><div class="card"><h2>Fast Auction Mock</h2><div class="toolbar"><button id="startMock" type="button">Start / Reset</button><button id="mockClockToggle" type="button">Start clock</button><span id="mockTimer" class="mock-timer">:10</span><label class="inline-control">Nom sec<input id="mockNominationSeconds" type="number" min="3" max="120" step="1" value="10"></label><label class="inline-control">Reset sec<input id="mockResetSeconds" type="number" min="3" max="120" step="1" value="10"></label><button id="mockAutoOne" type="button">Auto 1 sale</button><button id="mockAutoTen" type="button">Auto 10 sales</button><button id="mockBotRound" type="button">Next nomination / bot bid</button><button id="mockPass" type="button">Pass</button><button id="mockBidPlus1" type="button">Bid +$1</button><button id="mockBidPlus5" type="button">Bid +$5</button><button id="mockBidValue" type="button">Bid to value</button><label class="inline-control">Bid<input id="mockCustomBid" type="number" min="1" max="200" step="1" value="1"></label><button id="mockBidCustom" type="button">Bid amount</button></div><p class="small">Click a team header or summary to inspect that roster. Bot profiles can be changed in Team Summary. The board scrolls horizontally so you can compare every team at once.</p><div id="mockCurrent" class="current-auction"></div><div id="mockDraftBoard" class="mock-draft-board"></div></div><div class="mock-draft-layout"><div class="mock-stack"><div class="card"><h2>Team Summary</h2><div id="mockTeams" class="mock-board"></div></div><div class="card"><h2>Nomination Pool</h2><div class="toolbar"><input id="mockPlayerSearch" type="search" placeholder="Search auction pool"><select id="mockPosFilter"><option value="">All positions</option></select><label class="inline-control"><input id="mockShowDrafted" type="checkbox">Show drafted</label></div><div class="table-wrap mock-player-list"><table id="mockPlayerTable"></table></div></div></div><div class="mock-side-panel"><div class="card"><h2>Selected Team</h2><div id="mockHumanTeam" class="metric-grid"></div><div id="mockHumanRoster" class="roster-slots"></div></div><div class="card"><h2>Results</h2><div id="mockResults" class="result-log"></div></div></div></div></section>
+<section id="auctionBuilder" class="panel"><div class="card"><h2>Best Team Builder</h2><div class="toolbar"><label class="inline-control">Premium<select id="optimizerPremium"><option value="0">At bid</option><option value="0.05" selected>5% over</option><option value="0.1">10% over</option><option value="0.15">15% over</option></select></label><label class="inline-control">Build focus<select id="optimizerFocus"><option value="balanced" selected>Balanced</option><option value="qb">Better QBs</option><option value="rb">Better RBs</option><option value="wr">Better WRs</option><option value="te">Better TEs</option><option value="qb_wr">QB + WR</option><option value="rb_wr">RB + WR</option><option value="rb_te">RB + TE</option><option value="custom">Custom Mix</option></select></label><label class="inline-control">Budget<input id="optimizerBudget" type="number" min="25" max="200" step="1" value="200"></label><button id="runOptimizer" type="button">Build team</button></div><div class="toolbar mix-toolbar"><label class="inline-control">QB mix<input id="optimizerMixQB" type="number" min="0.5" max="2" step="0.1" value="1"></label><label class="inline-control">RB mix<input id="optimizerMixRB" type="number" min="0.5" max="2" step="0.1" value="1"></label><label class="inline-control">WR mix<input id="optimizerMixWR" type="number" min="0.5" max="2" step="0.1" value="1"></label><label class="inline-control">TE mix<input id="optimizerMixTE" type="number" min="0.5" max="2" step="0.1" value="1"></label></div><p class="small">Builds a 25-player roster using tier-banded bid values plus the selected premium. Starters use 1 QB, 1 RB, 1 WR, 1 TE, 5 Flex, and 1 Superflex. The builder requires 3 QBs, 3 RBs, and 2 TEs, with a soft preference for a third TE. Build focus presets set the mix values; editing a mix input switches to Custom Mix.</p><div id="optimizerSummary" class="metric-grid"></div><div id="optimizerByPosition" class="position-list"></div><div id="optimizerRoster" class="roster-slots"></div></div></section>
+<section id="mockAuction" class="panel"><div class="card"><h2>Fast Auction Mock</h2><div class="toolbar"><button id="startMock" type="button">Start / Reset</button><button id="mockClockToggle" type="button">Start clock</button><span id="mockTimer" class="mock-timer">:10</span><label class="inline-control">Nom sec<input id="mockNominationSeconds" type="number" min="3" max="120" step="1" value="10"></label><label class="inline-control">Reset sec<input id="mockResetSeconds" type="number" min="3" max="120" step="1" value="10"></label><button id="mockAutoOne" type="button" title="Simulates one full nomination, bot bidding sequence, and sale award.">Sim 1 sale</button><button id="mockAutoTen" type="button" title="Repeats the full automated sale cycle ten times or until the draft cannot continue.">Sim 10 sales</button><button id="mockBotRound" type="button">Next nomination / bot bid</button><button id="mockPass" type="button">Pass</button><button id="mockBidPlus1" type="button">Bid +$1</button><button id="mockBidPlus5" type="button">Bid +$5</button><button id="mockBidValue" type="button">Bid to value</button><label class="inline-control">Bid<input id="mockCustomBid" type="number" min="1" max="200" step="1" value="1"></label><button id="mockBidCustom" type="button">Bid amount</button></div><p class="small">Click a team header or summary to inspect that roster. Bot profiles can be changed in Team Summary. Sim buttons complete one or ten full nomination-and-sale cycles. The board scrolls horizontally so you can compare every team at once.</p><div id="mockCurrent" class="current-auction"></div><div id="mockDraftBoard" class="mock-draft-board"></div></div><div class="mock-draft-layout"><div class="mock-stack"><div class="card"><h2>Team Summary</h2><div id="mockTeams" class="mock-board"></div></div><div class="card"><h2>Nomination Pool</h2><div class="toolbar"><input id="mockPlayerSearch" type="search" placeholder="Search auction pool"><select id="mockPosFilter"><option value="">All positions</option></select><label class="inline-control"><input id="mockShowDrafted" type="checkbox">Show drafted</label></div><div class="table-wrap mock-player-list"><table id="mockPlayerTable"></table></div></div></div><div class="mock-side-panel"><div class="card"><h2>Selected Team</h2><div id="mockHumanTeam" class="metric-grid"></div><div id="mockHumanRoster" class="roster-slots"></div></div><div class="card"><h2>Results</h2><div id="mockResults" class="result-log"></div></div></div></div></section>
 
 <section id="teamStats" class="panel"><div class="scoring-settings" id="scoringSettings"><strong>League scoring</strong><label>Pass yd<input id="scorePassYards" type="number" min="0" step="0.01" value="0.04"></label><label>Pass TD<input id="scorePassTd" type="number" step="0.5" value="6"></label><label>INT<input id="scoreInt" type="number" step="0.5" value="-2"></label><label>Rush yd<input id="scoreRushYards" type="number" min="0" step="0.01" value="0.1"></label><label>Rush TD<input id="scoreRushTd" type="number" step="0.5" value="6"></label><label>Rec yd<input id="scoreRecYards" type="number" min="0" step="0.01" value="0.1"></label><label>Rec TD<input id="scoreRecTd" type="number" step="0.5" value="6"></label><label>Reception<input id="scoreReception" type="number" step="0.25" value="1"></label><label>TE bonus / rec<input id="scoreTeBonus" type="number" step="0.25" value="0.5"></label><button id="resetScoring" type="button">Reset scoring</button></div><nav class="subtabs" id="teamSubtabs"><button class="subtab active" data-team-panel="teamYear1">Year 1 Projections</button><button class="subtab" data-team-panel="teamYear2">Year 2 Projections</button><button class="subtab" data-team-panel="teamHistory">Historical Performance</button></nav><section id="teamYear1" class="subpanel active"><div class="toolbar"><input id="teamY1Search" type="search" placeholder="Search year 1 projections"><select id="teamY1Team"><option value="">All teams</option></select><select id="teamY1Pos"><option value="">All positions</option></select></div><div class="table-wrap"><table id="teamY1Table"></table></div></section><section id="teamYear2" class="subpanel"><div class="toolbar"><input id="teamY2Search" type="search" placeholder="Search year 2 projections"><select id="teamY2Team"><option value="">All teams</option></select><select id="teamY2Pos"><option value="">All positions</option></select></div><div class="table-wrap"><table id="teamY2Table"></table></div></section><section id="teamHistory" class="subpanel"><div class="toolbar"><input id="histSearch" type="search" placeholder="Search historical performance"><select id="histTeam"><option value="">All teams</option></select></div><div class="table-wrap"><table id="historyTable"></table></div></section></section>
 </main><div id="noteToast"></div>
@@ -149,7 +160,22 @@ const DEFAULT_SORTS = { playersTable:{key:'ppr',dir:-1}, cheatsTable:{key:'rank'
 const DEFAULT_SCORING = { scorePassYards:0.04, scorePassTd:6, scoreInt:-2, scoreRushYards:0.1, scoreRushTd:6, scoreRecYards:0.1, scoreRecTd:6, scoreReception:1, scoreTeBonus:0.5 };
 const AUCTION_CONFIG = { teams:12, budget:200, rosterSpots:25, draftablePlayers:300 };
 const AUCTION_ROSTER_RULES = { QB:1, RB:1, WR:1, TE:1, FLEX:5, SUPER_FLEX:1, bench:15 };
-const OPTIMIZER_MINIMUMS = { QB:2, RB:1, WR:1, TE:1 };
+const OPTIMIZER_MINIMUMS = { QB:3, RB:3, WR:1, TE:2 };
+const OPTIMIZER_TARGETS = { QB:3, TE:3 };
+const OPTIMIZER_POSITION_CAPS = { QB:4, TE:3 };
+const OPTIMIZER_MIX_IDS = { QB:'optimizerMixQB', RB:'optimizerMixRB', WR:'optimizerMixWR', TE:'optimizerMixTE' };
+const OPTIMIZER_DEFAULT_MIX = { QB:1, RB:1, WR:1, TE:1 };
+const OPTIMIZER_FOCUS_CONFIG = {
+	balanced:{label:'Balanced', mix:{QB:1, RB:1, WR:1, TE:1}, targets:{QB:3, RB:3, TE:3}, caps:{QB:4, TE:3}, order:['QB','TE','QB','RB','TE','QB','RB','TE','RB','WR'], pointWeight:{}, scoreBonus:{}},
+	qb:{label:'Better QBs', mix:{QB:1.5, RB:1, WR:1, TE:1}, targets:{QB:4, RB:3, TE:3}, caps:{QB:4, TE:3}, order:['QB','QB','TE','QB','RB','TE','QB','RB','TE','RB','WR'], pointWeight:{QB:0.58}, scoreBonus:{QB:28}},
+	rb:{label:'Better RBs', mix:{QB:1, RB:1.55, WR:1, TE:1}, targets:{QB:3, RB:5, TE:3}, caps:{QB:4, TE:3}, order:['RB','QB','RB','TE','RB','QB','RB','TE','QB','RB','TE','WR'], pointWeight:{RB:0.9}, scoreBonus:{RB:30}},
+	wr:{label:'Better WRs', mix:{QB:1, RB:1, WR:1.55, TE:1}, targets:{QB:3, RB:3, TE:3, WR:6}, caps:{QB:4, TE:3}, order:['QB','TE','WR','RB','QB','WR','TE','RB','QB','RB','TE','WR','WR','WR'], pointWeight:{WR:0.92}, scoreBonus:{WR:28}},
+	te:{label:'Better TEs', mix:{QB:1, RB:1, WR:1, TE:1.55}, targets:{QB:3, RB:3, TE:4}, caps:{QB:4, TE:4}, order:['TE','QB','TE','RB','TE','QB','RB','TE','QB','RB','WR'], pointWeight:{TE:0.98}, scoreBonus:{TE:30}},
+	qb_wr:{label:'QB + WR', mix:{QB:1.35, RB:1, WR:1.35, TE:1}, targets:{QB:4, RB:3, TE:3, WR:5}, caps:{QB:4, TE:3}, order:['QB','WR','TE','QB','RB','WR','TE','QB','QB','RB','TE','RB','WR'], pointWeight:{QB:0.54, WR:0.86}, scoreBonus:{QB:18, WR:20}},
+	rb_wr:{label:'RB + WR', mix:{QB:1, RB:1.35, WR:1.35, TE:1}, targets:{QB:3, RB:5, TE:3, WR:5}, caps:{QB:4, TE:3}, order:['RB','WR','QB','RB','TE','WR','QB','RB','TE','RB','WR','QB','TE'], pointWeight:{RB:0.86, WR:0.84}, scoreBonus:{RB:20, WR:20}},
+	rb_te:{label:'RB + TE', mix:{QB:1, RB:1.35, WR:1, TE:1.35}, targets:{QB:3, RB:5, TE:4}, caps:{QB:4, TE:4}, order:['RB','TE','QB','RB','TE','QB','RB','TE','RB','QB','TE','WR'], pointWeight:{RB:0.86, TE:0.94}, scoreBonus:{RB:20, TE:22}},
+	custom:{label:'Custom Mix', mix:{QB:1, RB:1, WR:1, TE:1}, targets:{QB:3, RB:3, TE:3}, caps:{QB:4, TE:4}, order:null, pointWeight:{}, scoreBonus:{}}
+};
 const AUCTION_REPLACEMENT_RANK = { QB:24, RB:36, WR:60, TE:18 };
 const AUCTION_POSITION_MULTIPLIER = { QB:1.18, RB:1.02, WR:1, TE:1.12 };
 const AUCTION_TIER_WEIGHT = { 1:2.65, 2:2.0, 3:1.4, 4:0.96, 5:0.62, 6:0.38, 7:0.2, 8:0.09 };
@@ -664,13 +690,47 @@ function displayPlayer(row) { return `${row.player} (${row.position}${row.team ?
 function adjustedAuctionPrice(row, premium) { return Math.max(1, Math.ceil(n(row.auction_value) * (1 + premium))); }
 function readOptimizerPremium() { const value = Number(document.getElementById('optimizerPremium')?.value ?? 0.05); return Number.isFinite(value) ? value : 0.05; }
 function readOptimizerBudget() { const value = Number(document.getElementById('optimizerBudget')?.value ?? AUCTION_CONFIG.budget); return Math.max(AUCTION_CONFIG.rosterSpots, Math.min(AUCTION_CONFIG.budget, Number.isFinite(value) ? value : AUCTION_CONFIG.budget)); }
+function clampMix(value) { return Math.max(0.5, Math.min(2, Number.isFinite(value) ? value : 1)); }
+function readOptimizerMix() { return Object.fromEntries(Object.entries(OPTIMIZER_MIX_IDS).map(([pos, id]) => [pos, clampMix(Number(document.getElementById(id)?.value))])); }
+function setOptimizerMixValues(mix) { Object.entries(OPTIMIZER_MIX_IDS).forEach(([pos, id]) => { const el = document.getElementById(id); if (el) el.value = rawFmt(clampMix(Number(mix?.[pos] ?? 1))); }); }
+function optimizerTargetsForMix(baseTargets, mix) {
+	const targets = {...OPTIMIZER_TARGETS, ...baseTargets};
+	if (mix.QB >= 1.25) targets.QB = Math.max(targets.QB || 0, 4);
+	if (mix.RB >= 1.25) targets.RB = Math.max(targets.RB || 0, 5);
+	if (mix.WR >= 1.25) targets.WR = Math.max(targets.WR || 0, 5);
+	if (mix.WR >= 1.5) targets.WR = Math.max(targets.WR || 0, 6);
+	if (mix.TE >= 1.25) targets.TE = Math.max(targets.TE || 0, 4);
+	return targets;
+}
+function optimizerCapsForMix(baseCaps, mix) {
+	const caps = {...OPTIMIZER_POSITION_CAPS, ...baseCaps};
+	if (mix.TE >= 1.25) caps.TE = Math.max(caps.TE || 0, 4);
+	return caps;
+}
+function optimizerOrderForMix(mix) {
+	return Object.entries(mix).sort((a,b)=>b[1]-a[1]).flatMap(([pos, weight]) => Array.from({length:Math.max(1, Math.round(weight * 2))}, () => pos));
+}
+function readOptimizerFocus() { const key = document.getElementById('optimizerFocus')?.value || 'balanced'; return OPTIMIZER_FOCUS_CONFIG[key] ? key : 'balanced'; }
+function optimizerFocusConfig(key=readOptimizerFocus()) {
+	const config = OPTIMIZER_FOCUS_CONFIG[key] || OPTIMIZER_FOCUS_CONFIG.balanced;
+	const mix = key === 'custom' ? readOptimizerMix() : {...OPTIMIZER_DEFAULT_MIX, ...(config.mix || {})};
+	return {...config, key, mix, targets:optimizerTargetsForMix(config.targets || {}, mix), caps:optimizerCapsForMix(config.caps || {}, mix)};
+}
 function rosterCounts(players) { return players.reduce((counts, p) => { counts[p.position] = (counts[p.position] || 0) + 1; return counts; }, {}); }
 function rosterMeetsMinimums(players) { const counts = rosterCounts(players); return Object.entries(OPTIMIZER_MINIMUMS).every(([pos, min]) => (counts[pos] || 0) >= min); }
-function optimizerScore(player, selected) {
-	const counts = rosterCounts(selected), need = (counts[player.position] || 0) < (OPTIMIZER_MINIMUMS[player.position] || 0) ? 1.18 : 1;
-	const scarcity = player.position === 'QB' ? 20 : player.position === 'TE' ? 8 : 0;
+function rosterMeetsTargets(players, targets=OPTIMIZER_TARGETS) { const counts = rosterCounts(players); return Object.entries(targets).every(([pos, target]) => (counts[pos] || 0) >= target); }
+function rosterWithinPositionCaps(players, caps=OPTIMIZER_POSITION_CAPS) { const counts = rosterCounts(players); return Object.entries(caps).every(([pos, max]) => (counts[pos] || 0) <= max); }
+function optimizerScore(player, selected, focus=optimizerFocusConfig()) {
+	const targets = focus.targets || OPTIMIZER_TARGETS, counts = rosterCounts(selected), count = counts[player.position] || 0, min = OPTIMIZER_MINIMUMS[player.position] || 0, target = targets[player.position] || min;
+	const need = count < min ? 1.28 : count < target ? 1.12 : 1;
+	const baseWeight = {QB:0.45, RB:0.72, WR:0.72, TE:0.84}[player.position] || 0.7;
+	const mix = focus.mix?.[player.position] || 1;
+	const pointWeight = (focus.pointWeight?.[player.position] || baseWeight) * mix;
+	const pointScore = n(player.auction_points) * pointWeight;
+	const scarcity = player.position === 'QB' ? 24 : player.position === 'TE' ? 22 : 0;
 	const signal = player.bid_signal ? 8 : 0;
-	return ((n(player.auction_points) + n(player.auction_value) * 2 + scarcity + signal) * need) - n(player.buy_price) * 0.45;
+	const focusBonus = (focus.scoreBonus?.[player.position] || 0) + ((mix - 1) * 26);
+	return ((pointScore + n(player.auction_value) * 2.4 + scarcity + signal + focusBonus) * need) - n(player.buy_price) * 0.7;
 }
 function assignRosterSlots(players) {
 	const remaining = [...players].sort((a,b)=>n(b.auction_points)-n(a.auction_points));
@@ -686,12 +746,14 @@ function assignRosterSlots(players) {
 	take('TE', p=>p.position === 'TE');
 	for (let i = 1; i <= AUCTION_ROSTER_RULES.FLEX; i++) take(`FLEX ${i}`, p=>['RB','WR','TE'].includes(p.position));
 	take('SUPER FLEX', p=>['QB','RB','WR','TE'].includes(p.position));
-	remaining.forEach((player, i) => slots.push({slot:`Bench ${i + 1}`, player, starter:false}));
+	const benchPlayers = remaining.slice(0, AUCTION_ROSTER_RULES.bench);
+	for (let i = 0; i < AUCTION_ROSTER_RULES.bench; i++) slots.push({slot:`Bench ${i + 1}`, player:benchPlayers[i] || null, starter:false});
 	return slots;
 }
-function improveOptimizedTeam(selected, pool, budget) {
+function improveOptimizedTeam(selected, pool, budget, focus=optimizerFocusConfig()) {
 	let best = [...selected], spent = best.reduce((sum, p) => sum + p.buy_price, 0);
 	for (let pass = 0; pass < 3; pass++) {
+		const preserveTargets = rosterMeetsTargets(best, focus.targets);
 		for (let i = 0; i < best.length; i++) {
 			const old = best[i];
 			for (const candidate of pool) {
@@ -699,8 +761,10 @@ function improveOptimizedTeam(selected, pool, budget) {
 				const nextCost = spent - old.buy_price + candidate.buy_price;
 				if (nextCost > budget) continue;
 				const next = [...best]; next[i] = candidate;
-				if (!rosterMeetsMinimums(next)) continue;
-				if (n(candidate.auction_points) + n(candidate.auction_value) > n(old.auction_points) + n(old.auction_value) + 1) {
+				if (!rosterMeetsMinimums(next) || !rosterWithinPositionCaps(next, focus.caps)) continue;
+				if (preserveTargets && !rosterMeetsTargets(next, focus.targets)) continue;
+				const context = best.filter((_, index) => index !== i);
+				if (optimizerScore(candidate, context, focus) > optimizerScore(old, context, focus) + 1) {
 					best = next; spent = nextCost; break;
 				}
 			}
@@ -708,40 +772,87 @@ function improveOptimizedTeam(selected, pool, budget) {
 	}
 	return best;
 }
-function buildOptimizedTeam(premium=readOptimizerPremium(), budget=readOptimizerBudget()) {
-	const pool = auctionPool().map(p => ({...p, buy_price:adjustedAuctionPrice(p, premium)})).filter(p => p.buy_price <= budget).sort((a,b)=>optimizerScore(b, []) - optimizerScore(a, []));
+function buildOptimizedTeam(premium=readOptimizerPremium(), budget=readOptimizerBudget(), focusKey=readOptimizerFocus()) {
+	const focus = optimizerFocusConfig(focusKey);
+	const pool = auctionPool().map(p => ({...p, buy_price:adjustedAuctionPrice(p, premium)})).filter(p => p.buy_price <= budget).sort((a,b)=>optimizerScore(b, [], focus) - optimizerScore(a, [], focus));
 	const selected = [], picked = new Set();
 	let spent = 0;
 	const minFuturePrice = Math.max(1, Math.min(...pool.map(p => p.buy_price)));
-	function canAfford(player) { return spent + player.buy_price + (Math.max(0, AUCTION_CONFIG.rosterSpots - selected.length - 1) * minFuturePrice) <= budget; }
+	function reserveAfter(player) {
+		const projected = player ? [...selected, player] : [...selected], projectedPicked = new Set(picked);
+		if (player) projectedPicked.add(player.id);
+		const counts = rosterCounts(projected);
+		let reserve = 0, requiredOpen = 0;
+		for (const [pos, min] of Object.entries(OPTIMIZER_MINIMUMS)) {
+			const target = Math.max(min, focus.targets[pos] || 0);
+			const deficit = Math.max(0, target - (counts[pos] || 0));
+			if (!deficit) continue;
+			const costs = pool.filter(p => !projectedPicked.has(p.id) && p.position === pos).map(p => p.buy_price).sort((a,b)=>a-b).slice(0, deficit);
+			if (costs.length < deficit) return Infinity;
+			reserve += costs.reduce((sum, cost) => sum + cost, 0);
+			requiredOpen += deficit;
+		}
+		const open = Math.max(0, AUCTION_CONFIG.rosterSpots - projected.length - requiredOpen);
+		return reserve + open * minFuturePrice;
+	}
+	function canAfford(player) { return spent + player.buy_price + reserveAfter(player) <= budget; }
 	function addBest(predicate) {
-		const candidates = pool.filter(p => !picked.has(p.id) && predicate(p) && canAfford(p)).sort((a,b)=>optimizerScore(b, selected) - optimizerScore(a, selected));
+		const candidates = pool.filter(p => !picked.has(p.id) && predicate(p) && canAfford(p)).sort((a,b)=>optimizerScore(b, selected, focus) - optimizerScore(a, selected, focus));
 		const player = candidates[0]; if (!player) return false;
 		selected.push(player); picked.add(player.id); spent += player.buy_price; return true;
 	}
+	function underPositionCap(player) { const cap = focus.caps[player.position]; return !cap || (rosterCounts(selected)[player.position] || 0) < cap; }
+	[...(focus.order || []), ...optimizerOrderForMix(focus.mix || OPTIMIZER_DEFAULT_MIX)].forEach(pos => {
+		const goal = Math.max(OPTIMIZER_MINIMUMS[pos] || 0, focus.targets[pos] || 0);
+		if ((rosterCounts(selected)[pos] || 0) < goal) addBest(p => p.position === pos);
+	});
 	Object.entries(OPTIMIZER_MINIMUMS).forEach(([pos, min]) => { while ((rosterCounts(selected)[pos] || 0) < min) { if (!addBest(p => p.position === pos)) break; } });
+	Object.entries(focus.targets).forEach(([pos, target]) => { while ((rosterCounts(selected)[pos] || 0) < target) { if (!addBest(p => p.position === pos)) break; } });
+	while (selected.length < AUCTION_CONFIG.rosterSpots && addBest(p=>underPositionCap(p))) {}
 	while (selected.length < AUCTION_CONFIG.rosterSpots && addBest(()=>true)) {}
-	const improved = improveOptimizedTeam(selected, pool, budget);
+	const improved = improveOptimizedTeam(selected, pool, budget, focus);
 	const cost = improved.reduce((sum, p) => sum + p.buy_price, 0), slots = assignRosterSlots(improved);
-	return {premium, budget, cost, remaining:budget - cost, players:improved, slots, starterPoints:slots.filter(s=>s.starter && s.player).reduce((sum, s) => sum + n(s.player.auction_points), 0), totalPoints:improved.reduce((sum, p) => sum + n(p.auction_points), 0)};
+	return {premium, budget, focus:focus.key, focusLabel:focus.label, mix:focus.mix, cost, remaining:budget - cost, players:improved, slots, starterPoints:slots.filter(s=>s.starter && s.player).reduce((sum, s) => sum + n(s.player.auction_points), 0), totalPoints:improved.reduce((sum, p) => sum + n(p.auction_points), 0)};
 }
 function renderMetric(label, value) { return `<div class="metric"><span>${escapeHtml(label)}</span><strong>${escapeHtml(value)}</strong></div>`; }
+function optimizerMixLabel(mix={}) { return ['QB','RB','WR','TE'].map(pos => `${pos} ${rawFmt(clampMix(Number(mix[pos] ?? 1)))}`).join(' / '); }
 function renderRosterSlot(item, priceKey='buy_price') {
 	if (!item.player) return `<div class="roster-slot"><strong>${escapeHtml(item.slot)}</strong><span class="small">Open</span></div>`;
 	const p = item.player, price = p[priceKey] ?? p.paid ?? p.auction_value;
 	return `<div class="roster-slot"><strong>${escapeHtml(item.slot)}</strong><div class="player-name">${escapeHtml(p.player)}</div><span class="small">${escapeHtml(p.position)}${p.team ? ' ' + escapeHtml(p.team) : ''} - $${Math.round(price)} - ${rawFmt(n(p.auction_points))} fpts</span></div>`;
 }
+function renderOptimizerByPosition(result) {
+	const order = ['QB','RB','WR','TE'];
+	return order.map(pos => {
+		const rows = result.players.filter(p => p.position === pos).sort((a,b)=>n(b.auction_points)-n(a.auction_points));
+		const cost = rows.reduce((sum, p) => sum + n(p.buy_price), 0);
+		const body = rows.length ? rows.map(p => {
+			const signal = p.bid_signal === -2 ? 'Bid++' : p.bid_signal === -1 ? 'Bid+' : '';
+			const meta = `${p.team ? escapeHtml(p.team) + ' - ' : ''}${rawFmt(n(p.auction_points))} fpts${p.auction_tier ? ' - ' + escapeHtml(p.auction_tier) : ''}`;
+			return `<div class="position-player-row"><div><strong>${escapeHtml(p.player)}</strong><span>${meta}</span></div><div><strong>$${Math.round(n(p.buy_price))}</strong>${signal ? `<span>${signal}</span>` : ''}</div></div>`;
+		}).join('') : '<div class="position-player-row"><span>No players</span></div>';
+		return `<div class="position-group"><h3>${pos} (${rows.length}) - $${cost}</h3>${body}</div>`;
+	}).join('');
+}
 function renderOptimizer(result=state.optimizer || buildOptimizedTeam()) {
 	state.optimizer = result;
-	const summary = document.getElementById('optimizerSummary'), roster = document.getElementById('optimizerRoster');
+	const summary = document.getElementById('optimizerSummary'), byPosition = document.getElementById('optimizerByPosition'), roster = document.getElementById('optimizerRoster');
 	if (!summary || !roster) return;
 	summary.innerHTML = [
+		renderMetric('Focus', result.focusLabel || 'Balanced'),
+		renderMetric('Mix', optimizerMixLabel(result.mix || OPTIMIZER_DEFAULT_MIX)),
 		renderMetric('Budget', `$${result.budget}`),
 		renderMetric('Spent', `$${result.cost}`),
 		renderMetric('Left', `$${result.remaining}`),
 		renderMetric('Starter Fpts', rawFmt(result.starterPoints))
 	].join('');
+	if (byPosition) byPosition.innerHTML = renderOptimizerByPosition(result);
 	roster.innerHTML = result.slots.map(slot => renderRosterSlot(slot)).join('');
+}
+function refreshOptimizer() {
+	state.optimizer = buildOptimizedTeam();
+	renderOptimizer(state.optimizer);
+	renderMockAuction();
 }
 function shuffle(items) { const out = [...items]; for (let i = out.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [out[i], out[j]] = [out[j], out[i]]; } return out; }
 function createMockTeam(id, profileKey='human') { const profile = MOCK_BOT_PROFILES[profileKey]; return {id, name:id === 0 ? 'You' : `Bot ${id}`, bot:id !== 0, profileKey, profile, budget:AUCTION_CONFIG.budget, roster:[]}; }
@@ -759,10 +870,11 @@ function mockClockLabel(m) { const value = Math.max(0, Number(m.timerRemaining ?
 function mockTeamMaxBid(team) { const open = AUCTION_CONFIG.rosterSpots - team.roster.length; if (open <= 0) return 0; return Math.max(0, team.budget - Math.max(0, open - 1)); }
 function mockTeamSpent(team) { return AUCTION_CONFIG.budget - team.budget; }
 function mockPositionNeed(team, pos) {
-	const counts = rosterCounts(team.roster), min = OPTIMIZER_MINIMUMS[pos] || 0;
-	let need = (counts[pos] || 0) < min ? 1.18 : 1;
+	const counts = rosterCounts(team.roster), count = counts[pos] || 0, min = OPTIMIZER_MINIMUMS[pos] || 0, target = OPTIMIZER_TARGETS[pos] || min;
+	let need = count < min ? 1.18 : 1;
 	if (pos !== 'QB' && (counts.RB || 0) + (counts.WR || 0) + (counts.TE || 0) < 8) need += 0.06;
-	if (pos === 'QB' && (counts.QB || 0) < 2) need += 0.12;
+	if (pos === 'QB' && count < target) need += 0.12;
+	if (pos === 'TE' && count < target) need += 0.08;
 	return need;
 }
 function mockPacingMultiplier(team) {
@@ -832,7 +944,8 @@ function mockAwardCurrent() {
 	const team = m.teams[m.highBidder], paid = Math.min(m.currentBid, mockTeamMaxBid(team));
 	if (paid < 1 || team.roster.length >= AUCTION_CONFIG.rosterSpots) { m.current = null; return; }
 	team.budget -= paid; team.roster.push({...m.current, paid}); m.drafted.add(m.current.id);
-	m.results.unshift({player:m.current.player, position:m.current.position, team:m.current.team, paid, buyer:team.name, profile:team.profile?.label || 'Human'});
+	const slot = assignRosterSlots(team.roster).find(s => s.player?.id === m.current.id)?.slot || '';
+	m.results.unshift({player:m.current.player, position:m.current.position, team:m.current.team, paid, buyer:team.name, profile:team.profile?.label || 'Human', slot});
 	m.nominatorIndex = (m.highBidder + 1) % m.teams.length; m.current = null; m.currentBid = 0; m.highBidder = null; m.passed = new Set(); resetMockTimer('nomination');
 }
 function mockAutoResolveOne() {
@@ -913,14 +1026,14 @@ function renderMockDraftBoard(m) {
 }
 function renderMockResults(m) {
 	const root = document.getElementById('mockResults'); if (!root) return;
-	root.innerHTML = m.results.length ? m.results.map(r => `<div class="result-item"><strong>${escapeHtml(r.player)}</strong> <span class="small">${escapeHtml(r.position)}${r.team ? ' ' + escapeHtml(r.team) : ''}</span><br><span class="small">$${r.paid} to ${escapeHtml(r.buyer)}${r.profile ? ' - ' + escapeHtml(r.profile) : ''}</span></div>`).join('') : '<div class="mock-empty">No completed nominations yet.</div>';
+	root.innerHTML = m.results.length ? m.results.map(r => `<div class="result-item"><strong>${escapeHtml(r.player)}</strong> <span class="small">${escapeHtml(r.position)}${r.team ? ' ' + escapeHtml(r.team) : ''}</span><br><span class="small">$${r.paid} to ${escapeHtml(r.buyer)}${r.slot ? ' - ' + escapeHtml(r.slot) : ''}${r.profile ? ' - ' + escapeHtml(r.profile) : ''}</span></div>`).join('') : '<div class="mock-empty">No completed nominations yet.</div>';
 }
 function renderMockPlayerTable(m) {
 	const table = document.getElementById('mockPlayerTable'); if (!table) return;
 	const q = norm(document.getElementById('mockPlayerSearch')?.value), pos = document.getElementById('mockPosFilter')?.value || '', showDrafted = Boolean(document.getElementById('mockShowDrafted')?.checked);
 	const rows = auctionPool().filter(r => (showDrafted || !m.drafted.has(r.id)) && (!pos || r.position === pos) && (!q || norm(Object.values(r).join(' ')).includes(q))).slice(0, 180);
 	table.innerHTML = `<thead><tr><th>Rank</th><th>Player</th><th>Pos</th><th>Team</th><th>Price Tier</th><th>Bid</th><th>+5%</th><th>+10%</th><th>Signal</th><th class="no-sort">Action</th></tr></thead><tbody>${rows.map(r => { const drafted = m.drafted.has(r.id); return `<tr><td>${r.pool_rank}</td><td><strong>${escapeHtml(r.player)}</strong></td><td>${escapeHtml(r.position)}</td><td>${escapeHtml(r.team || '')}</td><td>${escapeHtml(r.auction_tier)}</td><td>$${Math.round(r.auction_value)}</td><td>$${Math.ceil(n(r.auction_value) * 1.05)}</td><td>$${Math.ceil(n(r.auction_value) * 1.1)}</td><td>${renderBidSignal(r)}</td><td class="mock-actions">${drafted ? '<span class="small">Drafted</span>' : `<button type="button" data-nominate="${escapeHtml(r.id)}" ${m.current ? 'disabled' : ''}>Nominate</button>`}</td></tr>`; }).join('')}</tbody>`;
-	table.querySelectorAll('[data-nominate]').forEach(btn => btn.addEventListener('click', () => { mockNominate(btn.dataset.nominate, 0); renderMockAuction(); }));
+	table.querySelectorAll('[data-nominate]').forEach(btn => btn.addEventListener('click', () => { if (mockNominate(btn.dataset.nominate, 0)) startMockClock(); else renderMockAuction(); }));
 	table.querySelectorAll('.bid-pill').forEach(btn=>btn.addEventListener('click',()=>showNote(btn.dataset.tip)));
 }
 function renderMockAuction() {
@@ -982,10 +1095,12 @@ function init() {
 	Object.keys(DEFAULT_SCORING).forEach(id=>document.getElementById(id).addEventListener('input',()=>{ state.optimizer = null; renderCurrentTables(); }));
 	document.getElementById('resetScoring').addEventListener('click',()=>{ Object.entries(DEFAULT_SCORING).forEach(([id,value])=>document.getElementById(id).value=value); state.sorts.set('teamY1Table', DEFAULT_SORTS.teamY1Table); state.sorts.set('teamY2Table', DEFAULT_SORTS.teamY2Table); state.optimizer = null; renderCurrentTables(); });
 	document.getElementById('resetPlayers').addEventListener('click',()=>{ document.getElementById('playerSearch').value=''; document.getElementById('posFilter').value=''; document.getElementById('teamFilter').value=''; renderCurrentTables(); });
-	['optimizerPremium','optimizerBudget'].forEach(id=>document.getElementById(id).addEventListener('input',()=>{ state.optimizer = buildOptimizedTeam(); renderMockAuction(); }));
+	['optimizerPremium','optimizerBudget'].forEach(id=>['input','change'].forEach(eventName=>document.getElementById(id).addEventListener(eventName, refreshOptimizer)));
+	document.getElementById('optimizerFocus').addEventListener('change',()=>{ const key = readOptimizerFocus(); if (key !== 'custom') setOptimizerMixValues(OPTIMIZER_FOCUS_CONFIG[key]?.mix || OPTIMIZER_DEFAULT_MIX); refreshOptimizer(); });
+	Object.values(OPTIMIZER_MIX_IDS).forEach(id=>['input','change'].forEach(eventName=>document.getElementById(id).addEventListener(eventName,()=>{ document.getElementById('optimizerFocus').value = 'custom'; refreshOptimizer(); })));
 	['mockPlayerSearch','mockPosFilter','mockShowDrafted'].forEach(id=>document.getElementById(id).addEventListener('input', renderMockAuction));
 	['mockNominationSeconds','mockResetSeconds'].forEach(id=>document.getElementById(id).addEventListener('input', applyMockTimerConfig));
-	document.getElementById('runOptimizer').addEventListener('click',()=>{ state.optimizer = buildOptimizedTeam(); renderMockAuction(); });
+	document.getElementById('runOptimizer').addEventListener('click', refreshOptimizer);
 	document.getElementById('startMock').addEventListener('click',()=>{ stopMockClock(); state.mock = createMockState(); renderMockAuction(); });
 	document.getElementById('mockClockToggle').addEventListener('click',()=>{ toggleMockClock(); });
 	document.getElementById('mockAutoOne').addEventListener('click',()=>{ mockAutoResolveOne(); renderMockAuction(); });
