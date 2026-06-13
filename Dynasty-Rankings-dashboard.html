@@ -128,6 +128,11 @@ svg { width:100%; max-width:100%; min-width:0; height:auto; display:block; }
 .mock-timer.running { border-color:var(--green); color:#065f46; background:#ecfdf5; }
 .slow-auction-layout { display:grid; grid-template-columns:minmax(740px, 1.45fr) minmax(330px, .7fr); gap:14px; align-items:start; }
 .slow-lot-grid { display:grid; grid-template-columns:repeat(auto-fill, minmax(250px, 1fr)); gap:10px; max-height:760px; overflow:auto; padding-right:2px; }
+.slow-topbar { position:sticky; top:0; z-index:24; display:grid; grid-template-columns:auto minmax(360px, 1fr); gap:12px; align-items:center; margin:0 0 10px; padding:10px 12px; border:1px solid var(--line); border-radius:8px; background:rgba(255,255,255,.96); box-shadow:0 8px 24px rgba(15,23,42,.08); backdrop-filter:blur(8px); }
+.slow-topbar h2 { margin:0; }
+.slow-top-metrics { grid-template-columns:repeat(3, minmax(130px, 1fr)); }
+.slow-top-metrics .metric { padding:8px 10px; }
+#slowAuction > .card > h2, #slowAuction > .card > p.small { display:none; }
 .nomination-order { display:flex; flex-wrap:wrap; gap:6px; margin:0 0 12px; }
 .nomination-chip { border:1px solid var(--line); border-radius:999px; background:#f8fafc; color:#475569; padding:5px 8px; font-size:12px; font-weight:750; }
 .nomination-chip.active { border-color:var(--blue); background:#dbeafe; color:#1d4ed8; }
@@ -166,7 +171,7 @@ svg { width:100%; max-width:100%; min-width:0; height:auto; display:block; }
 	#teamY1Table th:nth-child(2), #teamY1Table td:nth-child(2),
 	#teamY2Table th:nth-child(2), #teamY2Table td:nth-child(2) { left:62px; width:220px; min-width:220px; max-width:220px; box-shadow:10px 0 12px -12px rgba(15,23,42,.55); }
 }
-@media (max-width: 1200px) { .mock-grid, .mock-draft-layout, .slow-auction-layout { grid-template-columns:1fr; } .mock-board { grid-template-columns:repeat(3, minmax(120px, 1fr)); } }
+@media (max-width: 1200px) { .mock-grid, .mock-draft-layout, .slow-auction-layout { grid-template-columns:1fr; } .mock-board { grid-template-columns:repeat(3, minmax(120px, 1fr)); } .slow-topbar { grid-template-columns:1fr; } }
 @media (max-width: 900px) { main { padding:12px; } .grid { grid-template-columns:1fr; } input[type=search] { min-width:100%; max-width:none; } .tabs, .subtabs { flex-wrap:nowrap; overflow-x:auto; padding-bottom:4px; } .tab, .subtab { white-space:nowrap; font-size:13px; padding:8px 10px; } table { font-size:12px; min-width:880px; } th, td { padding:7px; } svg { min-width:0; } .table-wrap { max-height:none; -webkit-overflow-scrolling:touch; } .current-auction { padding:12px; } .winning-bid { align-items:flex-start; flex-direction:column; } .winning-bid em { text-align:left; } }
 @media (max-width: 520px) { input, select, button { font-size:13px; min-height:36px; } .toolbar { gap:7px; } .toolbar select, .toolbar button, .age-range-filter { flex:1 1 140px; } .range-row input[type=range] { width:74px; } .card h2 { font-size:18px; } .scoring-settings { gap:7px; padding:9px; } .scoring-settings strong { flex-basis:100%; padding-bottom:0; } .scoring-settings input { width:74px; font-size:12px; min-height:34px; } table { font-size:11px; min-width:760px; } th, td { padding:6px; } #cheatsTable { min-width:860px; } #teamY1Table, #teamY2Table { min-width:1260px; } .metric-grid, .mock-board, .current-auction .metric-grid { grid-template-columns:1fr 1fr; } .current-auction h3 { font-size:22px; } .current-auction .metric { padding:9px; } .current-auction .metric strong { font-size:18px; } }
 @media (max-width: 430px) and (orientation: portrait) { table { font-size:10.5px; } th, td { padding:5px; } #cheatsTable { min-width:820px; } }
@@ -1164,6 +1169,7 @@ function slowNominationSeconds() { return slowDurationSeconds('slowNominationMin
 function slowBidSeconds() { return slowDurationSeconds('slowBidMinutes', 'bid'); }
 function slowResetSeconds() { return slowDurationSeconds('slowResetMinutes', 'reset'); }
 function slowBotBidIntervalSeconds() { return Math.max(1, Math.min(60, Math.round(slowBidSeconds() / 6))); }
+function slowBotNominationIntervalSeconds() { return Math.max(1, Math.min(60, Math.round(slowNominationSeconds() / 6))); }
 function slowLotLimit() { const value = Number(document.getElementById('slowNominationCount')?.value); return Math.max(20, Math.min(50, Number.isFinite(value) ? Math.round(value) : 30)); }
 function slowClockLabel(seconds) {
 	const minutes = Math.max(0, Math.ceil(Number(seconds || 0) / 60));
@@ -1181,18 +1187,25 @@ function slowClockDetail(seconds) {
 }
 function createSlowState() {
 	const bag = shuffle(['aggressive','balanced','balanced','balanced','conservative','conservative','value','value','aggressive','balanced','conservative']);
-	return {teams:[createMockTeam(0), ...bag.map((key, i) => assignSlowTiming(createMockTeam(i + 1, key)))], drafted:new Set(), lots:[], lotSeq:1, nominatorIndex:0, results:[], active:true, selectedTeamId:0, selectedLotId:null, nominationCooldown:slowNominationSeconds(), botBidCooldown:slowBotBidIntervalSeconds(), clockRunning:false};
+	return {teams:[createMockTeam(0), ...bag.map((key, i) => assignSlowTiming(createMockTeam(i + 1, key)))], drafted:new Set(), lots:[], lotSeq:1, nominatorIndex:0, results:[], active:true, selectedTeamId:0, selectedLotId:null, nominationCooldown:slowNominationSeconds(), botBidCooldown:slowBotBidIntervalSeconds(), botNominationCooldown:slowBotNominationIntervalSeconds(), clockRunning:false};
 }
 function ensureSlowState() { if (!state.slow) state.slow = createSlowState(); return state.slow; }
 function stopSlowClock() { if (slowClockId) clearInterval(slowClockId); slowClockId = null; if (state.slow) state.slow.clockRunning = false; }
 function slowNextNominator(m=ensureSlowState()) { return m.teams[m.nominatorIndex % m.teams.length] || m.teams[0]; }
 function slowAdvanceNominator(m, teamId) { m.nominatorIndex = (Number(teamId) + 1) % m.teams.length; }
 function slowActivePlayerIds(m=ensureSlowState()) { return new Set(m.lots.map(lot => lot.player.id)); }
-function slowTeamCommitted(team, excludingLotId=null) { const m = ensureSlowState(); return m.lots.filter(lot => lot.id !== excludingLotId && lot.highBidder === team.id).reduce((sum, lot) => sum + lot.currentBid, 0); }
+function slowTeamCommittedLots(team, excludingLotId=null) { const m = ensureSlowState(); return m.lots.filter(lot => lot.id !== excludingLotId && lot.highBidder === team.id); }
+function slowTeamCommitted(team, excludingLotId=null) { return slowTeamCommittedLots(team, excludingLotId).reduce((sum, lot) => sum + lot.currentBid, 0); }
 function slowTeamMaxBid(team, excludingLotId=null) {
 	const open = AUCTION_CONFIG.rosterSpots - team.roster.length;
 	if (open <= 0) return 0;
-	return Math.max(0, team.budget - slowTeamCommitted(team, excludingLotId) - Math.max(0, open - 1));
+	const committedLots = slowTeamCommittedLots(team, excludingLotId);
+	const availableSpotForBid = open - committedLots.length;
+	if (availableSpotForBid <= 0) return 0;
+	const committed = committedLots.reduce((sum, lot) => sum + lot.currentBid, 0);
+	const reserve = Math.max(0, availableSpotForBid - 1);
+	const max = Math.floor(team.budget - committed - reserve);
+	return Math.max(1, max);
 }
 function slowProxyBids(lot) { if (!lot.proxyBids) lot.proxyBids = {}; return lot.proxyBids; }
 function slowProxyMax(lot, teamId=0) { return Math.max(0, Number(lot?.proxyBids?.[teamId] || 0)); }
@@ -1272,6 +1285,27 @@ function slowFillNominations(maxAdds=Infinity) {
 	if (!m.lots.length && !slowAvailablePool(m).length) m.active = false;
 	m.nominationCooldown = slowNominationSeconds();
 	return added;
+}
+function slowBotNominationChance(team, force=false) {
+	if (force) return 1;
+	const duration = Math.max(1, slowNominationSeconds());
+	const remaining = Math.max(0, ensureSlowState().nominationCooldown || 0);
+	const elapsed = Math.max(0, Math.min(1, 1 - (remaining / duration)));
+	const timing = team.slowTiming || slowTimingForProfile(team.profileKey, team.id);
+	let chance = {early:0.20, normal:0.10, sniper:0.035, late:0.02}[timing] ?? 0.10;
+	chance += elapsed * ({early:0.36, normal:0.30, sniper:0.22, late:0.16}[timing] ?? 0.25);
+	if (team.profileKey === 'aggressive') chance += 0.08;
+	if (team.profileKey === 'conservative') chance -= 0.025;
+	if (elapsed < 0.18 && (timing === 'sniper' || timing === 'late')) chance *= 0.35;
+	if (remaining <= Math.max(2, duration * 0.2)) chance = Math.max(chance, timing === 'sniper' || timing === 'late' ? 0.76 : 0.58);
+	return Math.max(0.01, Math.min(0.9, chance));
+}
+function slowMaybeBotNominate(force=false) {
+	const m = ensureSlowState(), team = slowNextNominator(m);
+	if (!team?.bot || m.lots.length >= slowLotLimit()) return false;
+	if (Math.random() > slowBotNominationChance(team, force)) return false;
+	const player = slowNominationChoice(team);
+	return player ? slowNominate(player.id, team.id) : false;
 }
 function slowBotMaxBid(team, lot) {
 	const profile = team.profile || MOCK_BOT_PROFILES.balanced, base = Math.max(1, n(lot.player.auction_value));
@@ -1368,6 +1402,8 @@ function slowAdvanceSeconds(seconds=60) {
 	const elapsed = Math.max(1, Number(seconds) || 1);
 	m.lots.forEach(lot => { lot.timeRemaining = Math.max(0, lot.timeRemaining - elapsed); });
 	m.nominationCooldown = Math.max(0, (m.nominationCooldown || slowNominationSeconds()) - elapsed);
+	m.botNominationCooldown = Math.max(0, (m.botNominationCooldown ?? slowBotNominationIntervalSeconds()) - elapsed);
+	if (m.botNominationCooldown <= 0) { slowMaybeBotNominate(false); m.botNominationCooldown = slowBotNominationIntervalSeconds(); }
 	if (m.nominationCooldown <= 0 && m.lots.length < slowLotLimit()) slowFillNominations(1);
 	m.botBidCooldown = Math.max(0, (m.botBidCooldown ?? slowBotBidIntervalSeconds()) - elapsed);
 	if (m.botBidCooldown <= 0 || elapsed >= 60) { slowRunBotBids(false); m.botBidCooldown = slowBotBidIntervalSeconds(); }
@@ -1386,9 +1422,10 @@ function startSlowClock() {
 function toggleSlowClock() { if (slowClockId) stopSlowClock(); else startSlowClock(); renderSlowAuction(); }
 function applySlowTimerConfig() {
 	const m = ensureSlowState();
-	const nominationSeconds = slowNominationSeconds(), bidSeconds = slowBidSeconds(), botInterval = slowBotBidIntervalSeconds();
+	const nominationSeconds = slowNominationSeconds(), bidSeconds = slowBidSeconds(), botInterval = slowBotBidIntervalSeconds(), botNominationInterval = slowBotNominationIntervalSeconds();
 	m.nominationCooldown = Math.min(m.nominationCooldown || nominationSeconds, nominationSeconds);
 	m.botBidCooldown = Math.min(m.botBidCooldown || botInterval, botInterval);
+	m.botNominationCooldown = Math.min(m.botNominationCooldown || botNominationInterval, botNominationInterval);
 	m.lots.forEach(lot => {
 		lot.bidWindow = Math.min(Number.isFinite(Number(lot.bidWindow)) ? lot.bidWindow : bidSeconds, bidSeconds);
 		lot.timeRemaining = Math.min(Number.isFinite(Number(lot.timeRemaining)) ? lot.timeRemaining : bidSeconds, bidSeconds);
@@ -1400,6 +1437,29 @@ function setSlowTeamProfile(teamId, profileKey) {
 	if (!team || !team.bot || !MOCK_BOT_PROFILES[profileKey]) return;
 	team.profileKey = profileKey; team.profile = MOCK_BOT_PROFILES[profileKey];
 	assignSlowTiming(team);
+}
+function ensureSlowTopbar() {
+	const panel = document.getElementById('slowAuction');
+	if (!panel) return null;
+	let bar = document.getElementById('slowTopbar');
+	if (!bar) {
+		bar = document.createElement('div');
+		bar.id = 'slowTopbar';
+		bar.className = 'slow-topbar';
+		bar.innerHTML = '<h2>Slow Auction</h2><div id="slowTopMetrics" class="metric-grid slow-top-metrics"></div>';
+		panel.prepend(bar);
+	}
+	return bar;
+}
+function renderSlowTopbar(m) {
+	ensureSlowTopbar();
+	const root = document.getElementById('slowTopMetrics'), team = m.teams[0];
+	if (!root || !team) return;
+	root.innerHTML = [
+		renderMetric('Your budget', '$' + team.budget),
+		renderMetric('Committed', '$' + slowTeamCommitted(team)),
+		renderMetric('Max bid', '$' + slowTeamMaxBid(team))
+	].join('');
 }
 function renderSlowSummary(m) {
 	const root = document.getElementById('slowSummary'); if (!root) return;
@@ -1424,9 +1484,26 @@ function renderSlowSummary(m) {
 	const input = document.getElementById('slowCustomBid'), lot = slowSelectedLot();
 	if (input && lot) input.value = slowProxyMax(lot, 0) || Math.min(slowTeamMaxBid(m.teams[0], lot.id), Math.max(1, lot.currentBid + 1));
 }
+function captureSlowLotInputFocus(root) {
+	const active = document.activeElement;
+	if (!active || !active.matches?.('[data-slow-value-input], [data-slow-max-input]')) return null;
+	if (root?.contains && !root.contains(active)) return null;
+	const valueKey = active.dataset.slowValueInput !== undefined ? 'slowValueInput' : 'slowMaxInput';
+	return {valueKey, lotId:active.dataset[valueKey], value:active.value, start:active.selectionStart, end:active.selectionEnd};
+}
+function restoreSlowLotInputFocus(root, focus) {
+	if (!focus) return;
+	const attr = focus.valueKey === 'slowValueInput' ? 'slowValueInput' : 'slowMaxInput';
+	const input = [...root.querySelectorAll(`[data-${attr.replace(/[A-Z]/g, ch => '-' + ch.toLowerCase())}]`)].find(el => el.dataset[attr] === focus.lotId);
+	if (!input) return;
+	input.value = focus.value;
+	input.focus?.({preventScroll:true});
+	if (Number.isInteger(focus.start) && Number.isInteger(focus.end)) input.setSelectionRange?.(focus.start, focus.end);
+}
 function renderSlowLots(m) {
 	const root = document.getElementById('slowLots'); if (!root) return;
 	if (!m.lots.length) { root.innerHTML = '<div class="mock-empty">No active auctions. Fill nominations or nominate from the pool.</div>'; return; }
+	const focusedInput = captureSlowLotInputFocus(root);
 	root.innerHTML = [...m.lots].sort((a,b)=>a.timeRemaining-b.timeRemaining).map(lot => {
 		const high = m.teams[lot.highBidder], nominator = m.teams[lot.nominatorId], expiring = lot.timeRemaining <= slowResetSeconds();
 		const humanBidState = lot.highBidder === 0 ? 'human-winning' : slowHumanHasBid(lot) ? 'human-outbid' : '';
@@ -1441,6 +1518,7 @@ function renderSlowLots(m) {
 	root.querySelectorAll('[data-slow-bid-value]').forEach(btn => btn.addEventListener('click', e => { e.stopPropagation(); const input = [...root.querySelectorAll('[data-slow-value-input]')].find(el => el.dataset.slowValueInput === btn.dataset.slowBidValue); slowHumanBid(Number(input?.value), btn.dataset.slowBidValue); renderSlowAuction(); }));
 	root.querySelectorAll('[data-slow-set-max]').forEach(btn => btn.addEventListener('click', e => { e.stopPropagation(); const input = [...root.querySelectorAll('[data-slow-max-input]')].find(el => el.dataset.slowMaxInput === btn.dataset.slowSetMax); slowSetMaxBid(Number(input?.value), btn.dataset.slowSetMax); renderSlowAuction(); }));
 	root.querySelectorAll('[data-slow-value-input], [data-slow-max-input]').forEach(input => input.addEventListener('click', e => e.stopPropagation()));
+	restoreSlowLotInputFocus(root, focusedInput);
 }
 function renderSlowTeams(m) {
 	const root = document.getElementById('slowTeams'); if (!root) return;
@@ -1470,7 +1548,7 @@ function renderSlowPlayerTable(m) {
 function renderSlowAuction() {
 	if (!document.getElementById('slowAuction')) return;
 	const m = ensureSlowState();
-	renderSlowSummary(m); renderSlowLots(m); renderSlowTeams(m); renderSlowSelectedTeam(m); renderSlowResults(m); renderSlowPlayerTable(m);
+	renderSlowTopbar(m); renderSlowSummary(m); renderSlowLots(m); renderSlowTeams(m); renderSlowSelectedTeam(m); renderSlowResults(m); renderSlowPlayerTable(m);
 }
 function filteredTopLimit() { const value = Number(document.getElementById('filteredTopLimit')?.value); return [10, 20, 50, 100].includes(value) ? value : 20; }
 function currentCheatMode() { return document.getElementById('rankMode')?.value || 'waldman'; }
