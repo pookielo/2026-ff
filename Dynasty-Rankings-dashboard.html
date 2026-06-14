@@ -170,18 +170,21 @@ svg { width:100%; max-width:100%; min-width:0; height:auto; display:block; }
 .auction-settings-toggle::-webkit-details-marker { display:none; }
 .auction-settings-wrap[open] .auction-settings-toggle { border-color:var(--blue); background:#dbeafe; color:#1d4ed8; }
 .auction-settings-menu { position:absolute; left:0; top:calc(100% + 8px); z-index:35; width:min(820px, calc(100vw - 32px)); max-height:min(76vh, 620px); overflow:auto; border:1px solid var(--line); border-radius:8px; background:white; padding:10px; box-shadow:0 18px 44px rgba(15,23,42,.18); }
+.auction-settings-menu-head { position:sticky; top:-10px; z-index:2; display:flex; align-items:center; justify-content:space-between; gap:10px; flex:1 0 100%; margin:-10px -10px 2px; padding:10px; border-bottom:1px solid #e7ebf2; background:white; }
+.auction-settings-menu-head strong { font-size:13px; color:var(--muted); text-transform:uppercase; letter-spacing:0; }
+.auction-settings-close { width:36px; min-height:34px; padding:4px 8px; font-weight:850; }
 .sr-only { position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0; }
 .market-calibration { border:1px solid var(--line); border-radius:8px; background:#f8fafc; margin:10px 0 12px; padding:0; }
 .market-calibration summary { cursor:pointer; padding:10px 12px; font-weight:850; list-style:none; }
 .market-calibration summary::-webkit-details-marker { display:none; }
 .market-calibration-body { border-top:1px solid #e2e8f0; padding:10px 12px; }
 .market-calibration .toolbar { margin-top:8px; }
-.par-sheet { margin:12px 0; border:1px solid var(--line); border-radius:8px; background:#f8fafc; overflow:hidden; }
+.par-sheet { margin:12px 0; border:1px solid var(--line); border-radius:8px; background:#f8fafc; overflow:auto; }
 .par-sheet-head { display:flex; align-items:flex-start; justify-content:space-between; gap:10px; padding:10px; background:#eef2f7; }
 .par-sheet-head strong { display:block; }
 .par-sheet-head span { color:var(--muted); font-size:12px; }
 .par-table { display:grid; }
-.par-row { display:grid; grid-template-columns:54px minmax(70px, .9fr) repeat(4, minmax(54px, 1fr)); gap:8px; align-items:center; padding:8px 10px; border-top:1px solid #e2e8f0; font-size:12px; }
+.par-row { display:grid; grid-template-columns:48px 62px minmax(70px, .9fr) repeat(4, minmax(54px, 1fr)); gap:8px; align-items:center; min-width:560px; padding:8px 10px; border-top:1px solid #e2e8f0; font-size:12px; }
 .par-row.header { color:var(--muted); font-weight:850; text-transform:uppercase; background:#f8fafc; }
 .par-row strong { font-size:14px; }
 .par-row input { width:100%; min-height:32px; padding:5px 7px; font-size:12px; }
@@ -243,7 +246,7 @@ svg { width:100%; max-width:100%; min-width:0; height:auto; display:block; }
 	#teamY2Table th:nth-child(2), #teamY2Table td:nth-child(2) { left:62px; width:220px; min-width:220px; max-width:220px; box-shadow:10px 0 12px -12px rgba(15,23,42,.55); }
 }
 @media (max-width: 1200px) { .mock-grid, .mock-draft-layout, .slow-auction-layout, .lt-two-col { grid-template-columns:1fr; } .mock-board { grid-template-columns:repeat(3, minmax(120px, 1fr)); } .slow-topbar { grid-template-columns:1fr; } .strategy-panel, .tier-drop-grid { grid-template-columns:repeat(2, minmax(180px, 1fr)); } }
-@media (max-width: 900px) { main { padding:8px 10px 28px; } .tabs { position:sticky; top:0; z-index:30; background:rgba(245,247,251,.96); backdrop-filter:blur(8px); margin:0 -2px 10px; padding:8px 0 6px; } .grid { grid-template-columns:1fr; } .card { padding:12px; } input[type=search] { min-width:100%; max-width:none; } .tabs, .subtabs { flex-wrap:nowrap; overflow-x:auto; padding-bottom:4px; -webkit-overflow-scrolling:touch; } .tab, .subtab { white-space:nowrap; font-size:13px; padding:8px 10px; } .toolbar { gap:8px; } table { font-size:12px; min-width:880px; } th, td { padding:7px; } svg { min-width:0; } .table-wrap { max-height:none; -webkit-overflow-scrolling:touch; } .current-auction { padding:12px; } .winning-bid { align-items:flex-start; flex-direction:column; } .winning-bid em { text-align:left; } .strategy-panel { grid-template-columns:1fr 1fr; } #mockAuction > .card > .toolbar, #slowAuction > .card > .toolbar { position:sticky; bottom:0; z-index:25; background:rgba(255,255,255,.97); border:1px solid var(--line); border-radius:8px; padding:8px; box-shadow:0 -8px 24px rgba(15,23,42,.08); } .auction-settings-menu { position:fixed; left:max(10px, env(safe-area-inset-left)); right:max(10px, env(safe-area-inset-right)); bottom:calc(74px + env(safe-area-inset-bottom)); top:auto; width:auto; max-height:min(68vh, 560px); } .slow-lot-grid { max-height:none; } }
+@media (max-width: 900px) { main { padding:8px 10px 28px; } .tabs { position:sticky; top:0; z-index:30; background:rgba(245,247,251,.96); backdrop-filter:blur(8px); margin:0 -2px 10px; padding:8px 0 6px; } .grid { grid-template-columns:1fr; } .card { padding:12px; } input[type=search] { min-width:100%; max-width:none; } .tabs, .subtabs { flex-wrap:nowrap; overflow-x:auto; padding-bottom:4px; -webkit-overflow-scrolling:touch; } .tab, .subtab { white-space:nowrap; font-size:13px; padding:8px 10px; } .toolbar { gap:8px; } table { font-size:12px; min-width:880px; } th, td { padding:7px; } svg { min-width:0; } .table-wrap { max-height:none; -webkit-overflow-scrolling:touch; } .current-auction { padding:12px; } .winning-bid { align-items:flex-start; flex-direction:column; } .winning-bid em { text-align:left; } .strategy-panel { grid-template-columns:1fr 1fr; } #mockAuction > .card > .toolbar, #slowAuction > .card > .toolbar { position:sticky; bottom:0; z-index:25; background:rgba(255,255,255,.97); border:1px solid var(--line); border-radius:8px; padding:8px; box-shadow:0 -8px 24px rgba(15,23,42,.08); } .auction-settings-menu { position:fixed; left:max(10px, env(safe-area-inset-left)); right:max(10px, env(safe-area-inset-right)); top:calc(72px + env(safe-area-inset-top)); bottom:auto; width:auto; max-height:calc(100vh - 92px - env(safe-area-inset-top)); } .slow-lot-grid { max-height:none; } }
 @media (max-width: 520px) { input, select, button { font-size:13px; min-height:36px; } .toolbar { gap:7px; } .toolbar select, .toolbar button, .age-range-filter, .inline-control { flex:1 1 140px; } .inline-control input, .inline-control select { width:100%; min-width:0; } .range-row input[type=range] { width:74px; } .card h2 { font-size:18px; } .scoring-settings { gap:7px; padding:9px; } .scoring-settings strong { flex-basis:100%; padding-bottom:0; } .scoring-settings input { width:74px; font-size:12px; min-height:34px; } table { font-size:11px; min-width:760px; } th, td { padding:6px; } #cheatsTable { min-width:860px; } #mockPlayerTable, #slowPlayerTable, #ltPlayerTable { min-width:760px; } #teamY1Table, #teamY2Table { min-width:1260px; } .metric-grid, .mock-board, .current-auction .metric-grid, .strategy-panel, .tier-drop-grid { grid-template-columns:1fr 1fr; } .metric, .strategy-card { padding:8px; } .metric strong, .strategy-card strong { font-size:17px; } .current-auction h3 { font-size:22px; } .current-auction .metric { padding:9px; } .current-auction .metric strong { font-size:18px; } .mock-board-grid { grid-template-columns:72px repeat(12, minmax(132px, 1fr)); min-width:1656px; } .mock-slot-head, .mock-team-head, .mock-slot-label, .mock-roster-cell { min-height:46px; } .slow-lot { min-height:0; } .slow-lot-controls { grid-template-columns:1fr 1fr; } .tier-drop-row summary { grid-template-columns:1fr; } .tier-drop-score { text-align:left; } .tier-player-list { padding-left:10px; } }
 @media (max-width: 430px) and (orientation: portrait) { table { font-size:10.5px; } th, td { padding:5px; } #cheatsTable { min-width:820px; } }
 </style>
@@ -1014,7 +1017,7 @@ function setupAuctionSettingsPanel(panelId, settingsIds, label='Auction settings
 	const nodes = [...toolbar.children];
 	const details = document.createElement('details');
 	details.className = 'auction-settings-wrap';
-	details.innerHTML = `<summary class="auction-settings-toggle" title="${escapeHtml(label)}"><span aria-hidden="true">&#9881;</span><span class="sr-only">${escapeHtml(label)}</span></summary><div class="auction-settings-menu toolbar"></div>`;
+	details.innerHTML = `<summary class="auction-settings-toggle" title="${escapeHtml(label)}"><span aria-hidden="true">&#9881;</span><span class="sr-only">${escapeHtml(label)}</span></summary><div class="auction-settings-menu toolbar"><div class="auction-settings-menu-head"><strong>${escapeHtml(label)}</strong><button type="button" class="auction-settings-close" data-auction-settings-close aria-label="Close settings">X</button></div></div>`;
 	const menu = details.querySelector('.auction-settings-menu');
 	const commands = document.createElement('div');
 	commands.className = 'auction-command-row toolbar';
@@ -1026,6 +1029,7 @@ function setupAuctionSettingsPanel(panelId, settingsIds, label='Auction settings
 	toolbar.textContent = '';
 	toolbar.classList.add('auction-toolbar-compact');
 	toolbar.append(details, commands);
+	menu.querySelector('[data-auction-settings-close]')?.addEventListener('click', () => { details.open = false; });
 	toolbar.dataset.settingsWrapped = 'true';
 }
 function setupAuctionSettingsPanels() {
@@ -1628,14 +1632,15 @@ function parPositionTotals(players=[], key='buy_price') {
 function renderParSheet(root, team, commitments=[]) {
 	if (!root || !team) return;
 	const ideal = buildOptimizedTeam(), idealTotals = parPositionTotals(ideal.players, 'buy_price'), spentTotals = parPositionTotals(team.roster || [], 'paid');
+	const idealCounts = rosterCounts(ideal.players);
 	const committedTotals = parPositionTotals(commitments.map(item => ({...item.player, paid:item.currentBid})), 'paid');
 	const rows = ['QB','RB','WR','TE'].map(pos => {
-		const idealValue = Math.round(idealTotals[pos] || 0), hasOverride = Object.prototype.hasOwnProperty.call(state.parTargets || {}, pos), target = hasOverride ? Math.max(0, Math.round(n(state.parTargets[pos]))) : idealValue, spent = Math.round(spentTotals[pos] || 0), committed = Math.round(committedTotals[pos] || 0), actual = spent + committed, delta = actual - target;
+		const idealValue = Math.round(idealTotals[pos] || 0), idealCount = idealCounts[pos] || 0, hasOverride = Object.prototype.hasOwnProperty.call(state.parTargets || {}, pos), target = hasOverride ? Math.max(0, Math.round(n(state.parTargets[pos]))) : idealValue, spent = Math.round(spentTotals[pos] || 0), committed = Math.round(committedTotals[pos] || 0), actual = spent + committed, delta = actual - target;
 		const deltaClass = delta > 0 ? 'over' : delta < 0 ? 'under' : 'even';
 		const deltaText = delta > 0 ? `+$${delta}` : delta < 0 ? `-$${Math.abs(delta)}` : '$0';
-		return `<div class="par-row"><strong>${pos}</strong><input type="number" min="0" max="${AUCTION_CONFIG.budget}" step="1" value="${target}" data-par-input="${pos}" title="Manual ${pos} par target"><span>$${idealValue}</span><span>$${spent}</span><span>$${committed}</span><span class="par-delta ${deltaClass}">${deltaText}</span></div>`;
+		return `<div class="par-row"><strong>${pos}</strong><span>${idealCount}</span><input type="number" min="0" max="${AUCTION_CONFIG.budget}" step="1" value="${target}" data-par-input="${pos}" title="Total planned ${pos} spend"><span>$${idealValue}</span><span>$${spent}</span><span>$${committed}</span><span class="par-delta ${deltaClass}">${deltaText}</span></div>`;
 	}).join('');
-	root.innerHTML = `<div class="par-sheet-head"><div><strong>Par Sheet</strong><span>Edit Target to override the Best Team auto par. Auto stays visible for reference.</span></div><button type="button" class="par-reset" data-par-reset>Reset</button></div><div class="par-table"><div class="par-row header"><span>Pos</span><span>Target</span><span>Auto</span><span>Spent</span><span>Live</span><span>+/-</span></div>${rows}</div>`;
+	root.innerHTML = `<div class="par-sheet-head"><div><strong>Par Sheet</strong><span>Target is total planned spend for that whole position group. Suggested is from the current Best Team build.</span></div><button type="button" class="par-reset" data-par-reset>Reset</button></div><div class="par-table"><div class="par-row header"><span>Pos</span><span>Players</span><span>Target</span><span>Suggest</span><span>Spent</span><span>Live</span><span>+/-</span></div>${rows}</div>`;
 	root.querySelectorAll('[data-par-input]').forEach(input => input.addEventListener('change', () => {
 		const pos = input.dataset.parInput, value = Math.max(0, Math.min(AUCTION_CONFIG.budget, Math.round(Number(input.value))));
 		if (Number.isFinite(value)) state.parTargets[pos] = value;
