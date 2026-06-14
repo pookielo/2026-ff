@@ -162,6 +162,30 @@ svg { width:100%; max-width:100%; min-width:0; height:auto; display:block; }
 .mock-side-panel { display:grid; gap:14px; min-width:0; }
 .mock-timer { display:inline-flex; align-items:center; justify-content:center; min-width:72px; border:1px solid var(--line); border-radius:999px; background:#f8fafc; padding:8px 12px; font-weight:850; }
 .mock-timer.running { border-color:var(--green); color:#065f46; background:#ecfdf5; }
+.auction-toolbar-compact { align-items:flex-start; }
+.auction-command-row { flex:1 1 520px; min-width:0; }
+.auction-settings-wrap { position:relative; flex:0 0 auto; }
+.auction-settings-toggle { list-style:none; display:inline-flex; align-items:center; justify-content:center; width:42px; min-height:40px; border:1px solid var(--line); border-radius:8px; background:#f8fafc; color:var(--ink); font-size:20px; font-weight:850; cursor:pointer; }
+.auction-settings-toggle::-webkit-details-marker { display:none; }
+.auction-settings-wrap[open] .auction-settings-toggle { border-color:var(--blue); background:#dbeafe; color:#1d4ed8; }
+.auction-settings-menu { position:absolute; left:0; top:calc(100% + 8px); z-index:35; width:min(820px, calc(100vw - 32px)); max-height:min(76vh, 620px); overflow:auto; border:1px solid var(--line); border-radius:8px; background:white; padding:10px; box-shadow:0 18px 44px rgba(15,23,42,.18); }
+.sr-only { position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0; }
+.market-calibration { border:1px solid var(--line); border-radius:8px; background:#f8fafc; margin:10px 0 12px; padding:0; }
+.market-calibration summary { cursor:pointer; padding:10px 12px; font-weight:850; list-style:none; }
+.market-calibration summary::-webkit-details-marker { display:none; }
+.market-calibration-body { border-top:1px solid #e2e8f0; padding:10px 12px; }
+.market-calibration .toolbar { margin-top:8px; }
+.par-sheet { margin:12px 0; border:1px solid var(--line); border-radius:8px; background:#f8fafc; overflow:hidden; }
+.par-sheet-head { display:flex; align-items:flex-start; justify-content:space-between; gap:10px; padding:10px; background:#eef2f7; }
+.par-sheet-head strong { display:block; }
+.par-sheet-head span { color:var(--muted); font-size:12px; }
+.par-table { display:grid; }
+.par-row { display:grid; grid-template-columns:72px repeat(4, minmax(58px, 1fr)); gap:8px; align-items:center; padding:8px 10px; border-top:1px solid #e2e8f0; font-size:12px; }
+.par-row.header { color:var(--muted); font-weight:850; text-transform:uppercase; background:#f8fafc; }
+.par-row strong { font-size:14px; }
+.par-delta.over { color:#b91c1c; font-weight:850; }
+.par-delta.under { color:#047857; font-weight:850; }
+.par-delta.even { color:#475569; font-weight:850; }
 .slow-auction-layout { display:grid; grid-template-columns:minmax(740px, 1.45fr) minmax(330px, .7fr); gap:14px; align-items:start; }
 .slow-lot-grid { display:grid; grid-template-columns:repeat(auto-fill, minmax(250px, 1fr)); gap:10px; max-height:760px; overflow:auto; padding-right:2px; }
 .slow-topbar { position:sticky; top:0; z-index:24; display:grid; grid-template-columns:auto minmax(360px, 1fr); gap:12px; align-items:center; margin:0 0 10px; padding:10px 12px; border:1px solid var(--line); border-radius:8px; background:rgba(255,255,255,.96); box-shadow:0 8px 24px rgba(15,23,42,.08); backdrop-filter:blur(8px); }
@@ -208,7 +232,7 @@ svg { width:100%; max-width:100%; min-width:0; height:auto; display:block; }
 	#teamY2Table th:nth-child(2), #teamY2Table td:nth-child(2) { left:62px; width:220px; min-width:220px; max-width:220px; box-shadow:10px 0 12px -12px rgba(15,23,42,.55); }
 }
 @media (max-width: 1200px) { .mock-grid, .mock-draft-layout, .slow-auction-layout { grid-template-columns:1fr; } .mock-board { grid-template-columns:repeat(3, minmax(120px, 1fr)); } .slow-topbar { grid-template-columns:1fr; } .strategy-panel, .tier-drop-grid { grid-template-columns:repeat(2, minmax(180px, 1fr)); } }
-@media (max-width: 900px) { main { padding:8px 10px 28px; } .tabs { position:sticky; top:0; z-index:30; background:rgba(245,247,251,.96); backdrop-filter:blur(8px); margin:0 -2px 10px; padding:8px 0 6px; } .grid { grid-template-columns:1fr; } .card { padding:12px; } input[type=search] { min-width:100%; max-width:none; } .tabs, .subtabs { flex-wrap:nowrap; overflow-x:auto; padding-bottom:4px; -webkit-overflow-scrolling:touch; } .tab, .subtab { white-space:nowrap; font-size:13px; padding:8px 10px; } .toolbar { gap:8px; } table { font-size:12px; min-width:880px; } th, td { padding:7px; } svg { min-width:0; } .table-wrap { max-height:none; -webkit-overflow-scrolling:touch; } .current-auction { padding:12px; } .winning-bid { align-items:flex-start; flex-direction:column; } .winning-bid em { text-align:left; } .strategy-panel { grid-template-columns:1fr 1fr; } #mockAuction > .card > .toolbar, #slowAuction > .card > .toolbar { position:sticky; bottom:0; z-index:25; background:rgba(255,255,255,.97); border:1px solid var(--line); border-radius:8px; padding:8px; box-shadow:0 -8px 24px rgba(15,23,42,.08); } .slow-lot-grid { max-height:none; } }
+@media (max-width: 900px) { main { padding:8px 10px 28px; } .tabs { position:sticky; top:0; z-index:30; background:rgba(245,247,251,.96); backdrop-filter:blur(8px); margin:0 -2px 10px; padding:8px 0 6px; } .grid { grid-template-columns:1fr; } .card { padding:12px; } input[type=search] { min-width:100%; max-width:none; } .tabs, .subtabs { flex-wrap:nowrap; overflow-x:auto; padding-bottom:4px; -webkit-overflow-scrolling:touch; } .tab, .subtab { white-space:nowrap; font-size:13px; padding:8px 10px; } .toolbar { gap:8px; } table { font-size:12px; min-width:880px; } th, td { padding:7px; } svg { min-width:0; } .table-wrap { max-height:none; -webkit-overflow-scrolling:touch; } .current-auction { padding:12px; } .winning-bid { align-items:flex-start; flex-direction:column; } .winning-bid em { text-align:left; } .strategy-panel { grid-template-columns:1fr 1fr; } #mockAuction > .card > .toolbar, #slowAuction > .card > .toolbar { position:sticky; bottom:0; z-index:25; background:rgba(255,255,255,.97); border:1px solid var(--line); border-radius:8px; padding:8px; box-shadow:0 -8px 24px rgba(15,23,42,.08); } .auction-settings-menu { left:auto; right:0; width:calc(100vw - 28px); } .slow-lot-grid { max-height:none; } }
 @media (max-width: 520px) { input, select, button { font-size:13px; min-height:36px; } .toolbar { gap:7px; } .toolbar select, .toolbar button, .age-range-filter, .inline-control { flex:1 1 140px; } .inline-control input, .inline-control select { width:100%; min-width:0; } .range-row input[type=range] { width:74px; } .card h2 { font-size:18px; } .scoring-settings { gap:7px; padding:9px; } .scoring-settings strong { flex-basis:100%; padding-bottom:0; } .scoring-settings input { width:74px; font-size:12px; min-height:34px; } table { font-size:11px; min-width:760px; } th, td { padding:6px; } #cheatsTable { min-width:860px; } #mockPlayerTable, #slowPlayerTable { min-width:760px; } #teamY1Table, #teamY2Table { min-width:1260px; } .metric-grid, .mock-board, .current-auction .metric-grid, .strategy-panel, .tier-drop-grid { grid-template-columns:1fr 1fr; } .metric, .strategy-card { padding:8px; } .metric strong, .strategy-card strong { font-size:17px; } .current-auction h3 { font-size:22px; } .current-auction .metric { padding:9px; } .current-auction .metric strong { font-size:18px; } .mock-board-grid { grid-template-columns:72px repeat(12, minmax(132px, 1fr)); min-width:1656px; } .mock-slot-head, .mock-team-head, .mock-slot-label, .mock-roster-cell { min-height:46px; } .slow-lot { min-height:0; } .slow-lot-controls { grid-template-columns:1fr 1fr; } .tier-drop-row summary { grid-template-columns:1fr; } .tier-drop-score { text-align:left; } .tier-player-list { padding-left:10px; } }
 @media (max-width: 430px) and (orientation: portrait) { table { font-size:10.5px; } th, td { padding:5px; } #cheatsTable { min-width:820px; } }
 </style>
@@ -239,6 +263,7 @@ const OPTIMIZER_MINIMUMS = { QB:3, RB:3, WR:1, TE:2 };
 const OPTIMIZER_TARGETS = { QB:3, TE:3 };
 const OPTIMIZER_POSITION_CAPS = { QB:4, TE:3 };
 const OPTIMIZER_MIX_IDS = { QB:'optimizerMixQB', RB:'optimizerMixRB', WR:'optimizerMixWR', TE:'optimizerMixTE' };
+const MARKET_CONTROL_IDS = ['marketPreset','marketScale','marketQB','marketRB','marketWR','marketTE'];
 const OPTIMIZER_DEFAULT_MIX = { QB:1, RB:1, WR:1, TE:1 };
 const OPTIMIZER_FOCUS_CONFIG = {
 	balanced:{label:'Balanced', mix:{QB:1, RB:1, WR:1, TE:1}, targets:{QB:3, RB:3, TE:3}, caps:{QB:4, TE:3}, order:['QB','TE','QB','RB','TE','QB','RB','TE','RB','WR'], pointWeight:{}, scoreBonus:{}},
@@ -634,7 +659,7 @@ const state = { sorts: new Map(), cheatTierColor: '', optimizer:null, mock:null,
 let mockClockId = null, slowClockId = null;
 const DASHBOARD_STORAGE_KEY = 'rspDynastyDashboardState:v1';
 const DASHBOARD_STORAGE_VERSION = 1;
-const DASHBOARD_CONTROL_IDS = ['playerSearch','posFilter','teamFilter','filteredTopLimit','rankMode','cheatSearch','buildFilter','cheatPosFilter','harmonMarketFilter','cheatAgeMin','cheatAgeMax','optimizerPremium','optimizerGoal','optimizerTierMax','optimizerFocus','optimizerPreference','optimizerShape','optimizerAgeCap','optimizerBudget','optimizerMixQB','optimizerMixRB','optimizerMixWR','optimizerMixTE','mockPlayerSearch','mockPosFilter','mockShowDrafted','mockNominationSeconds','mockResetSeconds','slowPlayerSearch','slowPosFilter','slowShowDrafted','slowNominationCount','slowNominationMinutes','slowNominationUnit','slowBidMinutes','slowBidUnit','slowResetMinutes','slowResetUnit','teamY1Search','teamY1Team','teamY1Pos','teamY2Search','teamY2Team','teamY2Pos','histSearch','histTeam', ...Object.keys(DEFAULT_SCORING)];
+const DASHBOARD_CONTROL_IDS = ['playerSearch','posFilter','teamFilter','filteredTopLimit','rankMode','cheatSearch','buildFilter','cheatPosFilter','harmonMarketFilter','cheatAgeMin','cheatAgeMax','optimizerPremium','optimizerGoal','optimizerTierMax','optimizerFocus','optimizerPreference','optimizerShape','optimizerAgeCap','optimizerBudget','optimizerMixQB','optimizerMixRB','optimizerMixWR','optimizerMixTE', ...MARKET_CONTROL_IDS, 'mockPlayerSearch','mockPosFilter','mockShowDrafted','mockNominationSeconds','mockResetSeconds','slowPlayerSearch','slowPosFilter','slowShowDrafted','slowNominationCount','slowNominationMinutes','slowNominationUnit','slowBidMinutes','slowBidUnit','slowResetMinutes','slowResetUnit','teamY1Search','teamY1Team','teamY1Pos','teamY2Search','teamY2Team','teamY2Pos','histSearch','histTeam', ...Object.keys(DEFAULT_SCORING)];
 let autoSaveReady = false, isRestoringState = false, saveTimer = null;
 function rawFmt(v) { if (v === null || v === undefined || v === '') return ''; if (typeof v === 'number') return Number.isInteger(v) ? String(v) : v.toFixed(2).replace(/\.00$/, ''); return String(v); }
 function fmt(v, type) { if (v === null || v === undefined || v === '') return ''; const n = Number(v); if (type === 'money' && !Number.isNaN(n)) return `$${Math.round(n)}`; if (type === 'pct' && !Number.isNaN(n)) return `${(n*100).toFixed(1)}%`; if (type === 'int' && !Number.isNaN(n)) return String(Math.round(n)); if (!Number.isNaN(n) && typeof v === 'number') return Number.isInteger(v) ? String(v) : v.toFixed(type === 'rate' ? 2 : 1).replace(/\.0$/, ''); return String(v); }
@@ -866,10 +891,10 @@ function auctionPriceBook() {
 function auctionValues() { const values = new Map(); auctionPriceBook().forEach((info, key) => values.set(key, info.value)); return values; }
 function auctionInfoFor(row) { return auctionPriceBook().get(rankKey(row)) || {value:0, raw:0, auctionTier:'', points:n(row.ppr), tierIndex:8, positionRank:''}; }
 function auctionValueFor(row) { return auctionInfoFor(row).value || 0; }
-function withPlayerMetadata(row) { const meta = playerCheatMeta().get(rankKey(row)) || {}, auction = auctionInfoFor(row), bidSignals = meta.bidSignals || []; return {...row, auction_value:auction.value, auction_raw:auction.raw, auction_tier:auction.auctionTier, auction_points:auction.points, price_5:Math.ceil(auction.value * 1.05), price_10:Math.ceil(auction.value * 1.1), bid_signals:bidSignals, bid_signal:bidSignalSortValue(bidSignals), comment:row.comment || meta.comment || meta.notes || ''}; }
-function withCheatMetadata(row) { const meta = playerCheatMeta().get(rankKey(row)) || {}, auction = auctionInfoFor(row), bidSignals = meta.bidSignals || []; return {...row, auction_value:auction.value, auction_raw:auction.raw, auction_tier:auction.auctionTier, auction_points:auction.points, price_5:Math.ceil(auction.value * 1.05), price_10:Math.ceil(auction.value * 1.1), bid_signals:bidSignals, bid_signal:bidSignalSortValue(bidSignals), commentary:row.commentary || meta.comment || ''}; }
+function withPlayerMetadata(row) { const meta = playerCheatMeta().get(rankKey(row)) || {}, auction = calibratedAuctionInfo(row), bidSignals = meta.bidSignals || []; return {...row, auction_value:auction.value, auction_model_value:auction.modelValue, auction_market_multiplier:auction.marketMultiplier, auction_raw:auction.raw, auction_tier:auction.auctionTier, auction_points:auction.points, price_5:Math.ceil(auction.value * 1.05), price_10:Math.ceil(auction.value * 1.1), bid_signals:bidSignals, bid_signal:bidSignalSortValue(bidSignals), comment:row.comment || meta.comment || meta.notes || ''}; }
+function withCheatMetadata(row) { const meta = playerCheatMeta().get(rankKey(row)) || {}, auction = calibratedAuctionInfo(row), bidSignals = meta.bidSignals || []; return {...row, auction_value:auction.value, auction_model_value:auction.modelValue, auction_market_multiplier:auction.marketMultiplier, auction_raw:auction.raw, auction_tier:auction.auctionTier, auction_points:auction.points, price_5:Math.ceil(auction.value * 1.05), price_10:Math.ceil(auction.value * 1.1), bid_signals:bidSignals, bid_signal:bidSignalSortValue(bidSignals), commentary:row.commentary || meta.comment || ''}; }
 function auctionPool() {
-	const signature = Object.values(scoringSettings()).join('|');
+	const signature = Object.values(scoringSettings()).join('|') + '|' + marketCalibrationSignature();
 	if (auctionPool.cache?.signature === signature) return auctionPool.cache.rows;
 	const seen = new Map();
 	DATA.players.map(withPlayerMetadata).forEach(row => {
@@ -911,6 +936,78 @@ function ensureOptimizerTierControls() {
 	const premium = document.getElementById('optimizerPremium')?.closest('label');
 	if (!premium || document.getElementById('optimizerGoal')) return;
 	premium.insertAdjacentHTML('afterend', '<label class="inline-control">Goal<select id="optimizerGoal"><option value="points" selected>Projected points</option><option value="tiers">Top tiers</option></select></label><label class="inline-control">Tier max<select id="optimizerTierMax"><option value="1">Tier 1</option><option value="2" selected>Tiers 1-2</option><option value="3">Tiers 1-3</option><option value="4">Tiers 1-4</option></select></label>');
+}
+function ensureMarketCalibrationControls() {
+	if (document.getElementById('marketCalibration')) return;
+	const card = document.querySelector('#auctionBuilder > .card'), summary = document.getElementById('optimizerSummary');
+	if (!card || !summary) return;
+	const details = document.createElement('details');
+	details.id = 'marketCalibration';
+	details.className = 'market-calibration';
+	details.innerHTML = `<summary>Value Calibration</summary><div class="market-calibration-body"><p class="small">Use this to line the dashboard up with the room. The model value stays as the internal baseline, then these multipliers create the live bid values used by tables, bid guidance, bots, and the optimizer.</p><div class="toolbar"><label class="inline-control">Preset<select id="marketPreset"><option value="model" selected>Model values</option><option value="soft">Soft room 85%</option><option value="low">Low site prices 75%</option><option value="custom">Custom</option></select></label><label class="inline-control">All<input id="marketScale" type="number" min="0.5" max="1.3" step="0.05" value="1"></label><label class="inline-control">QB<input id="marketQB" type="number" min="0.5" max="1.4" step="0.05" value="1"></label><label class="inline-control">RB<input id="marketRB" type="number" min="0.5" max="1.4" step="0.05" value="1"></label><label class="inline-control">WR<input id="marketWR" type="number" min="0.5" max="1.4" step="0.05" value="1"></label><label class="inline-control">TE<input id="marketTE" type="number" min="0.5" max="1.4" step="0.05" value="1"></label></div></div>`;
+	card.insertBefore(details, summary);
+}
+function marketNumber(id, fallback=1) {
+	const value = Number(document.getElementById(id)?.value);
+	return Math.max(0.5, Math.min(1.4, Number.isFinite(value) ? value : fallback));
+}
+function marketCalibration() {
+	const scale = marketNumber('marketScale', 1);
+	return {scale, positions:{QB:marketNumber('marketQB', 1), RB:marketNumber('marketRB', 1), WR:marketNumber('marketWR', 1), TE:marketNumber('marketTE', 1)}};
+}
+function marketCalibrationSignature() {
+	const c = marketCalibration();
+	return [c.scale, c.positions.QB, c.positions.RB, c.positions.WR, c.positions.TE].map(v => rawFmt(v)).join('|');
+}
+function applyMarketPreset() {
+	const preset = document.getElementById('marketPreset')?.value || 'model';
+	const values = {
+		model:{marketScale:1, marketQB:1, marketRB:1, marketWR:1, marketTE:1},
+		soft:{marketScale:0.85, marketQB:0.9, marketRB:0.85, marketWR:0.85, marketTE:0.9},
+		low:{marketScale:0.75, marketQB:0.78, marketRB:0.75, marketWR:0.75, marketTE:0.82}
+	}[preset];
+	if (!values) return;
+	Object.entries(values).forEach(([id, value]) => { const el = document.getElementById(id); if (el) el.value = value; });
+}
+function refreshMarketValues() {
+	state.optimizer = null;
+	auctionPool.cache = null;
+	renderCurrentTables();
+}
+function markMarketCustomAndRefresh() {
+	const preset = document.getElementById('marketPreset');
+	if (preset) preset.value = 'custom';
+	refreshMarketValues();
+}
+function calibratedAuctionInfo(row, auction=auctionInfoFor(row)) {
+	const c = marketCalibration(), multiplier = c.scale * (c.positions[row.position] || 1);
+	const value = auction.value ? Math.max(1, Math.round(auction.value * multiplier)) : 0;
+	return {...auction, modelValue:auction.value, value, marketMultiplier:multiplier};
+}
+function setupAuctionSettingsPanel(panelId, settingsIds, label='Auction settings') {
+	const toolbar = document.querySelector(`#${panelId} > .card > .toolbar`);
+	if (!toolbar || toolbar.dataset.settingsWrapped) return;
+	const settings = new Set(settingsIds);
+	const nodes = [...toolbar.children];
+	const details = document.createElement('details');
+	details.className = 'auction-settings-wrap';
+	details.innerHTML = `<summary class="auction-settings-toggle" title="${escapeHtml(label)}"><span aria-hidden="true">&#9881;</span><span class="sr-only">${escapeHtml(label)}</span></summary><div class="auction-settings-menu toolbar"></div>`;
+	const menu = details.querySelector('.auction-settings-menu');
+	const commands = document.createElement('div');
+	commands.className = 'auction-command-row toolbar';
+	nodes.forEach(node => {
+		const match = node.id && settings.has(node.id);
+		const childMatch = [...settings].some(id => node.querySelector?.(`#${id}`));
+		(match || childMatch ? menu : commands).appendChild(node);
+	});
+	toolbar.textContent = '';
+	toolbar.classList.add('auction-toolbar-compact');
+	toolbar.append(details, commands);
+	toolbar.dataset.settingsWrapped = 'true';
+}
+function setupAuctionSettingsPanels() {
+	setupAuctionSettingsPanel('mockAuction', ['startMock','mockClockToggle','mockNominationSeconds','mockResetSeconds','mockAutoOne','mockAutoTen','mockBotRound','mockPass'], 'Fast auction settings');
+	setupAuctionSettingsPanel('slowAuction', ['startSlow','slowFillNominations','slowClockToggle','slowNominationCount','slowNominationMinutes','slowNominationUnit','slowBidMinutes','slowBidUnit','slowResetMinutes','slowResetUnit','slowBotBids','slowAdvanceFive','slowResolveExpired'], 'Slow auction settings');
 }
 function readOptimizerGoal() { const value = document.getElementById('optimizerGoal')?.value || 'points'; return value === 'tiers' ? 'tiers' : 'points'; }
 function readOptimizerTierMax() { const value = Number(document.getElementById('optimizerTierMax')?.value || 2); return Math.max(1, Math.min(4, Number.isFinite(value) ? value : 2)); }
@@ -1488,10 +1585,39 @@ function renderMockTeams(m) {
 	root.querySelectorAll('[data-team-id]').forEach(tile => tile.addEventListener('click', e => { if (e.target.closest('[data-profile-team-id]')) return; m.selectedTeamId = Number(tile.dataset.teamId); renderMockAuction(); }));
 	root.querySelectorAll('[data-profile-team-id]').forEach(select => select.addEventListener('change', e => { setMockTeamProfile(select.dataset.profileTeamId, select.value); renderMockAuction(); }));
 }
+function ensureParSheetRoot(id, anchor) {
+	let root = document.getElementById(id);
+	if (root) return root;
+	if (!anchor?.parentElement) return null;
+	root = document.createElement('div');
+	root.id = id;
+	root.className = 'par-sheet';
+	anchor.insertAdjacentElement('afterend', root);
+	return root;
+}
+function parPositionTotals(players=[], key='buy_price') {
+	return ['QB','RB','WR','TE'].reduce((totals, pos) => {
+		totals[pos] = players.filter(p => p.position === pos).reduce((sum, p) => sum + n(p[key] ?? p.paid ?? p.auction_value), 0);
+		return totals;
+	}, {});
+}
+function renderParSheet(root, team, commitments=[]) {
+	if (!root || !team) return;
+	const ideal = buildOptimizedTeam(), idealTotals = parPositionTotals(ideal.players, 'buy_price'), spentTotals = parPositionTotals(team.roster || [], 'paid');
+	const committedTotals = parPositionTotals(commitments.map(item => ({...item.player, paid:item.currentBid})), 'paid');
+	const rows = ['QB','RB','WR','TE'].map(pos => {
+		const idealValue = Math.round(idealTotals[pos] || 0), spent = Math.round(spentTotals[pos] || 0), committed = Math.round(committedTotals[pos] || 0), actual = spent + committed, delta = actual - idealValue;
+		const deltaClass = delta > 0 ? 'over' : delta < 0 ? 'under' : 'even';
+		const deltaText = delta > 0 ? `+$${delta}` : delta < 0 ? `-$${Math.abs(delta)}` : '$0';
+		return `<div class="par-row"><strong>${pos}</strong><span>$${idealValue}</span><span>$${spent}</span><span>$${committed}</span><span class="par-delta ${deltaClass}">${deltaText}</span></div>`;
+	}).join('');
+	root.innerHTML = `<div class="par-sheet-head"><div><strong>Par Sheet</strong><span>Ideal spend from current Best Team settings</span></div><span class="small">${escapeHtml(team.name)}</span></div><div class="par-table"><div class="par-row header"><span>Pos</span><span>Par</span><span>Spent</span><span>Live</span><span>+/-</span></div>${rows}</div>`;
+}
 function renderMockSelectedTeam(m) {
 	const team = m.teams.find(t => t.id === m.selectedTeamId) || m.teams[0], summary = document.getElementById('mockHumanTeam'), roster = document.getElementById('mockHumanRoster');
 	if (!summary || !roster) return;
 	summary.innerHTML = [renderMetric('Team', team.name), renderMetric('Budget', '$' + team.budget), renderMetric('Max bid', '$' + mockTeamMaxBid(team)), renderMetric('Players', `${team.roster.length}/${AUCTION_CONFIG.rosterSpots}`)].join('');
+	renderParSheet(ensureParSheetRoot('mockParSheet', summary), team, m.current && m.highBidder === team.id ? [{player:m.current, currentBid:m.currentBid}] : []);
 	roster.innerHTML = assignRosterSlots(team.roster).map(slot => renderRosterSlot(slot, 'paid')).join('');
 }
 function renderMockDraftBoard(m) {
@@ -1915,6 +2041,7 @@ function renderSlowSelectedTeam(m) {
 	const team = m.teams.find(t => t.id === m.selectedTeamId) || m.teams[0], summary = document.getElementById('slowHumanTeam'), roster = document.getElementById('slowHumanRoster');
 	if (!summary || !roster) return;
 	summary.innerHTML = [renderMetric('Team', team.name), renderMetric('Budget', '$' + team.budget), renderMetric('Committed', '$' + slowTeamCommitted(team)), renderMetric('Max bid', '$' + slowTeamMaxBid(team)), renderMetric('Players', `${team.roster.length}/${AUCTION_CONFIG.rosterSpots}`)].join('');
+	renderParSheet(ensureParSheetRoot('slowParSheet', summary), team, slowTeamCommittedLots(team));
 	roster.innerHTML = assignRosterSlots(team.roster).map(slot => renderRosterSlot(slot, 'paid')).join('');
 }
 function renderSlowResults(m) {
@@ -2027,6 +2154,8 @@ const historyCols = [['team','Team'],['team_name','Team Name'],['pass_att','Pass
 function renderCurrentTables() { const pr=playerRows(); renderTable('playersTable', pr, playerCols); const scoredPlayers = withPlayerChartScore(pr); barChart('chartFilteredPpr', [...scoredPlayers].sort((a,b)=>cmp(a,b,'chart_fpts',-1)).map(r=>({...r,label:`${r.player} (${r.position}${r.team ? ' '+r.team : ''})`})), 'label', 'chart_fpts', '#2563eb', filteredTopLimit()); countChart('chartFilteredPos', pr, 'position', '#0f9f6e'); updateCheatControls(); updateCheatModeNote(); updateCheatAgeRangeLabel(); renderTierLegend(); renderTierDropOffs(); const cr=cheatRows(); renderTable('cheatsTable', cr, cheatColsForMode()); renderTable('teamY1Table', teamRows('year1'), projectionCols); renderTable('teamY2Table', teamRows('year2'), projectionCols); renderTable('historyTable', histRows(), historyCols); renderOptimizer(state.optimizer || buildOptimizedTeam()); renderMockAuction(); renderSlowAuction(); scheduleAutoSave(); }
 function init() {
 	ensureOptimizerTierControls();
+	ensureMarketCalibrationControls();
+	setupAuctionSettingsPanels();
 	fillTabs();
 	renderCharts();
 	renderTierLegend();
@@ -2050,6 +2179,8 @@ function init() {
 	document.getElementById('resetScoring').addEventListener('click',()=>{ Object.entries(DEFAULT_SCORING).forEach(([id,value])=>document.getElementById(id).value=value); state.sorts.set('teamY1Table', DEFAULT_SORTS.teamY1Table); state.sorts.set('teamY2Table', DEFAULT_SORTS.teamY2Table); state.optimizer = null; renderCurrentTables(); });
 	document.getElementById('resetPlayers').addEventListener('click',()=>{ document.getElementById('playerSearch').value=''; document.getElementById('posFilter').value=''; document.getElementById('teamFilter').value=''; renderCurrentTables(); });
 	['optimizerPremium','optimizerGoal','optimizerTierMax','optimizerBudget','optimizerPreference','optimizerShape','optimizerAgeCap'].forEach(id=>['input','change'].forEach(eventName=>document.getElementById(id).addEventListener(eventName, refreshOptimizer)));
+	document.getElementById('marketPreset').addEventListener('change',()=>{ applyMarketPreset(); refreshMarketValues(); });
+	['marketScale','marketQB','marketRB','marketWR','marketTE'].forEach(id=>['input','change'].forEach(eventName=>document.getElementById(id).addEventListener(eventName, markMarketCustomAndRefresh)));
 	document.getElementById('optimizerFocus').addEventListener('change',()=>{ const key = readOptimizerFocus(); if (key !== 'custom') setOptimizerMixValues(OPTIMIZER_FOCUS_CONFIG[key]?.mix || OPTIMIZER_DEFAULT_MIX); refreshOptimizer(); });
 	Object.values(OPTIMIZER_MIX_IDS).forEach(id=>['input','change'].forEach(eventName=>document.getElementById(id).addEventListener(eventName,()=>{ document.getElementById('optimizerFocus').value = 'custom'; refreshOptimizer(); })));
 	['mockPlayerSearch','mockPosFilter','mockShowDrafted'].forEach(id=>document.getElementById(id).addEventListener('input', renderMockAuction));
