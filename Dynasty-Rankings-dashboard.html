@@ -221,7 +221,7 @@ svg { width:100%; max-width:100%; min-width:0; height:auto; display:block; }
 <section id="players" class="panel"><div class="toolbar"><input id="playerSearch" type="search" placeholder="Search players, teams, positions, comments"><select id="posFilter"><option value="">All positions</option></select><select id="teamFilter"><option value="">All teams</option></select><button id="resetPlayers">Reset</button></div><p class="small">Upside is the source ceiling score; Downside is the source miss-risk score. Higher numbers mean more of that trait. Auction values assume 12 teams, $200 budgets, superflex, PPR, and TE premium. Bid+ means an analyst target signal; Bid++ means a stronger signal such as Harmon SUPER BUY or multiple target signals. Hover or click a Bid marker for the source.</p><div class="grid"><div class="card"><h2>Filtered Top Fpts</h2><div class="toolbar"><select id="filteredTopLimit"><option value="10">Top 10</option><option value="20" selected>Top 20</option><option value="50">Top 50</option><option value="100">Top 100</option></select></div><div id="chartFilteredPpr"></div></div><div class="card"><h2>Filtered Position Mix</h2><div id="chartFilteredPos"></div></div></div><div class="table-wrap"><table id="playersTable"></table></div></section>
 <section id="cheatsheets" class="panel"><div class="toolbar"><input id="cheatSearch" type="search" placeholder="Search cheatsheets"><select id="rankMode"><option value="waldman">Waldman ranks</option><option value="kyle">Kyle ranks</option><option value="fantasypros">FantasyPros ranks</option><option value="harmon">Harmon WR ranks</option><option value="combined">Combined rank</option><option value="compare">Differences</option></select><select id="buildFilter"><option value="">All builds</option><option>Win-Now</option><option>Long Build</option></select><select id="cheatPosFilter"><option value="">All positions</option></select><select id="harmonMarketFilter"><option value="">All Harmon markets</option></select><label class="age-range-filter">Age <span id="cheatAgeRangeLabel">20-50</span><span class="range-row"><input id="cheatAgeMin" type="range" min="20" max="50" value="20"><input id="cheatAgeMax" type="range" min="20" max="50" value="50"></span></label></div><p class="small" id="cheatModeNote">Waldman mode keeps workbook tier colors. Kyle mode uses the supplied rankings and tier shading. FantasyPros mode uses the imported 2026 dynasty ECR CSV.</p><div class="legend" id="tierLegend"></div><div class="table-wrap"><table id="cheatsTable"></table></div></section>
 
-<section id="auctionBuilder" class="panel"><div class="card"><h2>Best Team Builder</h2><div class="toolbar"><label class="inline-control">Premium<select id="optimizerPremium"><option value="0">At bid</option><option value="0.05" selected>5% over</option><option value="0.1">10% over</option><option value="0.15">15% over</option></select></label><label class="inline-control">Build focus<select id="optimizerFocus"><option value="balanced" selected>Balanced</option><option value="qb">Better QBs</option><option value="rb">Better RBs</option><option value="wr">Better WRs</option><option value="te">Better TEs</option><option value="qb_wr">QB + WR</option><option value="rb_wr">RB + WR</option><option value="rb_te">RB + TE</option><option value="custom">Custom Mix</option></select></label><label class="inline-control">Preferred<select id="optimizerPreference"><option value="none" selected>Value only</option><option value="waldman_win">Waldman Win Now</option><option value="waldman_long">Waldman Long-Term</option><option value="waldman">Waldman Overall</option><option value="harmon">Harmon Buy/Super Buy</option><option value="kyle">Kyle Suggestions</option><option value="fantasypros">FantasyPros Suggestions</option><option value="common">Common Preferred</option></select></label><label class="inline-control">Budget<input id="optimizerBudget" type="number" min="25" max="200" step="1" value="200"></label><button id="runOptimizer" type="button">Build team</button></div><div class="toolbar mix-toolbar"><label class="inline-control">QB mix<input id="optimizerMixQB" type="number" min="0.5" max="2" step="0.1" value="1"></label><label class="inline-control">RB mix<input id="optimizerMixRB" type="number" min="0.5" max="2" step="0.1" value="1"></label><label class="inline-control">WR mix<input id="optimizerMixWR" type="number" min="0.5" max="2" step="0.1" value="1"></label><label class="inline-control">TE mix<input id="optimizerMixTE" type="number" min="0.5" max="2" step="0.1" value="1"></label></div><p class="small">Builds a 25-player roster using tier-banded bid values plus the selected premium. Starters use 1 QB, 1 RB, 1 WR, 1 TE, 5 Flex, and 1 Superflex. The builder requires 3 QBs, 3 RBs, and 2 TEs, with a soft preference for a third TE. Build focus presets set the mix values; Preferred biases the optimizer toward Win Now, Long-Term, Waldman, Harmon, Kyle, FantasyPros, or commonly preferred players.</p><div id="optimizerSummary" class="metric-grid"></div><div id="optimizerByPosition" class="position-list"></div><div id="optimizerRoster" class="roster-slots"></div></div></section>
+<section id="auctionBuilder" class="panel"><div class="card"><h2>Best Team Builder</h2><div class="toolbar"><label class="inline-control">Premium<select id="optimizerPremium"><option value="0">At bid</option><option value="0.05" selected>5% over</option><option value="0.1">10% over</option><option value="0.15">15% over</option></select></label><label class="inline-control">Build focus<select id="optimizerFocus"><option value="balanced" selected>Balanced</option><option value="qb">Better QBs</option><option value="rb">Better RBs</option><option value="wr">Better WRs</option><option value="te">Better TEs</option><option value="qb_wr">QB + WR</option><option value="rb_wr">RB + WR</option><option value="rb_te">RB + TE</option><option value="custom">Custom Mix</option></select></label><label class="inline-control">Preferred<select id="optimizerPreference"><option value="none" selected>Value only</option><option value="waldman_win">Waldman Win Now</option><option value="waldman_long">Waldman Long-Term</option><option value="waldman">Waldman Overall</option><option value="harmon">Harmon Buy/Super Buy</option><option value="kyle">Kyle Suggestions</option><option value="fantasypros">FantasyPros Suggestions</option><option value="common">Common Preferred</option></select></label><label class="inline-control">Shape<select id="optimizerShape"><option value="stars" selected>Stars + values</option><option value="balanced">Balanced spend</option><option value="breakout">Young breakouts</option></select></label><label class="inline-control">Age cap<select id="optimizerAgeCap"><option value="">No cap</option><option value="29">29 or younger</option><option value="27">27 or younger</option><option value="25">25 or younger</option></select></label><label class="inline-control">Budget<input id="optimizerBudget" type="number" min="25" max="200" step="1" value="200"></label><button id="runOptimizer" type="button">Build team</button></div><div class="toolbar mix-toolbar"><label class="inline-control">QB mix<input id="optimizerMixQB" type="number" min="0.5" max="2" step="0.1" value="1"></label><label class="inline-control">RB mix<input id="optimizerMixRB" type="number" min="0.5" max="2" step="0.1" value="1"></label><label class="inline-control">WR mix<input id="optimizerMixWR" type="number" min="0.5" max="2" step="0.1" value="1"></label><label class="inline-control">TE mix<input id="optimizerMixTE" type="number" min="0.5" max="2" step="0.1" value="1"></label></div><p class="small">Builds a 25-player roster using tier-banded bid values plus the selected premium. Shape controls whether the optimizer chases premium stars, balances spend, or leans into younger mid-priced breakout profiles. Age cap excludes players with known ages above the selected limit.</p><div id="optimizerSummary" class="metric-grid"></div><div id="optimizerByPosition" class="position-list"></div><div id="optimizerRoster" class="roster-slots"></div></div></section>
 <section id="mockAuction" class="panel"><div class="card"><h2>Fast Auction</h2><div class="toolbar"><button id="startMock" type="button">Start / Reset</button><button id="mockClockToggle" type="button">Start clock</button><span id="mockTimer" class="mock-timer">:30</span><label class="inline-control">Nom sec<input id="mockNominationSeconds" type="number" min="3" max="120" step="1" value="30"></label><label class="inline-control">Reset sec<input id="mockResetSeconds" type="number" min="3" max="120" step="1" value="10"></label><button id="mockAutoOne" type="button" title="Simulates one full nomination, bot bidding sequence, and sale award.">Sim 1 sale</button><button id="mockAutoTen" type="button" title="Repeats the full automated sale cycle ten times or until the draft cannot continue.">Sim 10 sales</button><button id="mockBotRound" type="button">Next nomination / bot bid</button><button id="mockPass" type="button">Pass</button><button id="mockBidPlus1" type="button">Bid +$1</button><button id="mockBidPlus5" type="button">Bid +$5</button><button id="mockBidValue" type="button">Bid to value</button><label class="inline-control">Bid<input id="mockCustomBid" type="number" min="1" max="200" step="1" value="1"></label><button id="mockBidCustom" type="button">Bid amount</button></div><p class="small">Click a team header or summary to inspect that roster. Bot profiles can be changed in Team Summary. Sim buttons complete one or ten full nomination-and-sale cycles. The board scrolls horizontally so you can compare every team at once.</p><div id="mockCurrent" class="current-auction"></div><div id="mockDraftBoard" class="mock-draft-board"></div></div><div class="mock-draft-layout"><div class="mock-stack"><div class="card"><h2>Team Summary</h2><div id="mockTeams" class="mock-board"></div></div><div class="card"><h2>Nomination Pool</h2><div class="toolbar"><input id="mockPlayerSearch" type="search" placeholder="Search auction pool"><select id="mockPosFilter"><option value="">All positions</option></select><label class="inline-control"><input id="mockShowDrafted" type="checkbox">Show drafted</label></div><div class="table-wrap mock-player-list"><table id="mockPlayerTable"></table></div></div></div><div class="mock-side-panel"><div class="card"><h2>Selected Team</h2><div id="mockHumanTeam" class="metric-grid"></div><div id="mockHumanRoster" class="roster-slots"></div></div><div class="card"><h2>Results</h2><div id="mockResults" class="result-log"></div></div></div></div></section>
 <section id="slowAuction" class="panel"><div class="card"><h2>Slow Auction</h2><div class="toolbar"><button id="startSlow" type="button">Start / Reset</button><button id="slowFillNominations" type="button">Fill nominations</button><button id="slowClockToggle" type="button">Start clock</button><span id="slowTimer" class="mock-timer">0 active</span><label class="inline-control">Active lots<input id="slowNominationCount" type="number" min="20" max="50" step="1" value="30"></label><label class="inline-control">Nom<input id="slowNominationMinutes" type="number" min="1" max="86400" step="1" value="30"><select id="slowNominationUnit"><option value="seconds">sec</option><option value="minutes" selected>min</option><option value="hours">hr</option></select></label><label class="inline-control">Bid<input id="slowBidMinutes" type="number" min="1" max="86400" step="1" value="720"><select id="slowBidUnit"><option value="seconds">sec</option><option value="minutes" selected>min</option><option value="hours">hr</option></select></label><label class="inline-control">Reset<input id="slowResetMinutes" type="number" min="1" max="86400" step="1" value="30"><select id="slowResetUnit"><option value="seconds">sec</option><option value="minutes" selected>min</option><option value="hours">hr</option></select></label><button id="slowBotBids" type="button">Bot bid round</button><button id="slowAdvanceFive" type="button">Advance 5 min</button><button id="slowResolveExpired" type="button">Resolve expired</button><button id="slowBidPlus1" type="button">Bid +$1</button><button id="slowBidPlus5" type="button">Bid +$5</button><button id="slowBidValue" type="button">Bid to value</button><label class="inline-control">Bid / max<input id="slowCustomBid" type="number" min="1" max="200" step="1" value="1"></label><button id="slowBidCustom" type="button">Bid amount</button><button id="slowMaxBid" type="button">Set max</button></div><p class="small">Modeled after slow auction drafts: many players can be auctioned simultaneously, every player has an independent timer, and expired lots award to the high bidder. Timer inputs can use seconds, minutes, or hours and clamp from 5 seconds to 24 hours. Fill nominations follows the nomination order, including bot teams. Use Set max to store a proxy bid: if another team bids below your ceiling, the mock auto-bids $1 higher on your behalf.</p><div id="slowSummary" class="metric-grid"></div><div id="slowNominationOrder" class="nomination-order"></div></div><div class="slow-auction-layout"><div class="mock-stack"><div class="card"><h2>Active Auctions</h2><div id="slowLots" class="slow-lot-grid"></div></div><div class="card"><h2>Nomination Pool</h2><div class="toolbar"><input id="slowPlayerSearch" type="search" placeholder="Search slow auction pool"><select id="slowPosFilter"><option value="">All positions</option></select><label class="inline-control"><input id="slowShowDrafted" type="checkbox">Show drafted</label></div><div class="table-wrap slow-pool-list"><table id="slowPlayerTable"></table></div></div></div><div class="mock-side-panel"><div class="card"><h2>Team Summary</h2><div id="slowTeams" class="mock-board"></div></div><div class="card"><h2>Selected Team</h2><div id="slowHumanTeam" class="metric-grid"></div><div id="slowHumanRoster" class="roster-slots"></div></div><div class="card"><h2>Results</h2><div id="slowResults" class="result-log"></div></div></div></div></section>
 
@@ -260,6 +260,11 @@ const OPTIMIZER_PREFERENCE_CONFIG = {
 	kyle:{label:'Kyle Suggestions'},
 	fantasypros:{label:'FantasyPros Suggestions'},
 	common:{label:'Common Preferred'}
+};
+const OPTIMIZER_SHAPE_CONFIG = {
+	stars:{label:'Stars + values', midMin:8, midMax:38, targetMid:0, midBonus:0, midNeedBonus:0, youngBonus:0, elitePenalty:0, cheapPenalty:0},
+	balanced:{label:'Balanced spend', midMin:8, midMax:38, targetMid:8, midBonus:24, midNeedBonus:3, youngBonus:12, elitePenalty:16, cheapPenalty:5},
+	breakout:{label:'Young breakouts', midMin:6, midMax:32, targetMid:11, midBonus:34, midNeedBonus:4, youngBonus:24, elitePenalty:24, cheapPenalty:9}
 };
 const AUCTION_REPLACEMENT_RANK = { QB:24, RB:36, WR:60, TE:18 };
 const AUCTION_POSITION_MULTIPLIER = { QB:1.18, RB:1.02, WR:1, TE:1.12 };
@@ -629,7 +634,7 @@ const state = { sorts: new Map(), cheatTierColor: '', optimizer:null, mock:null,
 let mockClockId = null, slowClockId = null;
 const DASHBOARD_STORAGE_KEY = 'rspDynastyDashboardState:v1';
 const DASHBOARD_STORAGE_VERSION = 1;
-const DASHBOARD_CONTROL_IDS = ['playerSearch','posFilter','teamFilter','filteredTopLimit','rankMode','cheatSearch','buildFilter','cheatPosFilter','harmonMarketFilter','cheatAgeMin','cheatAgeMax','optimizerPremium','optimizerGoal','optimizerTierMax','optimizerFocus','optimizerPreference','optimizerBudget','optimizerMixQB','optimizerMixRB','optimizerMixWR','optimizerMixTE','mockPlayerSearch','mockPosFilter','mockShowDrafted','mockNominationSeconds','mockResetSeconds','slowPlayerSearch','slowPosFilter','slowShowDrafted','slowNominationCount','slowNominationMinutes','slowNominationUnit','slowBidMinutes','slowBidUnit','slowResetMinutes','slowResetUnit','teamY1Search','teamY1Team','teamY1Pos','teamY2Search','teamY2Team','teamY2Pos','histSearch','histTeam', ...Object.keys(DEFAULT_SCORING)];
+const DASHBOARD_CONTROL_IDS = ['playerSearch','posFilter','teamFilter','filteredTopLimit','rankMode','cheatSearch','buildFilter','cheatPosFilter','harmonMarketFilter','cheatAgeMin','cheatAgeMax','optimizerPremium','optimizerGoal','optimizerTierMax','optimizerFocus','optimizerPreference','optimizerShape','optimizerAgeCap','optimizerBudget','optimizerMixQB','optimizerMixRB','optimizerMixWR','optimizerMixTE','mockPlayerSearch','mockPosFilter','mockShowDrafted','mockNominationSeconds','mockResetSeconds','slowPlayerSearch','slowPosFilter','slowShowDrafted','slowNominationCount','slowNominationMinutes','slowNominationUnit','slowBidMinutes','slowBidUnit','slowResetMinutes','slowResetUnit','teamY1Search','teamY1Team','teamY1Pos','teamY2Search','teamY2Team','teamY2Pos','histSearch','histTeam', ...Object.keys(DEFAULT_SCORING)];
 let autoSaveReady = false, isRestoringState = false, saveTimer = null;
 function rawFmt(v) { if (v === null || v === undefined || v === '') return ''; if (typeof v === 'number') return Number.isInteger(v) ? String(v) : v.toFixed(2).replace(/\.00$/, ''); return String(v); }
 function fmt(v, type) { if (v === null || v === undefined || v === '') return ''; const n = Number(v); if (type === 'money' && !Number.isNaN(n)) return `$${Math.round(n)}`; if (type === 'pct' && !Number.isNaN(n)) return `${(n*100).toFixed(1)}%`; if (type === 'int' && !Number.isNaN(n)) return String(Math.round(n)); if (!Number.isNaN(n) && typeof v === 'number') return Number.isInteger(v) ? String(v) : v.toFixed(type === 'rate' ? 2 : 1).replace(/\.0$/, ''); return String(v); }
@@ -925,6 +930,46 @@ function optimizerFocusConfig(key=readOptimizerFocus()) {
 }
 function readOptimizerPreference() { const key = document.getElementById('optimizerPreference')?.value || 'none'; return OPTIMIZER_PREFERENCE_CONFIG[key] ? key : 'none'; }
 function optimizerPreferenceConfig(key=readOptimizerPreference()) { return {...(OPTIMIZER_PREFERENCE_CONFIG[key] || OPTIMIZER_PREFERENCE_CONFIG.none), key}; }
+function readOptimizerShape() { const key = document.getElementById('optimizerShape')?.value || 'stars'; return OPTIMIZER_SHAPE_CONFIG[key] ? key : 'stars'; }
+function optimizerShapeConfig(key=readOptimizerShape()) { return {...(OPTIMIZER_SHAPE_CONFIG[key] || OPTIMIZER_SHAPE_CONFIG.stars), key}; }
+function readOptimizerAgeCap() {
+	const value = Number(document.getElementById('optimizerAgeCap')?.value || '');
+	return Number.isFinite(value) && value > 0 ? value : null;
+}
+function optimizerAgeCapLabel(cap=readOptimizerAgeCap()) { return cap ? `${cap} or younger` : 'No cap'; }
+function optimizerKnownAge(player) {
+	const age = Number(player?.age);
+	return Number.isFinite(age) && age > 0 ? age : null;
+}
+function optimizerAgeAllowed(player, cap=readOptimizerAgeCap()) {
+	const age = optimizerKnownAge(player);
+	return !cap || age === null || age <= cap;
+}
+function optimizerPriceBand(player, shape=optimizerShapeConfig()) {
+	const price = n(player?.buy_price ?? player?.auction_value);
+	if (price >= 45) return 'premium';
+	if (price >= (shape.midMin ?? 8) && price <= (shape.midMax ?? 38)) return 'mid';
+	if (price >= 4) return 'depth';
+	return 'cheap';
+}
+function optimizerBreakoutScore(player) {
+	const age = optimizerKnownAge(player);
+	const ageScore = age === null ? 0.25 : age <= 23 ? 1 : age <= 25 ? 0.86 : age <= 27 ? 0.58 : age <= 29 ? 0.32 : 0;
+	const upside = Math.max(0, Math.min(1, n(player?.upside) / 5));
+	const signal = player?.bid_signal === -2 ? 1 : player?.bid_signal === -1 ? 0.65 : 0;
+	const preference = Math.max(0, Math.min(1, n(player?.preference_score) / 55));
+	const tier = optimizerTierIndex(player);
+	const tierScore = tier <= 2 ? 0.56 : tier <= 4 ? 1 : tier <= 6 ? 0.72 : 0.35;
+	return Math.max(0, Math.min(1, (ageScore * 0.38) + (upside * 0.22) + (signal * 0.18) + (preference * 0.12) + (tierScore * 0.1)));
+}
+function optimizerShapePlayerInfo(player, shape=optimizerShapeConfig()) {
+	const band = optimizerPriceBand(player, shape), breakout = optimizerBreakoutScore(player);
+	let label = '';
+	if (shape.key !== 'stars' && band === 'mid' && breakout >= 0.64) label = 'breakout fit';
+	else if (shape.key !== 'stars' && band === 'mid') label = 'mid-price';
+	else if (shape.key !== 'stars' && band === 'premium') label = 'premium';
+	return {band, breakout, label};
+}
 function optimizerPreferenceRankSpan(pos) { return ({QB:36, RB:60, WR:72, TE:36}[pos] || 60); }
 function optimizerPreferenceRankScore(row, rank, strength=1, extra=0) {
 	const value = Number(rank);
@@ -978,6 +1023,7 @@ function rosterCounts(players) { return players.reduce((counts, p) => { counts[p
 function rosterMeetsMinimums(players) { const counts = rosterCounts(players); return Object.entries(OPTIMIZER_MINIMUMS).every(([pos, min]) => (counts[pos] || 0) >= min); }
 function rosterMeetsTargets(players, targets=OPTIMIZER_TARGETS) { const counts = rosterCounts(players); return Object.entries(targets).every(([pos, target]) => (counts[pos] || 0) >= target); }
 function rosterWithinPositionCaps(players, caps=OPTIMIZER_POSITION_CAPS) { const counts = rosterCounts(players); return Object.entries(caps).every(([pos, max]) => (counts[pos] || 0) <= max); }
+function optimizerBandCount(players, band, shape=optimizerShapeConfig()) { return players.filter(p => optimizerPriceBand(p, shape) === band).length; }
 function optimizerScore(player, selected, focus=optimizerFocusConfig()) {
 	const targets = focus.targets || OPTIMIZER_TARGETS, counts = rosterCounts(selected), count = counts[player.position] || 0, min = OPTIMIZER_MINIMUMS[player.position] || 0, target = targets[player.position] || min;
 	const need = count < min ? 1.28 : count < target ? 1.12 : 1;
@@ -993,7 +1039,15 @@ function optimizerScore(player, selected, focus=optimizerFocusConfig()) {
 	const tierBonus = tierGoal ? (insideTierTarget ? 190 - (tier * 30) : Math.max(0, 42 - (tier * 5))) : 0;
 	const tierValueBonus = tierGoal && insideTierTarget ? n(player.auction_value) * 1.65 : 0;
 	const costPenalty = tierGoal ? 0.44 : 0.7;
-	return ((pointScore + n(player.auction_value) * 2.4 + scarcity + signal + focusBonus + preferenceBonus + tierBonus + tierValueBonus) * need) - n(player.buy_price) * costPenalty;
+	const shape = focus.shape || optimizerShapeConfig('stars'), shapeInfo = optimizerShapePlayerInfo(player, shape);
+	const selectedPremium = selected.filter(p => optimizerPriceBand(p, shape) === 'premium').length;
+	const selectedMid = selected.filter(p => optimizerPriceBand(p, shape) === 'mid').length;
+	const midNeed = Math.max(0, (shape.targetMid || 0) - selectedMid);
+	const midBonus = shapeInfo.band === 'mid' ? (shape.midBonus || 0) + Math.min(24, midNeed * (shape.midNeedBonus || 0)) : 0;
+	const youngBonus = (shape.youngBonus || 0) * shapeInfo.breakout;
+	const premiumPenalty = shapeInfo.band === 'premium' ? (shape.elitePenalty || 0) * selectedPremium : 0;
+	const cheapPenalty = shapeInfo.band === 'cheap' ? (shape.cheapPenalty || 0) : 0;
+	return ((pointScore + n(player.auction_value) * 2.4 + scarcity + signal + focusBonus + preferenceBonus + tierBonus + tierValueBonus + midBonus + youngBonus) * need) - n(player.buy_price) * costPenalty - premiumPenalty - cheapPenalty;
 }
 function assignRosterSlots(players) {
 	const remaining = [...players].sort((a,b)=>n(b.auction_points)-n(a.auction_points));
@@ -1036,12 +1090,19 @@ function improveOptimizedTeam(selected, pool, budget, focus=optimizerFocusConfig
 	}
 	return best;
 }
-function buildOptimizedTeam(premium=readOptimizerPremium(), budget=readOptimizerBudget(), focusKey=readOptimizerFocus(), preferenceKey=readOptimizerPreference(), goal=readOptimizerGoal(), tierMax=readOptimizerTierMax()) {
+function buildOptimizedTeam(premium=readOptimizerPremium(), budget=readOptimizerBudget(), focusKey=readOptimizerFocus(), preferenceKey=readOptimizerPreference(), goal=readOptimizerGoal(), tierMax=readOptimizerTierMax(), shapeKey=readOptimizerShape(), ageCap=readOptimizerAgeCap()) {
 	const focus = optimizerFocusConfig(focusKey);
 	focus.goal = goal;
 	focus.tierMax = tierMax;
+	focus.shape = optimizerShapeConfig(shapeKey);
+	focus.ageCap = ageCap;
 	const preference = optimizerPreferenceConfig(preferenceKey);
-	const pool = auctionPool().map(p => { const pref = optimizerPreferenceFor(p, preference.key); return {...p, buy_price:adjustedAuctionPrice(p, premium), preference_score:pref.score, preference_label:pref.label}; }).filter(p => p.buy_price <= budget).sort((a,b)=>optimizerScore(b, [], focus) - optimizerScore(a, [], focus));
+	const pool = auctionPool().map(p => {
+		const pref = optimizerPreferenceFor(p, preference.key);
+		const priced = {...p, buy_price:adjustedAuctionPrice(p, premium), preference_score:pref.score, preference_label:pref.label};
+		const shapeInfo = optimizerShapePlayerInfo(priced, focus.shape);
+		return {...priced, shape_band:shapeInfo.band, shape_score:shapeInfo.breakout, shape_label:shapeInfo.label};
+	}).filter(p => p.buy_price <= budget && optimizerAgeAllowed(p, ageCap)).sort((a,b)=>optimizerScore(b, [], focus) - optimizerScore(a, [], focus));
 	const selected = [], picked = new Set();
 	let spent = 0;
 	const minFuturePrice = Math.max(1, Math.min(...pool.map(p => p.buy_price)));
@@ -1074,6 +1135,12 @@ function buildOptimizedTeam(premium=readOptimizerPremium(), budget=readOptimizer
 			if (!addBest(p => optimizerTierIndex(p) <= focus.tierMax && underPositionCap(p))) break;
 		}
 	}
+	if (focus.shape?.targetMid) {
+		const targetMid = Math.min(focus.shape.targetMid, AUCTION_CONFIG.rosterSpots - selected.length);
+		while (optimizerBandCount(selected, 'mid', focus.shape) < targetMid) {
+			if (!addBest(p => optimizerPriceBand(p, focus.shape) === 'mid' && underPositionCap(p))) break;
+		}
+	}
 	[...(focus.order || []), ...optimizerOrderForMix(focus.mix || OPTIMIZER_DEFAULT_MIX)].forEach(pos => {
 		const goal = Math.max(OPTIMIZER_MINIMUMS[pos] || 0, focus.targets[pos] || 0);
 		if ((rosterCounts(selected)[pos] || 0) < goal) addBest(p => p.position === pos);
@@ -1084,7 +1151,8 @@ function buildOptimizedTeam(premium=readOptimizerPremium(), budget=readOptimizer
 	while (selected.length < AUCTION_CONFIG.rosterSpots && addBest(()=>true)) {}
 	const improved = improveOptimizedTeam(selected, pool, budget, focus);
 	const cost = improved.reduce((sum, p) => sum + p.buy_price, 0), slots = assignRosterSlots(improved);
-	return {premium, budget, goal, goalLabel:goal === 'tiers' ? `${optimizerTierLabel(tierMax)} stack` : 'Projected points', tierMax, focus:focus.key, focusLabel:focus.label, preference:preference.key, preferenceLabel:preference.label, mix:focus.mix, cost, remaining:budget - cost, players:improved, slots, starterPoints:slots.filter(s=>s.starter && s.player).reduce((sum, s) => sum + n(s.player.auction_points), 0), totalPoints:improved.reduce((sum, p) => sum + n(p.auction_points), 0)};
+	const knownAges = improved.map(optimizerKnownAge).filter(age => age !== null);
+	return {premium, budget, goal, goalLabel:goal === 'tiers' ? `${optimizerTierLabel(tierMax)} stack` : 'Projected points', tierMax, focus:focus.key, focusLabel:focus.label, preference:preference.key, preferenceLabel:preference.label, shape:focus.shape.key, shapeLabel:focus.shape.label, ageCap, ageCapLabel:optimizerAgeCapLabel(ageCap), mix:focus.mix, midCount:optimizerBandCount(improved, 'mid', focus.shape), midTarget:focus.shape.targetMid || 0, premiumCount:optimizerBandCount(improved, 'premium', focus.shape), avgAge:knownAges.length ? knownAges.reduce((sum, age) => sum + age, 0) / knownAges.length : null, cost, remaining:budget - cost, players:improved, slots, starterPoints:slots.filter(s=>s.starter && s.player).reduce((sum, s) => sum + n(s.player.auction_points), 0), totalPoints:improved.reduce((sum, p) => sum + n(p.auction_points), 0)};
 }
 function renderMetric(label, value) { return `<div class="metric"><span>${escapeHtml(label)}</span><strong>${escapeHtml(value)}</strong></div>`; }
 function strategyBudgetProfile(team, committed=0) {
@@ -1178,7 +1246,8 @@ function renderRosterSlot(item, priceKey='buy_price') {
 	if (!item.player) return `<div class="roster-slot"><strong>${escapeHtml(item.slot)}</strong><span class="small">Open</span></div>`;
 	const p = item.player, price = p[priceKey] ?? p.paid ?? p.auction_value;
 	const tier = p.auction_tier ? ` - ${escapeHtml(p.auction_tier)}` : '';
-	return `<div class="roster-slot"><strong>${escapeHtml(item.slot)}</strong><div class="player-name">${escapeHtml(p.player)}</div><span class="small">${escapeHtml(p.position)}${p.team ? ' ' + escapeHtml(p.team) : ''} - $${Math.round(price)} - ${rawFmt(n(p.auction_points))} fpts${tier}</span></div>`;
+	const age = optimizerKnownAge(p), ageText = age !== null ? ` - Age ${rawFmt(age)}` : '';
+	return `<div class="roster-slot"><strong>${escapeHtml(item.slot)}</strong><div class="player-name">${escapeHtml(p.player)}</div><span class="small">${escapeHtml(p.position)}${p.team ? ' ' + escapeHtml(p.team) : ''} - $${Math.round(price)} - ${rawFmt(n(p.auction_points))} fpts${tier}${ageText}</span></div>`;
 }
 function renderOptimizerByPosition(result) {
 	const order = ['QB','RB','WR','TE'];
@@ -1188,7 +1257,9 @@ function renderOptimizerByPosition(result) {
 		const body = rows.length ? rows.map(p => {
 			const signal = p.bid_signal === -2 ? 'Bid++' : p.bid_signal === -1 ? 'Bid+' : '';
 			const pref = p.preference_label ? ` - ${escapeHtml(p.preference_label)}` : '';
-			const meta = `${p.team ? escapeHtml(p.team) + ' - ' : ''}${rawFmt(n(p.auction_points))} fpts${p.auction_tier ? ' - ' + escapeHtml(p.auction_tier) : ''}${pref}`;
+			const age = optimizerKnownAge(p), ageText = age !== null ? `Age ${rawFmt(age)} - ` : '';
+			const shape = p.shape_label ? ` - ${escapeHtml(p.shape_label)}` : '';
+			const meta = `${p.team ? escapeHtml(p.team) + ' - ' : ''}${ageText}${rawFmt(n(p.auction_points))} fpts${p.auction_tier ? ' - ' + escapeHtml(p.auction_tier) : ''}${pref}${shape}`;
 			return `<div class="position-player-row"><div><strong>${escapeHtml(p.player)}</strong><span>${meta}</span></div><div><strong>$${Math.round(n(p.buy_price))}</strong>${signal ? `<span>${signal}</span>` : ''}</div></div>`;
 		}).join('') : '<div class="position-player-row"><span>No players</span></div>';
 		return `<div class="position-group"><h3>${pos} (${rows.length}) - $${cost}</h3>${body}</div>`;
@@ -1214,9 +1285,9 @@ function ensureOptimizerTierStacks() {
 function renderOptimizerTierStacks(result) {
 	const root = ensureOptimizerTierStacks();
 	if (!root) return;
-	const tiers = [1, 2, 3, 4], premium = result.premium, budget = result.budget, focus = result.focus, preference = result.preference;
+	const tiers = [1, 2, 3, 4], premium = result.premium, budget = result.budget, focus = result.focus, preference = result.preference, shape = result.shape, ageCap = result.ageCap;
 	root.innerHTML = tiers.map(maxTier => {
-		const build = buildOptimizedTeam(premium, budget, focus, preference, 'tiers', maxTier);
+		const build = buildOptimizedTeam(premium, budget, focus, preference, 'tiers', maxTier, shape, ageCap);
 		const counts = optimizerTierCounts(build.players), topPlayers = build.players.filter(p => optimizerTierIndex(p) <= maxTier).sort((a,b)=>optimizerTierIndex(a)-optimizerTierIndex(b) || n(b.auction_value)-n(a.auction_value) || n(b.auction_points)-n(a.auction_points));
 		const pos = rosterCounts(topPlayers);
 		const active = result.goal === 'tiers' && Number(result.tierMax) === maxTier;
@@ -1233,6 +1304,11 @@ function renderOptimizer(result=state.optimizer || buildOptimizedTeam()) {
 		renderMetric('Goal', result.goalLabel || 'Projected points'),
 		renderMetric('Focus', result.focusLabel || 'Balanced'),
 		renderMetric('Prefs', result.preferenceLabel || 'Value only'),
+		renderMetric('Shape', result.shapeLabel || 'Stars + values'),
+		renderMetric('Age Cap', result.ageCapLabel || 'No cap'),
+		renderMetric('Mid Fits', result.midTarget ? `${result.midCount || 0}/${result.midTarget}` : String(result.midCount || 0)),
+		renderMetric('Premium', String(result.premiumCount || 0)),
+		renderMetric('Avg Age', result.avgAge ? rawFmt(result.avgAge) : '-'),
 		renderMetric('Mix', optimizerMixLabel(result.mix || OPTIMIZER_DEFAULT_MIX)),
 		renderMetric('Budget', `$${result.budget}`),
 		renderMetric('Spent', `$${result.cost}`),
@@ -1973,7 +2049,7 @@ function init() {
 	Object.keys(DEFAULT_SCORING).forEach(id=>document.getElementById(id).addEventListener('input',()=>{ state.optimizer = null; renderCurrentTables(); }));
 	document.getElementById('resetScoring').addEventListener('click',()=>{ Object.entries(DEFAULT_SCORING).forEach(([id,value])=>document.getElementById(id).value=value); state.sorts.set('teamY1Table', DEFAULT_SORTS.teamY1Table); state.sorts.set('teamY2Table', DEFAULT_SORTS.teamY2Table); state.optimizer = null; renderCurrentTables(); });
 	document.getElementById('resetPlayers').addEventListener('click',()=>{ document.getElementById('playerSearch').value=''; document.getElementById('posFilter').value=''; document.getElementById('teamFilter').value=''; renderCurrentTables(); });
-	['optimizerPremium','optimizerGoal','optimizerTierMax','optimizerBudget','optimizerPreference'].forEach(id=>['input','change'].forEach(eventName=>document.getElementById(id).addEventListener(eventName, refreshOptimizer)));
+	['optimizerPremium','optimizerGoal','optimizerTierMax','optimizerBudget','optimizerPreference','optimizerShape','optimizerAgeCap'].forEach(id=>['input','change'].forEach(eventName=>document.getElementById(id).addEventListener(eventName, refreshOptimizer)));
 	document.getElementById('optimizerFocus').addEventListener('change',()=>{ const key = readOptimizerFocus(); if (key !== 'custom') setOptimizerMixValues(OPTIMIZER_FOCUS_CONFIG[key]?.mix || OPTIMIZER_DEFAULT_MIX); refreshOptimizer(); });
 	Object.values(OPTIMIZER_MIX_IDS).forEach(id=>['input','change'].forEach(eventName=>document.getElementById(id).addEventListener(eventName,()=>{ document.getElementById('optimizerFocus').value = 'custom'; refreshOptimizer(); })));
 	['mockPlayerSearch','mockPosFilter','mockShowDrafted'].forEach(id=>document.getElementById(id).addEventListener('input', renderMockAuction));
