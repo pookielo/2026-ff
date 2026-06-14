@@ -87,6 +87,9 @@ svg { width:100%; max-width:100%; min-width:0; height:auto; display:block; }
 .position-player-row { display:grid; grid-template-columns:1fr auto; gap:8px; padding:8px 10px; border-top:1px solid #e2e8f0; }
 .position-player-row strong { display:block; }
 .position-player-row span { color:var(--muted); font-size:12px; }
+.tier-stack-card.active { border-color:var(--blue); box-shadow:0 0 0 2px rgba(37,99,235,.14); }
+.tier-stack-meta { display:flex; flex-wrap:wrap; gap:6px; padding:8px 10px; border-top:1px solid #e2e8f0; }
+.tier-pill { display:inline-flex; align-items:center; border:1px solid #cbd5e1; border-radius:999px; background:white; color:#334155; padding:3px 8px; font-size:12px; font-weight:800; }
 .mix-toolbar { margin-top:-4px; padding-top:0; }
 .mix-toolbar .inline-control input { width:72px; }
 .mock-board { display:grid; grid-template-columns:repeat(4, minmax(120px, 1fr)); gap:8px; margin-top:10px; }
@@ -123,6 +126,7 @@ svg { width:100%; max-width:100%; min-width:0; height:auto; display:block; }
 .mock-roster-cell.empty { color:#94a3b8; background:#f8fafc; font-size:12px; display:flex; align-items:center; }
 .mock-roster-cell strong { display:block; font-size:12px; line-height:1.2; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
 .mock-roster-cell span { display:block; color:var(--muted); font-size:11px; margin-top:2px; }
+.slow-draft-card { margin:14px 0; }
 .mock-side-panel { display:grid; gap:14px; min-width:0; }
 .mock-timer { display:inline-flex; align-items:center; justify-content:center; min-width:72px; border:1px solid var(--line); border-radius:999px; background:#f8fafc; padding:8px 12px; font-weight:850; }
 .mock-timer.running { border-color:var(--green); color:#065f46; background:#ecfdf5; }
@@ -763,6 +767,21 @@ function optimizerCapsForMix(baseCaps, mix) {
 function optimizerOrderForMix(mix) {
 	return Object.entries(mix).sort((a,b)=>b[1]-a[1]).flatMap(([pos, weight]) => Array.from({length:Math.max(1, Math.round(weight * 2))}, () => pos));
 }
+function ensureOptimizerTierControls() {
+	const premium = document.getElementById('optimizerPremium')?.closest('label');
+	if (!premium || document.getElementById('optimizerGoal')) return;
+	premium.insertAdjacentHTML('afterend', '<label class="inline-control">Goal<select id="optimizerGoal"><option value="points" selected>Projected points</option><option value="tiers">Top tiers</option></select></label><label class="inline-control">Tier max<select id="optimizerTierMax"><option value="1">Tier 1</option><option value="2" selected>Tiers 1-2</option><option value="3">Tiers 1-3</option><option value="4">Tiers 1-4</option></select></label>');
+}
+function readOptimizerGoal() { const value = document.getElementById('optimizerGoal')?.value || 'points'; return value === 'tiers' ? 'tiers' : 'points'; }
+function readOptimizerTierMax() { const value = Number(document.getElementById('optimizerTierMax')?.value || 2); return Math.max(1, Math.min(4, Number.isFinite(value) ? value : 2)); }
+function optimizerTierIndex(player) {
+	const direct = Number(player?.auction_tier_index);
+	if (Number.isFinite(direct) && direct > 0) return direct;
+	const match = String(player?.auction_tier || '').match(/T(\d+)/i);
+	const value = match ? Number(match[1]) : NaN;
+	return Number.isFinite(value) && value > 0 ? value : 9;
+}
+function optimizerTierLabel(max=readOptimizerTierMax()) { return max <= 1 ? 'Tier 1' : `Tiers 1-${max}`; }
 function readOptimizerFocus() { const key = document.getElementById('optimizerFocus')?.value || 'balanced'; return OPTIMIZER_FOCUS_CONFIG[key] ? key : 'balanced'; }
 function optimizerFocusConfig(key=readOptimizerFocus()) {
 	const config = OPTIMIZER_FOCUS_CONFIG[key] || OPTIMIZER_FOCUS_CONFIG.balanced;
@@ -835,7 +854,11 @@ function optimizerScore(player, selected, focus=optimizerFocusConfig()) {
 	const signal = player.bid_signal ? 8 : 0;
 	const focusBonus = (focus.scoreBonus?.[player.position] || 0) + ((mix - 1) * 26);
 	const preferenceBonus = n(player.preference_score);
-	return ((pointScore + n(player.auction_value) * 2.4 + scarcity + signal + focusBonus + preferenceBonus) * need) - n(player.buy_price) * 0.7;
+	const tier = optimizerTierIndex(player), tierGoal = focus.goal === 'tiers', insideTierTarget = tier <= Number(focus.tierMax || 2);
+	const tierBonus = tierGoal ? (insideTierTarget ? 190 - (tier * 30) : Math.max(0, 42 - (tier * 5))) : 0;
+	const tierValueBonus = tierGoal && insideTierTarget ? n(player.auction_value) * 1.65 : 0;
+	const costPenalty = tierGoal ? 0.44 : 0.7;
+	return ((pointScore + n(player.auction_value) * 2.4 + scarcity + signal + focusBonus + preferenceBonus + tierBonus + tierValueBonus) * need) - n(player.buy_price) * costPenalty;
 }
 function assignRosterSlots(players) {
 	const remaining = [...players].sort((a,b)=>n(b.auction_points)-n(a.auction_points));
@@ -869,6 +892,7 @@ function improveOptimizedTeam(selected, pool, budget, focus=optimizerFocusConfig
 				if (!rosterMeetsMinimums(next) || !rosterWithinPositionCaps(next, focus.caps)) continue;
 				if (preserveTargets && !rosterMeetsTargets(next, focus.targets)) continue;
 				const context = best.filter((_, index) => index !== i);
+				if (focus.goal === 'tiers' && optimizerTierIndex(old) <= Number(focus.tierMax || 2) && optimizerTierIndex(candidate) > optimizerTierIndex(old)) continue;
 				if (optimizerScore(candidate, context, focus) > optimizerScore(old, context, focus) + 1) {
 					best = next; spent = nextCost; break;
 				}
@@ -877,8 +901,10 @@ function improveOptimizedTeam(selected, pool, budget, focus=optimizerFocusConfig
 	}
 	return best;
 }
-function buildOptimizedTeam(premium=readOptimizerPremium(), budget=readOptimizerBudget(), focusKey=readOptimizerFocus(), preferenceKey=readOptimizerPreference()) {
+function buildOptimizedTeam(premium=readOptimizerPremium(), budget=readOptimizerBudget(), focusKey=readOptimizerFocus(), preferenceKey=readOptimizerPreference(), goal=readOptimizerGoal(), tierMax=readOptimizerTierMax()) {
 	const focus = optimizerFocusConfig(focusKey);
+	focus.goal = goal;
+	focus.tierMax = tierMax;
 	const preference = optimizerPreferenceConfig(preferenceKey);
 	const pool = auctionPool().map(p => { const pref = optimizerPreferenceFor(p, preference.key); return {...p, buy_price:adjustedAuctionPrice(p, premium), preference_score:pref.score, preference_label:pref.label}; }).filter(p => p.buy_price <= budget).sort((a,b)=>optimizerScore(b, [], focus) - optimizerScore(a, [], focus));
 	const selected = [], picked = new Set();
@@ -908,6 +934,11 @@ function buildOptimizedTeam(premium=readOptimizerPremium(), budget=readOptimizer
 		selected.push(player); picked.add(player.id); spent += player.buy_price; return true;
 	}
 	function underPositionCap(player) { const cap = focus.caps[player.position]; return !cap || (rosterCounts(selected)[player.position] || 0) < cap; }
+	if (focus.goal === 'tiers') {
+		for (let i = 0; i < AUCTION_CONFIG.rosterSpots; i++) {
+			if (!addBest(p => optimizerTierIndex(p) <= focus.tierMax && underPositionCap(p))) break;
+		}
+	}
 	[...(focus.order || []), ...optimizerOrderForMix(focus.mix || OPTIMIZER_DEFAULT_MIX)].forEach(pos => {
 		const goal = Math.max(OPTIMIZER_MINIMUMS[pos] || 0, focus.targets[pos] || 0);
 		if ((rosterCounts(selected)[pos] || 0) < goal) addBest(p => p.position === pos);
@@ -918,14 +949,15 @@ function buildOptimizedTeam(premium=readOptimizerPremium(), budget=readOptimizer
 	while (selected.length < AUCTION_CONFIG.rosterSpots && addBest(()=>true)) {}
 	const improved = improveOptimizedTeam(selected, pool, budget, focus);
 	const cost = improved.reduce((sum, p) => sum + p.buy_price, 0), slots = assignRosterSlots(improved);
-	return {premium, budget, focus:focus.key, focusLabel:focus.label, preference:preference.key, preferenceLabel:preference.label, mix:focus.mix, cost, remaining:budget - cost, players:improved, slots, starterPoints:slots.filter(s=>s.starter && s.player).reduce((sum, s) => sum + n(s.player.auction_points), 0), totalPoints:improved.reduce((sum, p) => sum + n(p.auction_points), 0)};
+	return {premium, budget, goal, goalLabel:goal === 'tiers' ? `${optimizerTierLabel(tierMax)} stack` : 'Projected points', tierMax, focus:focus.key, focusLabel:focus.label, preference:preference.key, preferenceLabel:preference.label, mix:focus.mix, cost, remaining:budget - cost, players:improved, slots, starterPoints:slots.filter(s=>s.starter && s.player).reduce((sum, s) => sum + n(s.player.auction_points), 0), totalPoints:improved.reduce((sum, p) => sum + n(p.auction_points), 0)};
 }
 function renderMetric(label, value) { return `<div class="metric"><span>${escapeHtml(label)}</span><strong>${escapeHtml(value)}</strong></div>`; }
 function optimizerMixLabel(mix={}) { return ['QB','RB','WR','TE'].map(pos => `${pos} ${rawFmt(clampMix(Number(mix[pos] ?? 1)))}`).join(' / '); }
 function renderRosterSlot(item, priceKey='buy_price') {
 	if (!item.player) return `<div class="roster-slot"><strong>${escapeHtml(item.slot)}</strong><span class="small">Open</span></div>`;
 	const p = item.player, price = p[priceKey] ?? p.paid ?? p.auction_value;
-	return `<div class="roster-slot"><strong>${escapeHtml(item.slot)}</strong><div class="player-name">${escapeHtml(p.player)}</div><span class="small">${escapeHtml(p.position)}${p.team ? ' ' + escapeHtml(p.team) : ''} - $${Math.round(price)} - ${rawFmt(n(p.auction_points))} fpts</span></div>`;
+	const tier = p.auction_tier ? ` - ${escapeHtml(p.auction_tier)}` : '';
+	return `<div class="roster-slot"><strong>${escapeHtml(item.slot)}</strong><div class="player-name">${escapeHtml(p.player)}</div><span class="small">${escapeHtml(p.position)}${p.team ? ' ' + escapeHtml(p.team) : ''} - $${Math.round(price)} - ${rawFmt(n(p.auction_points))} fpts${tier}</span></div>`;
 }
 function renderOptimizerByPosition(result) {
 	const order = ['QB','RB','WR','TE'];
@@ -941,20 +973,55 @@ function renderOptimizerByPosition(result) {
 		return `<div class="position-group"><h3>${pos} (${rows.length}) - $${cost}</h3>${body}</div>`;
 	}).join('');
 }
+function optimizerTierCounts(players) {
+	const counts = {1:0, 2:0, 3:0, 4:0};
+	players.forEach(player => { const tier = optimizerTierIndex(player); if (tier >= 1 && tier <= 4) counts[tier] += 1; });
+	return counts;
+}
+function optimizerTierTargetCount(players, maxTier=2) { return players.filter(player => optimizerTierIndex(player) <= maxTier).length; }
+function ensureOptimizerTierStacks() {
+	let root = document.getElementById('optimizerTierStacks');
+	if (root) return root;
+	const byPosition = document.getElementById('optimizerByPosition');
+	if (!byPosition?.parentElement) return null;
+	root = document.createElement('div');
+	root.id = 'optimizerTierStacks';
+	root.className = 'position-list';
+	byPosition.insertAdjacentElement('afterend', root);
+	return root;
+}
+function renderOptimizerTierStacks(result) {
+	const root = ensureOptimizerTierStacks();
+	if (!root) return;
+	const tiers = [1, 2, 3, 4], premium = result.premium, budget = result.budget, focus = result.focus, preference = result.preference;
+	root.innerHTML = tiers.map(maxTier => {
+		const build = buildOptimizedTeam(premium, budget, focus, preference, 'tiers', maxTier);
+		const counts = optimizerTierCounts(build.players), topPlayers = build.players.filter(p => optimizerTierIndex(p) <= maxTier).sort((a,b)=>optimizerTierIndex(a)-optimizerTierIndex(b) || n(b.auction_value)-n(a.auction_value) || n(b.auction_points)-n(a.auction_points));
+		const pos = rosterCounts(topPlayers);
+		const active = result.goal === 'tiers' && Number(result.tierMax) === maxTier;
+		const body = topPlayers.slice(0, 10).map(p => `<div class="position-player-row"><div><strong>${escapeHtml(p.player)}</strong><span>${escapeHtml(p.position)}${p.team ? ' ' + escapeHtml(p.team) : ''} - ${escapeHtml(p.auction_tier || '')} - ${rawFmt(n(p.auction_points))} fpts</span></div><div><strong>$${Math.round(n(p.buy_price))}</strong></div></div>`).join('') || '<div class="position-player-row"><span>No top-tier players fit this build.</span></div>';
+		return `<div class="position-group tier-stack-card ${active ? 'active' : ''}"><h3>${escapeHtml(optimizerTierLabel(maxTier))}: ${topPlayers.length} players - $${build.cost}</h3><div class="tier-stack-meta"><span class="tier-pill">T1 ${counts[1]}</span><span class="tier-pill">T2 ${counts[2]}</span><span class="tier-pill">T3 ${counts[3]}</span><span class="tier-pill">T4 ${counts[4]}</span><span class="tier-pill">QB ${pos.QB || 0}</span><span class="tier-pill">RB ${pos.RB || 0}</span><span class="tier-pill">WR ${pos.WR || 0}</span><span class="tier-pill">TE ${pos.TE || 0}</span></div>${body}</div>`;
+	}).join('');
+}
 function renderOptimizer(result=state.optimizer || buildOptimizedTeam()) {
 	state.optimizer = result;
 	const summary = document.getElementById('optimizerSummary'), byPosition = document.getElementById('optimizerByPosition'), roster = document.getElementById('optimizerRoster');
 	if (!summary || !roster) return;
+	const tierCounts = optimizerTierCounts(result.players);
 	summary.innerHTML = [
+		renderMetric('Goal', result.goalLabel || 'Projected points'),
 		renderMetric('Focus', result.focusLabel || 'Balanced'),
 		renderMetric('Prefs', result.preferenceLabel || 'Value only'),
 		renderMetric('Mix', optimizerMixLabel(result.mix || OPTIMIZER_DEFAULT_MIX)),
 		renderMetric('Budget', `$${result.budget}`),
 		renderMetric('Spent', `$${result.cost}`),
 		renderMetric('Left', `$${result.remaining}`),
-		renderMetric('Starter Fpts', rawFmt(result.starterPoints))
+		renderMetric('Starter Fpts', rawFmt(result.starterPoints)),
+		renderMetric('Tier Stack', `${optimizerTierTargetCount(result.players, result.tierMax || 2)} ${optimizerTierLabel(result.tierMax || 2)}`),
+		renderMetric('T1/T2/T3', `${tierCounts[1]}/${tierCounts[2]}/${tierCounts[3]}`)
 	].join('');
 	if (byPosition) byPosition.innerHTML = renderOptimizerByPosition(result);
+	renderOptimizerTierStacks(result);
 	roster.innerHTML = result.slots.map(slot => renderRosterSlot(slot)).join('');
 }
 function refreshOptimizer() {
@@ -1138,6 +1205,27 @@ function renderMockDraftBoard(m) {
 	const rows = slotNames.map((slot, idx) => `<div class="mock-slot-label">${escapeHtml(slot)}</div>${teamSlots.map(({team, slots}) => { const player = slots[idx]?.player; if (!player) return `<div class="mock-roster-cell empty" data-team-id="${team.id}">Open</div>`; return `<div class="mock-roster-cell" data-team-id="${team.id}"><strong>${escapeHtml(player.player)}</strong><span>${escapeHtml(player.position)}${player.team ? ' ' + escapeHtml(player.team) : ''} - $${Math.round(player.paid ?? player.auction_value)}</span></div>`; }).join('')}`).join('');
 	root.innerHTML = `<div class="mock-board-grid">${heads}${rows}</div>`;
 	root.querySelectorAll('[data-team-id]').forEach(el => el.addEventListener('click', () => { m.selectedTeamId = Number(el.dataset.teamId); renderMockAuction(); }));
+}
+function ensureSlowDraftBoard() {
+	let root = document.getElementById('slowDraftBoard');
+	if (root) return root;
+	const panel = document.getElementById('slowAuction'), layout = panel?.querySelector('.slow-auction-layout');
+	if (!panel || !layout) return null;
+	const card = document.createElement('div');
+	card.className = 'card slow-draft-card';
+	card.innerHTML = '<h2>Slow Auction Board</h2><div id="slowDraftBoard" class="mock-draft-board slow-draft-board"></div>';
+	panel.insertBefore(card, layout);
+	return document.getElementById('slowDraftBoard');
+}
+function renderSlowDraftBoard(m) {
+	const root = ensureSlowDraftBoard();
+	if (!root) return;
+	const slotNames = assignRosterSlots([]).map(s => s.slot);
+	const teamSlots = m.teams.map(team => ({team, slots:assignRosterSlots(team.roster)}));
+	const heads = `<div class="mock-slot-head">Slot</div>${m.teams.map(team => `<button type="button" class="mock-team-head ${m.selectedTeamId === team.id ? 'active' : ''}" data-slow-board-team-id="${team.id}"><strong>${escapeHtml(team.name)}</strong><div class="budget-line">$${team.budget} left - committed $${slowTeamCommitted(team)} - max $${slowTeamMaxBid(team)} - ${team.roster.length}/${AUCTION_CONFIG.rosterSpots}</div></button>`).join('')}`;
+	const rows = slotNames.map((slot, idx) => `<div class="mock-slot-label">${escapeHtml(slot)}</div>${teamSlots.map(({team, slots}) => { const player = slots[idx]?.player; if (!player) return `<div class="mock-roster-cell empty" data-slow-board-team-id="${team.id}">Open</div>`; return `<div class="mock-roster-cell" data-slow-board-team-id="${team.id}"><strong>${escapeHtml(player.player)}</strong><span>${escapeHtml(player.position)}${player.team ? ' ' + escapeHtml(player.team) : ''} - $${Math.round(player.paid ?? player.auction_value)}</span></div>`; }).join('')}`).join('');
+	root.innerHTML = `<div class="mock-board-grid">${heads}${rows}</div>`;
+	root.querySelectorAll('[data-slow-board-team-id]').forEach(el => el.addEventListener('click', () => { m.selectedTeamId = Number(el.dataset.slowBoardTeamId); renderSlowAuction(); }));
 }
 function renderMockResults(m) {
 	const root = document.getElementById('mockResults'); if (!root) return;
@@ -1548,7 +1636,7 @@ function renderSlowPlayerTable(m) {
 function renderSlowAuction() {
 	if (!document.getElementById('slowAuction')) return;
 	const m = ensureSlowState();
-	renderSlowTopbar(m); renderSlowSummary(m); renderSlowLots(m); renderSlowTeams(m); renderSlowSelectedTeam(m); renderSlowResults(m); renderSlowPlayerTable(m);
+	renderSlowTopbar(m); renderSlowSummary(m); renderSlowDraftBoard(m); renderSlowLots(m); renderSlowTeams(m); renderSlowSelectedTeam(m); renderSlowResults(m); renderSlowPlayerTable(m);
 }
 function filteredTopLimit() { const value = Number(document.getElementById('filteredTopLimit')?.value); return [10, 20, 50, 100].includes(value) ? value : 20; }
 function currentCheatMode() { return document.getElementById('rankMode')?.value || 'waldman'; }
@@ -1591,6 +1679,7 @@ const projectionCols = [['player','Player'],['fpts','Fpts'],['team','Team'],['po
 const historyCols = [['team','Team'],['team_name','Team Name'],['pass_att','Pass Att','int'],['pass_comp','Pass Comp','int'],['pass_yards','Pass Yds','int'],['pass_td','Pass TD','int'],['rec_targets','Targets','int'],['receptions','Rec','int'],['rec_yards','Rec Yds','int'],['rec_td','Rec TD','int'],['rush_att','Rush Att','int'],['rush_yards','Rush Yds','int'],['rush_td','Rush TD','int'],['run_pct','Run %','pct'],['pass_pct','Pass %','pct']];
 function renderCurrentTables() { const pr=playerRows(); renderTable('playersTable', pr, playerCols); const scoredPlayers = withPlayerChartScore(pr); barChart('chartFilteredPpr', [...scoredPlayers].sort((a,b)=>cmp(a,b,'chart_fpts',-1)).map(r=>({...r,label:`${r.player} (${r.position}${r.team ? ' '+r.team : ''})`})), 'label', 'chart_fpts', '#2563eb', filteredTopLimit()); countChart('chartFilteredPos', pr, 'position', '#0f9f6e'); updateCheatControls(); updateCheatModeNote(); updateCheatAgeRangeLabel(); renderTierLegend(); const cr=cheatRows(); renderTable('cheatsTable', cr, cheatColsForMode()); renderTable('teamY1Table', teamRows('year1'), projectionCols); renderTable('teamY2Table', teamRows('year2'), projectionCols); renderTable('historyTable', histRows(), historyCols); renderOptimizer(state.optimizer || buildOptimizedTeam()); renderMockAuction(); renderSlowAuction(); }
 function init() {
+	ensureOptimizerTierControls();
 	fillTabs();
 	renderCharts();
 	renderTierLegend();
@@ -1610,7 +1699,7 @@ function init() {
 	Object.keys(DEFAULT_SCORING).forEach(id=>document.getElementById(id).addEventListener('input',()=>{ state.optimizer = null; renderCurrentTables(); }));
 	document.getElementById('resetScoring').addEventListener('click',()=>{ Object.entries(DEFAULT_SCORING).forEach(([id,value])=>document.getElementById(id).value=value); state.sorts.set('teamY1Table', DEFAULT_SORTS.teamY1Table); state.sorts.set('teamY2Table', DEFAULT_SORTS.teamY2Table); state.optimizer = null; renderCurrentTables(); });
 	document.getElementById('resetPlayers').addEventListener('click',()=>{ document.getElementById('playerSearch').value=''; document.getElementById('posFilter').value=''; document.getElementById('teamFilter').value=''; renderCurrentTables(); });
-	['optimizerPremium','optimizerBudget','optimizerPreference'].forEach(id=>['input','change'].forEach(eventName=>document.getElementById(id).addEventListener(eventName, refreshOptimizer)));
+	['optimizerPremium','optimizerGoal','optimizerTierMax','optimizerBudget','optimizerPreference'].forEach(id=>['input','change'].forEach(eventName=>document.getElementById(id).addEventListener(eventName, refreshOptimizer)));
 	document.getElementById('optimizerFocus').addEventListener('change',()=>{ const key = readOptimizerFocus(); if (key !== 'custom') setOptimizerMixValues(OPTIMIZER_FOCUS_CONFIG[key]?.mix || OPTIMIZER_DEFAULT_MIX); refreshOptimizer(); });
 	Object.values(OPTIMIZER_MIX_IDS).forEach(id=>['input','change'].forEach(eventName=>document.getElementById(id).addEventListener(eventName,()=>{ document.getElementById('optimizerFocus').value = 'custom'; refreshOptimizer(); })));
 	['mockPlayerSearch','mockPosFilter','mockShowDrafted'].forEach(id=>document.getElementById(id).addEventListener('input', renderMockAuction));
