@@ -203,35 +203,48 @@ svg { width:100%; max-width:100%; min-width:0; height:auto; display:block; }
 .lt-parse-note { color:var(--muted); font-size:12px; margin-top:6px; }
 #ltPlayerTable { min-width:960px; }
 .slow-auction-layout { display:grid; grid-template-columns:minmax(740px, 1.45fr) minmax(330px, .7fr); gap:14px; align-items:start; }
-.slow-lot-grid { display:grid; grid-template-columns:repeat(auto-fill, minmax(250px, 1fr)); gap:10px; max-height:760px; overflow:auto; padding-right:2px; }
+.slow-lot-grid { display:grid; grid-template-columns:repeat(auto-fill, minmax(220px, 1fr)); gap:8px; max-height:760px; overflow:auto; padding-right:2px; }
 .slow-topbar { position:sticky; top:0; z-index:24; display:grid; grid-template-columns:auto minmax(360px, 1fr); gap:12px; align-items:center; margin:0 0 10px; padding:10px 12px; border:1px solid var(--line); border-radius:8px; background:rgba(255,255,255,.96); box-shadow:0 8px 24px rgba(15,23,42,.08); backdrop-filter:blur(8px); }
 .slow-topbar h2 { margin:0; }
-.slow-top-metrics { grid-template-columns:repeat(3, minmax(130px, 1fr)); }
+.slow-top-metrics { grid-template-columns:repeat(4, minmax(116px, 1fr)); }
 .slow-top-metrics .metric { padding:8px 10px; }
 #slowAuction > .card > h2, #slowAuction > .card > p.small { display:none; }
 .nomination-order { display:flex; flex-wrap:wrap; gap:6px; margin:0 0 12px; }
 .nomination-chip { border:1px solid var(--line); border-radius:999px; background:#f8fafc; color:#475569; padding:5px 8px; font-size:12px; font-weight:750; }
 .nomination-chip.active { border-color:var(--blue); background:#dbeafe; color:#1d4ed8; }
-.slow-lot { border:1px solid var(--line); border-radius:8px; background:#f8fafc; padding:10px; cursor:pointer; min-height:188px; display:flex; flex-direction:column; gap:8px; }
+.slow-lot { border:1px solid var(--line); border-radius:8px; background:#f8fafc; padding:8px; cursor:pointer; min-height:168px; display:flex; flex-direction:column; gap:6px; }
 .slow-lot.active { border-color:var(--blue); box-shadow:0 0 0 2px rgba(37,99,235,.16); background:#eff6ff; }
 .slow-lot.expiring { border-color:var(--orange); box-shadow:0 0 0 2px rgba(217,119,6,.12); }
 .slow-lot.human-winning { border-color:#059669; box-shadow:0 0 0 2px rgba(5,150,105,.18); background:#ecfdf5; }
 .slow-lot.human-outbid { border-color:#dc2626; box-shadow:0 0 0 2px rgba(220,38,38,.16); background:#fef2f2; }
-.slow-lot h3 { margin:0; font-size:16px; line-height:1.2; }
+.slow-lot h3 { margin:0; font-size:15px; line-height:1.15; }
 .slow-lot-meta, .slow-lot-status { display:flex; align-items:center; justify-content:space-between; gap:8px; color:var(--muted); font-size:12px; }
-.slow-lot-bid { display:flex; align-items:flex-end; justify-content:space-between; gap:8px; border:1px solid #dbe4f0; border-radius:8px; background:white; padding:8px; }
+.slow-lot-bid { display:flex; align-items:flex-end; justify-content:space-between; gap:8px; border:1px solid #dbe4f0; border-radius:8px; background:white; padding:7px; }
 .slow-lot.human-winning .slow-lot-bid { border-color:#86efac; }
 .slow-lot.human-outbid .slow-lot-bid { border-color:#fecaca; }
 .slow-lot-bid span { display:block; color:var(--muted); font-size:11px; font-weight:850; text-transform:uppercase; }
-.slow-lot-bid strong { display:block; font-size:24px; line-height:1; margin-top:2px; }
+.slow-lot-bid strong { display:block; font-size:22px; line-height:1; margin-top:2px; }
 .slow-lot-bid em { font-style:normal; text-align:right; color:var(--muted); font-size:12px; }
 .proxy-pill { display:inline-flex; align-items:center; border:1px solid #bfdbfe; border-radius:999px; background:#dbeafe; color:#1d4ed8; padding:3px 8px; font-size:12px; font-weight:850; }
 .slow-actions { display:flex; flex-wrap:wrap; gap:6px; margin-top:auto; }
 .slow-actions button { padding:6px 8px; font-size:12px; }
+.slow-lot-guidance { display:grid; grid-template-columns:repeat(2, minmax(0, 1fr)); gap:5px; }
+.slow-guide-chip { border:1px solid #dbe4f0; border-radius:7px; background:white; padding:6px; min-width:0; }
+.slow-guide-chip.strategy-status.target { border-color:#86efac; background:#ecfdf5; }
+.slow-guide-chip.strategy-status.fair { border-color:#bfdbfe; background:#eff6ff; }
+.slow-guide-chip.strategy-status.caution { border-color:#fed7aa; background:#fff7ed; }
+.slow-guide-chip.strategy-status.pass { border-color:#fecaca; background:#fef2f2; }
+.slow-guide-chip span { display:block; color:var(--muted); font-size:10px; font-weight:850; text-transform:uppercase; }
+.slow-guide-chip strong { display:block; margin-top:2px; font-size:14px; line-height:1.1; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.slow-guide-chip em { display:block; margin-top:2px; color:var(--muted); font-size:10px; font-style:normal; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
 .slow-lot-controls { display:grid; grid-template-columns:1fr auto; gap:6px; align-items:end; }
 .slow-lot-controls label { display:flex; flex-direction:column; gap:3px; color:var(--muted); font-size:11px; font-weight:850; text-transform:uppercase; }
 .slow-lot-controls input { width:100%; min-height:34px; padding:6px 8px; font-size:13px; }
-.slow-pool-list { max-height:520px; }
+.slow-pool-list { max-height:620px; }
+.pool-pager { display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:8px; margin:8px 0; color:var(--muted); font-size:12px; }
+.pool-pager-actions { display:flex; gap:6px; align-items:center; }
+.pool-pager button { padding:6px 9px; font-size:12px; min-height:32px; }
+.pool-pager strong { color:var(--ink); }
 #slowPlayerTable { min-width:920px; }
 .team-tile { cursor:pointer; }
 .team-tile.active { border-color:var(--blue); box-shadow:0 0 0 2px rgba(37,99,235,.18); }
@@ -248,8 +261,8 @@ svg { width:100%; max-width:100%; min-width:0; height:auto; display:block; }
 	#teamY2Table th:nth-child(2), #teamY2Table td:nth-child(2) { left:62px; width:220px; min-width:220px; max-width:220px; box-shadow:10px 0 12px -12px rgba(15,23,42,.55); }
 }
 @media (max-width: 1200px) { .mock-grid, .mock-draft-layout, .slow-auction-layout, .lt-two-col { grid-template-columns:1fr; } .mock-board { grid-template-columns:repeat(3, minmax(120px, 1fr)); } .slow-topbar { grid-template-columns:1fr; } .strategy-panel, .tier-drop-grid { grid-template-columns:repeat(2, minmax(180px, 1fr)); } }
-@media (max-width: 900px) { main { padding:8px 10px 28px; } .tabs { position:sticky; top:0; z-index:30; background:rgba(245,247,251,.96); backdrop-filter:blur(8px); margin:0 -2px 10px; padding:8px 0 6px; } .grid { grid-template-columns:1fr; } .card { padding:12px; } input[type=search] { min-width:100%; max-width:none; } .tabs, .subtabs { flex-wrap:nowrap; overflow-x:auto; padding-bottom:4px; -webkit-overflow-scrolling:touch; } .tab, .subtab { white-space:nowrap; font-size:13px; padding:8px 10px; } .toolbar { gap:8px; } table { font-size:12px; min-width:880px; } th, td { padding:7px; } svg { min-width:0; } .table-wrap { max-height:none; -webkit-overflow-scrolling:touch; } .current-auction { padding:12px; } .winning-bid { align-items:flex-start; flex-direction:column; } .winning-bid em { text-align:left; } .strategy-panel { grid-template-columns:1fr 1fr; } #mockAuction > .card > .toolbar, #slowAuction > .card > .toolbar { position:sticky; bottom:0; z-index:25; background:rgba(255,255,255,.97); border:1px solid var(--line); border-radius:8px; padding:8px; box-shadow:0 -8px 24px rgba(15,23,42,.08); } .auction-settings-menu { position:fixed; left:max(10px, env(safe-area-inset-left)); right:max(10px, env(safe-area-inset-right)); top:calc(72px + env(safe-area-inset-top)); bottom:auto; width:auto; max-height:calc(100vh - 92px - env(safe-area-inset-top)); } .slow-lot-grid { max-height:none; } }
-@media (max-width: 520px) { input, select, button { font-size:13px; min-height:36px; } .toolbar { gap:7px; } .toolbar select, .toolbar button, .age-range-filter, .inline-control { flex:1 1 140px; } .inline-control input, .inline-control select { width:100%; min-width:0; } .range-row input[type=range] { width:74px; } .card h2 { font-size:18px; } .scoring-settings { gap:7px; padding:9px; } .scoring-settings strong { flex-basis:100%; padding-bottom:0; } .scoring-settings input { width:74px; font-size:12px; min-height:34px; } table { font-size:11px; min-width:760px; } th, td { padding:6px; } #cheatsTable { min-width:860px; } #mockPlayerTable, #slowPlayerTable, #ltPlayerTable { min-width:760px; } #teamY1Table, #teamY2Table { min-width:1260px; } .metric-grid, .mock-board, .current-auction .metric-grid, .strategy-panel, .tier-drop-grid { grid-template-columns:1fr 1fr; } .metric, .strategy-card { padding:8px; } .metric strong, .strategy-card strong { font-size:17px; } .current-auction h3 { font-size:22px; } .current-auction .metric { padding:9px; } .current-auction .metric strong { font-size:18px; } .mock-board-grid { grid-template-columns:72px repeat(12, minmax(132px, 1fr)); min-width:1656px; } .mock-slot-head, .mock-team-head, .mock-slot-label, .mock-roster-cell { min-height:46px; } .slow-lot { min-height:0; } .slow-lot-controls { grid-template-columns:1fr 1fr; } .tier-drop-row summary { grid-template-columns:1fr; } .tier-drop-score { text-align:left; } .tier-player-list { padding-left:10px; } }
+@media (max-width: 900px) { main { padding:8px 10px 28px; } .tabs { position:sticky; top:0; z-index:30; background:rgba(245,247,251,.96); backdrop-filter:blur(8px); margin:0 -2px 10px; padding:8px 0 6px; } .grid { grid-template-columns:1fr; } .card { padding:12px; } input[type=search] { min-width:100%; max-width:none; } .tabs, .subtabs { flex-wrap:nowrap; overflow-x:auto; padding-bottom:4px; -webkit-overflow-scrolling:touch; } .tab, .subtab { white-space:nowrap; font-size:13px; padding:8px 10px; } .toolbar { gap:8px; } table { font-size:12px; min-width:880px; } th, td { padding:7px; } svg { min-width:0; } .table-wrap { max-height:none; -webkit-overflow-scrolling:touch; } .current-auction { padding:12px; } .winning-bid { align-items:flex-start; flex-direction:column; } .winning-bid em { text-align:left; } .strategy-panel { grid-template-columns:1fr 1fr; } #mockAuction > .card > .toolbar, #slowAuction > .card > .toolbar { position:sticky; bottom:0; z-index:25; background:rgba(255,255,255,.97); border:1px solid var(--line); border-radius:8px; padding:8px; box-shadow:0 -8px 24px rgba(15,23,42,.08); } .auction-settings-wrap[open]::before { content:''; position:fixed; inset:0; z-index:34; background:rgba(15,23,42,.34); } .auction-settings-menu { position:fixed; left:max(10px, env(safe-area-inset-left)); right:max(10px, env(safe-area-inset-right)); top:max(10px, env(safe-area-inset-top)); bottom:max(10px, env(safe-area-inset-bottom)); width:auto; max-height:none; z-index:35; align-content:flex-start; align-items:flex-start; overflow:auto; } .slow-lot-grid { max-height:none; } }
+@media (max-width: 520px) { input, select, button { font-size:13px; min-height:36px; } .toolbar { gap:7px; } .toolbar select, .toolbar button, .age-range-filter, .inline-control { flex:1 1 140px; } .inline-control input, .inline-control select { width:100%; min-width:0; } .range-row input[type=range] { width:74px; } .card h2 { font-size:18px; } .scoring-settings { gap:7px; padding:9px; } .scoring-settings strong { flex-basis:100%; padding-bottom:0; } .scoring-settings input { width:74px; font-size:12px; min-height:34px; } table { font-size:11px; min-width:760px; } th, td { padding:6px; } #cheatsTable { min-width:860px; } #mockPlayerTable, #slowPlayerTable, #ltPlayerTable { min-width:760px; } #teamY1Table, #teamY2Table { min-width:1260px; } .metric-grid, .mock-board, .current-auction .metric-grid, .strategy-panel, .tier-drop-grid { grid-template-columns:1fr 1fr; } .metric, .strategy-card { padding:8px; } .metric strong, .strategy-card strong { font-size:17px; } .current-auction h3 { font-size:22px; } .current-auction .metric { padding:9px; } .current-auction .metric strong { font-size:18px; } .mock-board-grid { grid-template-columns:72px repeat(12, minmax(132px, 1fr)); min-width:1656px; } .mock-slot-head, .mock-team-head, .mock-slot-label, .mock-roster-cell { min-height:46px; } .slow-lot-grid { grid-template-columns:repeat(auto-fill, minmax(168px, 1fr)); } .slow-lot { min-height:0; } .slow-lot-controls { grid-template-columns:1fr 1fr; } .tier-drop-row summary { grid-template-columns:1fr; } .tier-drop-score { text-align:left; } .tier-player-list { padding-left:10px; } }
 @media (max-width: 430px) and (orientation: portrait) { table { font-size:10.5px; } th, td { padding:5px; } #cheatsTable { min-width:820px; } }
 </style>
 </head>
@@ -315,6 +328,8 @@ const DEFAULT_NOMINATION_SECONDS = 30;
 const DEFAULT_BID_RESET_SECONDS = 10;
 const DEFAULT_SLOW_TIMER_MINUTES = { nomination:30, bid:720, reset:30 };
 const SLOW_TIMER_LIMITS_SECONDS = { min:5, max:86400 };
+const NOMINATION_POOL_PAGE_SIZE = 25;
+const SLOW_POOL_PAGE_SIZE = NOMINATION_POOL_PAGE_SIZE;
 const MOCK_BOT_PROFILES = {
 	aggressive:{label:'Aggressive', min:1.06, max:1.25, need:0.2, signal:1.08, patience:0.92, cap:1.33},
 	balanced:{label:'Balanced', min:0.9, max:1.13, need:0.14, signal:1.03, patience:1, cap:1.22},
@@ -672,7 +687,7 @@ const HARMON_RANKS = `1|Ja'Marr Chase|CIN|26.3|'21|BUY|Market Aligned||1
 	const [rank, player, team, age, draft, action, market, delta, market_rank] = line.split('|');
 	return {position:'WR', rank:Number(rank), player, team, age, draft, action, market, delta, market_rank, commentary:HARMON_COMMENTS[rank] || '', tier:action, tier_color:HARMON_ACTION_COLORS[action] || HARMON_MARKET_COLORS[market] || '#ffffff'};
 });
-const state = { sorts: new Map(), cheatTierColor: '', optimizer:null, mock:null, slow:null, leagueTycoon:null, parTargets:{} };
+const state = { sorts: new Map(), cheatTierColor: '', optimizer:null, mock:null, slow:null, leagueTycoon:null, parTargets:{}, mockPlayerPage:1, slowPlayerPage:1 };
 let mockClockId = null, slowClockId = null;
 const DASHBOARD_STORAGE_KEY = 'rspDynastyDashboardState:v1';
 const DASHBOARD_STORAGE_VERSION = 1;
@@ -792,6 +807,8 @@ function dashboardSavePayload() {
 		sorts:[...state.sorts.entries()],
 		cheatTierColor:state.cheatTierColor || '',
 		parTargets:{...(state.parTargets || {})},
+		mockPlayerPage:state.mockPlayerPage || 1,
+		slowPlayerPage:state.slowPlayerPage || 1,
 		mock:serializeMockState(state.mock),
 		slow:serializeSlowState(state.slow),
 		leagueTycoon:serializeLeagueTycoonState(state.leagueTycoon),
@@ -821,6 +838,8 @@ function restoreDashboardState() {
 	state.sorts = new Map(Array.isArray(saved.sorts) ? saved.sorts : []);
 	state.cheatTierColor = saved.cheatTierColor || '';
 	state.parTargets = saved.parTargets && typeof saved.parTargets === 'object' ? saved.parTargets : {};
+	state.mockPlayerPage = Math.max(1, Math.round(Number(saved.mockPlayerPage) || 1));
+	state.slowPlayerPage = Math.max(1, Math.round(Number(saved.slowPlayerPage) || 1));
 	state.optimizer = null;
 	state.mock = hydrateMockState(saved.mock);
 	state.slow = hydrateSlowState(saved.slow);
@@ -1342,6 +1361,11 @@ function strategyHtml(strategy, player) {
 		`<div class="strategy-card"><span>Build fit</span><strong>${escapeHtml(strategy.fit.label)}</strong><em>${escapeHtml(strategy.fit.detail)}</em></div>`
 	].join('');
 }
+function slowLotGuidanceHtml(strategy, player) {
+	if (!strategy || !player) return '';
+	const gap = strategy.gap >= 0 ? `$${strategy.gap} room` : `$${Math.abs(strategy.gap)} over`;
+	return `<div class="slow-lot-guidance"><div class="slow-guide-chip strategy-status ${strategy.status}"><span>Strategy</span><strong>${escapeHtml(strategy.label)}</strong><em>${escapeHtml(gap)}</em></div><div class="slow-guide-chip"><span>Rec max</span><strong>$${strategy.recommended}</strong><em>Next $${strategy.nextBid}</em></div><div class="slow-guide-chip"><span>Bid value</span><strong>$${Math.round(strategy.value)}</strong><em>${escapeHtml(player.auction_tier || '')}</em></div><div class="slow-guide-chip"><span>Roster need</span><strong>${escapeHtml(strategy.needLabel)}</strong><em>${rawFmt(n(player.auction_points))} fpts</em></div></div>`;
+}
 function ensureMockStrategyPanel() {
 	let root = document.getElementById('mockStrategy');
 	if (root) return root;
@@ -1523,7 +1547,7 @@ function mockNominate(playerId, teamId=0) {
 	const m = ensureMockState(); if (m.current) return false;
 	const team = m.teams[teamId], player = auctionPool().find(p => p.id === playerId);
 	if (!team || !player || m.drafted.has(player.id) || mockTeamMaxBid(team) < 1) return false;
-	m.current = player; m.currentBid = 1; m.highBidder = teamId; m.passed = new Set(); resetMockTimer('nomination'); return true;
+	m.current = player; m.currentBid = 1; m.highBidder = teamId; m.passed = new Set(); resetMockTimer('nomination'); mockMaybeAutoAwardCurrent(); return true;
 }
 function mockBotNominate() {
 	const m = ensureMockState();
@@ -1535,6 +1559,16 @@ function mockBotNominate() {
 	m.active = false; return false;
 }
 function mockBidIncrement(current, max) { if (current >= 45 && max - current >= 5) return 5; if (current >= 18 && max - current >= 2) return 2; return 1; }
+function mockCanAnyOpponentOutbid(m=ensureMockState()) {
+	if (!m.current || m.highBidder === null) return false;
+	return m.teams.some(team => team.id !== m.highBidder && !m.passed.has(team.id) && team.roster.length < AUCTION_CONFIG.rosterSpots && mockTeamMaxBid(team) > m.currentBid);
+}
+function mockMaybeAutoAwardCurrent() {
+	const m = ensureMockState();
+	if (!m.current || m.highBidder === null || mockCanAnyOpponentOutbid(m)) return false;
+	mockAwardCurrent();
+	return true;
+}
 function mockRunBotRound(auto=false) {
 	const m = ensureMockState(); if (!m.current) return false;
 	let changed = false;
@@ -1544,6 +1578,7 @@ function mockRunBotRound(auto=false) {
 		if (max > m.currentBid) { m.currentBid = Math.min(max, m.currentBid + mockBidIncrement(m.currentBid, max)); m.highBidder = team.id; changed = true; }
 		else m.passed.add(team.id);
 	});
+	if (mockMaybeAutoAwardCurrent()) return true;
 	if (changed) resetMockTimer('bid');
 	if (!changed && auto) mockAwardCurrent();
 	return changed;
@@ -1551,7 +1586,7 @@ function mockRunBotRound(auto=false) {
 function mockHumanBid(amount) {
 	const m = ensureMockState(); if (!m.current) return;
 	const team = m.teams[0], max = mockTeamMaxBid(team), bid = Math.min(max, Math.max(m.currentBid + 1, Math.round(amount)));
-	if (bid > m.currentBid) { m.currentBid = bid; m.highBidder = 0; m.passed.delete(0); resetMockTimer('bid'); }
+	if (bid > m.currentBid) { m.currentBid = bid; m.highBidder = 0; m.passed.delete(0); resetMockTimer('bid'); mockMaybeAutoAwardCurrent(); }
 }
 function mockPassHuman() { const m = ensureMockState(); if (!m.current) return; m.passed.add(0); if (!mockRunBotRound(true) && m.current) mockAwardCurrent(); }
 function mockAwardCurrent() {
@@ -1700,10 +1735,29 @@ function renderMockResults(m) {
 	const root = document.getElementById('mockResults'); if (!root) return;
 	root.innerHTML = m.results.length ? m.results.map(r => `<div class="result-item"><strong>${escapeHtml(r.player)}</strong> <span class="small">${escapeHtml(r.position)}${r.team ? ' ' + escapeHtml(r.team) : ''}</span><br><span class="small">$${r.paid} to ${escapeHtml(r.buyer)}${r.slot ? ' - ' + escapeHtml(r.slot) : ''}${r.profile ? ' - ' + escapeHtml(r.profile) : ''}</span></div>`).join('') : '<div class="mock-empty">No completed nominations yet.</div>';
 }
+function ensureMockPlayerPager(table) {
+	let pager = document.getElementById('mockPlayerPager');
+	if (pager) return pager;
+	pager = document.createElement('div');
+	pager.id = 'mockPlayerPager';
+	pager.className = 'pool-pager';
+	table?.parentElement?.insertAdjacentElement('beforebegin', pager);
+	return pager;
+}
 function renderMockPlayerTable(m) {
 	const table = document.getElementById('mockPlayerTable'); if (!table) return;
 	const q = norm(document.getElementById('mockPlayerSearch')?.value), pos = document.getElementById('mockPosFilter')?.value || '', showDrafted = Boolean(document.getElementById('mockShowDrafted')?.checked);
-	const rows = auctionPool().filter(r => (showDrafted || !m.drafted.has(r.id)) && (!pos || r.position === pos) && (!q || norm(Object.values(r).join(' ')).includes(q))).slice(0, 180);
+	const allRows = auctionPool().filter(r => (showDrafted || !m.drafted.has(r.id)) && (!pos || r.position === pos) && (!q || norm(Object.values(r).join(' ')).includes(q)));
+	const pageCount = Math.max(1, Math.ceil(allRows.length / NOMINATION_POOL_PAGE_SIZE));
+	const page = Math.max(1, Math.min(pageCount, Math.round(Number(state.mockPlayerPage) || 1)));
+	state.mockPlayerPage = page;
+	const start = (page - 1) * NOMINATION_POOL_PAGE_SIZE, rows = allRows.slice(start, start + NOMINATION_POOL_PAGE_SIZE);
+	const pager = ensureMockPlayerPager(table);
+	if (pager) {
+		const first = allRows.length ? start + 1 : 0, last = Math.min(start + rows.length, allRows.length);
+		pager.innerHTML = `<span><strong>${first}-${last}</strong> of ${allRows.length} players</span><div class="pool-pager-actions"><button type="button" data-mock-page="${page - 1}" ${page <= 1 ? 'disabled' : ''}>Prev</button><span>Page ${page}/${pageCount}</span><button type="button" data-mock-page="${page + 1}" ${page >= pageCount ? 'disabled' : ''}>Next</button></div>`;
+		pager.querySelectorAll('[data-mock-page]').forEach(btn => btn.addEventListener('click', () => { state.mockPlayerPage = Number(btn.dataset.mockPage); renderMockAuction(); }));
+	}
 	table.innerHTML = `<thead><tr><th>Rank</th><th>Player</th><th>Pos</th><th>Team</th><th>Price Tier</th><th>Bid</th><th>+5%</th><th>+10%</th><th>Signal</th><th class="no-sort">Action</th></tr></thead><tbody>${rows.map(r => { const drafted = m.drafted.has(r.id); return `<tr><td>${r.pool_rank}</td><td><strong>${escapeHtml(r.player)}</strong></td><td>${escapeHtml(r.position)}</td><td>${escapeHtml(r.team || '')}</td><td>${escapeHtml(r.auction_tier)}</td><td>$${Math.round(r.auction_value)}</td><td>$${Math.ceil(n(r.auction_value) * 1.05)}</td><td>$${Math.ceil(n(r.auction_value) * 1.1)}</td><td>${renderBidSignal(r)}</td><td class="mock-actions">${drafted ? '<span class="small">Drafted</span>' : `<button type="button" data-nominate="${escapeHtml(r.id)}" ${m.current ? 'disabled' : ''}>Nominate</button>`}</td></tr>`; }).join('')}</tbody>`;
 	table.querySelectorAll('[data-nominate]').forEach(btn => btn.addEventListener('click', () => { if (mockNominate(btn.dataset.nominate, 0)) startMockClock(); else renderMockAuction(); }));
 	table.querySelectorAll('.bid-pill').forEach(btn=>btn.addEventListener('click',()=>showNote(btn.dataset.tip)));
@@ -1994,6 +2048,22 @@ function slowTeamMaxBid(team, excludingLotId=null) {
 	const max = Math.floor(team.budget - committed - reserve);
 	return Math.max(1, max);
 }
+function slowCanAnyOpponentOutbid(lot) {
+	const m = ensureSlowState();
+	if (!lot || lot.highBidder === null || lot.highBidder === undefined) return false;
+	return m.teams.some(team => team.id !== lot.highBidder && team.roster.length < AUCTION_CONFIG.rosterSpots && slowTeamMaxBid(team, lot.id) > lot.currentBid);
+}
+function slowMaybeAutoAwardLot(lotOrId) {
+	const m = ensureSlowState(), lot = typeof lotOrId === 'object' ? lotOrId : m.lots.find(item => item.id === Number(lotOrId));
+	if (!lot || slowCanAnyOpponentOutbid(lot)) return false;
+	return slowAwardLot(lot.id);
+}
+function slowAwardUnbeatableLots() {
+	const m = ensureSlowState();
+	let awarded = false;
+	[...m.lots].forEach(lot => { if (slowMaybeAutoAwardLot(lot.id)) awarded = true; });
+	return awarded;
+}
 function slowProxyBids(lot) { if (!lot.proxyBids) lot.proxyBids = {}; return lot.proxyBids; }
 function slowProxyMax(lot, teamId=0) { return Math.max(0, Number(lot?.proxyBids?.[teamId] || 0)); }
 function slowHumanHasBid(lot) { return Boolean(lot?.humanBid || slowProxyMax(lot, 0) > 0 || lot?.nominatorId === 0); }
@@ -2025,7 +2095,12 @@ function slowSetMaxBid(amount, lotId=null, teamId=0) {
 	slowProxyBids(lot)[team.id] = ceiling;
 	if (team.id === 0) lot.humanBid = true;
 	m.selectedLotId = lot.id;
-	if (lot.highBidder !== team.id && ceiling > lot.currentBid) return slowApplyProxyBids(lot);
+	if (lot.highBidder !== team.id && ceiling > lot.currentBid) {
+		const changed = slowApplyProxyBids(lot);
+		slowMaybeAutoAwardLot(lot.id);
+		return changed;
+	}
+	slowMaybeAutoAwardLot(lot.id);
 	return true;
 }
 function slowAvailablePool(m=ensureSlowState()) {
@@ -2051,6 +2126,7 @@ function slowNominate(playerId, teamId=0, advanceOrder=true) {
 	m.selectedLotId = lot.id;
 	if (advanceOrder) slowAdvanceNominator(m, teamId);
 	m.nominationCooldown = slowNominationSeconds();
+	slowMaybeAutoAwardLot(lot.id);
 	return true;
 }
 function slowFillNominations(maxAdds=Infinity) {
@@ -2145,6 +2221,7 @@ function slowRunBotBids(force=false) {
 			}
 		});
 	});
+	if (slowAwardUnbeatableLots()) changed = true;
 	return changed;
 }
 function slowSelectedLot() {
@@ -2163,6 +2240,7 @@ function slowHumanBid(amount, lotId=null) {
 		m.selectedLotId = lot.id;
 		slowTouchTimer(lot);
 		slowApplyProxyBids(lot);
+		slowMaybeAutoAwardLot(lot.id);
 		return true;
 	}
 	return false;
@@ -2245,7 +2323,8 @@ function renderSlowTopbar(m) {
 	root.innerHTML = [
 		renderMetric('Your budget', '$' + team.budget),
 		renderMetric('Committed', '$' + slowTeamCommitted(team)),
-		renderMetric('Max bid', '$' + slowTeamMaxBid(team))
+		renderMetric('Max bid', '$' + slowTeamMaxBid(team)),
+		renderMetric('Roster', `${team.roster.length}/${AUCTION_CONFIG.rosterSpots}`)
 	].join('');
 }
 function renderSlowSummary(m) {
@@ -2296,9 +2375,11 @@ function renderSlowLots(m) {
 		const humanBidState = lot.highBidder === 0 ? 'human-winning' : slowHumanHasBid(lot) ? 'human-outbid' : '';
 		const humanMax = slowProxyMax(lot, 0);
 		const humanMaxAllowed = slowTeamMaxBid(m.teams[0], lot.id);
+		const strategy = auctionStrategy(lot.player, m.teams[0], lot.currentBid, humanMaxAllowed, slowTeamCommitted(m.teams[0], lot.id));
+		const guidance = slowLotGuidanceHtml(strategy, lot.player);
 		const valueAmount = Math.min(humanMaxAllowed, Math.max(lot.currentBid + 1, Math.round(n(lot.player.auction_value))));
 		const maxAmount = Math.min(humanMaxAllowed, Math.max(lot.currentBid + 1, humanMax || Math.ceil(n(lot.player.auction_value) * 1.1) || lot.currentBid + 1));
-		return `<div class="slow-lot ${m.selectedLotId === lot.id ? 'active' : ''} ${expiring ? 'expiring' : ''} ${humanBidState}" data-slow-lot="${lot.id}" role="button" tabindex="0"><div class="slow-lot-status"><strong>Bid ${escapeHtml(slowClockDetail(lot.timeRemaining))}</strong><span>${lot.bidCount} bids</span></div><h3>${escapeHtml(lot.player.player)}</h3><div class="slow-lot-meta"><span>${escapeHtml(lot.player.position)}${lot.player.team ? ' ' + escapeHtml(lot.player.team) : ''}</span><span>$${Math.round(n(lot.player.auction_value))} value</span></div><div class="slow-lot-meta"><span>Nom: ${escapeHtml(nominator ? nominator.name : '-')}</span><span>${escapeHtml(lot.player.auction_tier || '')}</span></div>${humanMax ? `<span class="proxy-pill">Your max $${humanMax}</span>` : ''}<div class="slow-lot-bid"><div><span>Winning bid</span><strong>$${lot.currentBid}</strong></div><em>${escapeHtml(high ? high.name : '-')}<br>${escapeHtml(lot.player.auction_tier || '')}</em></div><div class="slow-actions"><button type="button" data-slow-bid="${lot.id}" data-amount="${lot.currentBid + 1}">+$1</button><button type="button" data-slow-bid="${lot.id}" data-amount="${lot.currentBid + 5}">+$5</button></div><div class="slow-lot-controls"><label>Value<input type="number" min="${lot.currentBid + 1}" max="${humanMaxAllowed}" step="1" value="${valueAmount}" data-slow-value-input="${lot.id}"></label><button type="button" data-slow-bid-value="${lot.id}">Bid value</button><label>Max<input type="number" min="${lot.currentBid + 1}" max="${humanMaxAllowed}" step="1" value="${maxAmount}" data-slow-max-input="${lot.id}"></label><button type="button" data-slow-set-max="${lot.id}">Set max</button></div></div>`;
+		return `<div class="slow-lot ${m.selectedLotId === lot.id ? 'active' : ''} ${expiring ? 'expiring' : ''} ${humanBidState}" data-slow-lot="${lot.id}" role="button" tabindex="0"><div class="slow-lot-status"><strong>Bid ${escapeHtml(slowClockDetail(lot.timeRemaining))}</strong><span>${lot.bidCount} bids</span></div><h3>${escapeHtml(lot.player.player)}</h3><div class="slow-lot-meta"><span>${escapeHtml(lot.player.position)}${lot.player.team ? ' ' + escapeHtml(lot.player.team) : ''}</span><span>$${Math.round(n(lot.player.auction_value))} value</span></div><div class="slow-lot-meta"><span>Nom: ${escapeHtml(nominator ? nominator.name : '-')}</span><span>${escapeHtml(lot.player.auction_tier || '')}</span></div>${humanMax ? `<span class="proxy-pill">Your max $${humanMax}</span>` : ''}<div class="slow-lot-bid"><div><span>Winning bid</span><strong>$${lot.currentBid}</strong></div><em>${escapeHtml(high ? high.name : '-')}<br>${escapeHtml(lot.player.auction_tier || '')}</em></div>${guidance}<div class="slow-actions"><button type="button" data-slow-bid="${lot.id}" data-amount="${lot.currentBid + 1}">+$1</button><button type="button" data-slow-bid="${lot.id}" data-amount="${lot.currentBid + 5}">+$5</button></div><div class="slow-lot-controls"><label>Value<input type="number" min="${lot.currentBid + 1}" max="${humanMaxAllowed}" step="1" value="${valueAmount}" data-slow-value-input="${lot.id}"></label><button type="button" data-slow-bid-value="${lot.id}">Bid value</button><label>Max<input type="number" min="${lot.currentBid + 1}" max="${humanMaxAllowed}" step="1" value="${maxAmount}" data-slow-max-input="${lot.id}"></label><button type="button" data-slow-set-max="${lot.id}">Set max</button></div></div>`;
 	}).join('');
 	root.querySelectorAll('[data-slow-lot]').forEach(card => card.addEventListener('click', e => { if (e.target.closest('button')) return; m.selectedLotId = Number(card.dataset.slowLot); renderSlowAuction(); }));
 	root.querySelectorAll('[data-slow-bid]').forEach(btn => btn.addEventListener('click', e => { e.stopPropagation(); slowHumanBid(Number(btn.dataset.amount), btn.dataset.slowBid); renderSlowAuction(); }));
@@ -2324,10 +2405,29 @@ function renderSlowResults(m) {
 	const root = document.getElementById('slowResults'); if (!root) return;
 	root.innerHTML = m.results.length ? m.results.map(r => `<div class="result-item"><strong>${escapeHtml(r.player)}</strong> <span class="small">${escapeHtml(r.position)}${r.team ? ' ' + escapeHtml(r.team) : ''}</span><br><span class="small">$${r.paid} to ${escapeHtml(r.buyer)}${r.slot ? ' - ' + escapeHtml(r.slot) : ''}${r.profile ? ' - ' + escapeHtml(r.profile) : ''}</span></div>`).join('') : '<div class="mock-empty">No completed slow auctions yet.</div>';
 }
+function ensureSlowPlayerPager(table) {
+	let pager = document.getElementById('slowPlayerPager');
+	if (pager) return pager;
+	pager = document.createElement('div');
+	pager.id = 'slowPlayerPager';
+	pager.className = 'pool-pager';
+	table?.parentElement?.insertAdjacentElement('beforebegin', pager);
+	return pager;
+}
 function renderSlowPlayerTable(m) {
 	const table = document.getElementById('slowPlayerTable'); if (!table) return;
 	const q = norm(document.getElementById('slowPlayerSearch')?.value), pos = document.getElementById('slowPosFilter')?.value || '', showDrafted = Boolean(document.getElementById('slowShowDrafted')?.checked), active = slowActivePlayerIds(m);
-	const rows = auctionPool().filter(r => (showDrafted || (!m.drafted.has(r.id) && !active.has(r.id))) && (!pos || r.position === pos) && (!q || norm(Object.values(r).join(' ')).includes(q))).slice(0, 180);
+	const allRows = auctionPool().filter(r => (showDrafted || (!m.drafted.has(r.id) && !active.has(r.id))) && (!pos || r.position === pos) && (!q || norm(Object.values(r).join(' ')).includes(q)));
+	const pageCount = Math.max(1, Math.ceil(allRows.length / SLOW_POOL_PAGE_SIZE));
+	const page = Math.max(1, Math.min(pageCount, Math.round(Number(state.slowPlayerPage) || 1)));
+	state.slowPlayerPage = page;
+	const start = (page - 1) * SLOW_POOL_PAGE_SIZE, rows = allRows.slice(start, start + SLOW_POOL_PAGE_SIZE);
+	const pager = ensureSlowPlayerPager(table);
+	if (pager) {
+		const first = allRows.length ? start + 1 : 0, last = Math.min(start + rows.length, allRows.length);
+		pager.innerHTML = `<span><strong>${first}-${last}</strong> of ${allRows.length} players</span><div class="pool-pager-actions"><button type="button" data-slow-page="${page - 1}" ${page <= 1 ? 'disabled' : ''}>Prev</button><span>Page ${page}/${pageCount}</span><button type="button" data-slow-page="${page + 1}" ${page >= pageCount ? 'disabled' : ''}>Next</button></div>`;
+		pager.querySelectorAll('[data-slow-page]').forEach(btn => btn.addEventListener('click', () => { state.slowPlayerPage = Number(btn.dataset.slowPage); renderSlowAuction(); }));
+	}
 	const full = m.lots.length >= slowLotLimit(), humanTurn = slowNextNominator(m)?.id === 0;
 	table.innerHTML = `<thead><tr><th>Rank</th><th>Player</th><th>Pos</th><th>Team</th><th>Price Tier</th><th>Bid</th><th>+5%</th><th>+10%</th><th>Signal</th><th class="no-sort">Action</th></tr></thead><tbody>${rows.map(r => { const unavailable = m.drafted.has(r.id) || active.has(r.id); return `<tr><td>${r.pool_rank}</td><td><strong>${escapeHtml(r.player)}</strong></td><td>${escapeHtml(r.position)}</td><td>${escapeHtml(r.team || '')}</td><td>${escapeHtml(r.auction_tier)}</td><td>$${Math.round(r.auction_value)}</td><td>$${Math.ceil(n(r.auction_value) * 1.05)}</td><td>$${Math.ceil(n(r.auction_value) * 1.1)}</td><td>${renderBidSignal(r)}</td><td class="mock-actions">${unavailable ? '<span class="small">Unavailable</span>' : `<button type="button" data-slow-nominate="${escapeHtml(r.id)}" ${full || !humanTurn ? 'disabled' : ''} title="${humanTurn ? 'Nominate this player' : 'Wait for your nomination turn'}">Nominate</button>`}</td></tr>`; }).join('')}</tbody>`;
 	table.querySelectorAll('[data-slow-nominate]').forEach(btn => btn.addEventListener('click', () => { slowNominate(btn.dataset.slowNominate, 0); renderSlowAuction(); }));
@@ -2336,7 +2436,7 @@ function renderSlowPlayerTable(m) {
 function renderSlowAuction() {
 	if (!document.getElementById('slowAuction')) return;
 	const m = ensureSlowState();
-	renderSlowTopbar(m); renderSlowSummary(m); renderSlowStrategy(m); renderSlowDraftBoard(m); renderSlowLots(m); renderSlowTeams(m); renderSlowSelectedTeam(m); renderSlowResults(m); renderSlowPlayerTable(m); scheduleAutoSave();
+	renderSlowTopbar(m); renderSlowSummary(m); renderSlowDraftBoard(m); renderSlowLots(m); renderSlowTeams(m); renderSlowSelectedTeam(m); renderSlowResults(m); renderSlowPlayerTable(m); scheduleAutoSave();
 }
 function filteredTopLimit() { const value = Number(document.getElementById('filteredTopLimit')?.value); return [10, 20, 50, 100].includes(value) ? value : 20; }
 function currentCheatMode() { return document.getElementById('rankMode')?.value || 'waldman'; }
@@ -2461,9 +2561,9 @@ function init() {
 	['marketScale','marketQB','marketRB','marketWR','marketTE'].forEach(id=>['input','change'].forEach(eventName=>document.getElementById(id).addEventListener(eventName, markMarketCustomAndRefresh)));
 	document.getElementById('optimizerFocus').addEventListener('change',()=>{ const key = readOptimizerFocus(); if (key !== 'custom') setOptimizerMixValues(OPTIMIZER_FOCUS_CONFIG[key]?.mix || OPTIMIZER_DEFAULT_MIX); refreshOptimizer(); });
 	Object.values(OPTIMIZER_MIX_IDS).forEach(id=>['input','change'].forEach(eventName=>document.getElementById(id).addEventListener(eventName,()=>{ document.getElementById('optimizerFocus').value = 'custom'; refreshOptimizer(); })));
-	['mockPlayerSearch','mockPosFilter','mockShowDrafted'].forEach(id=>document.getElementById(id).addEventListener('input', renderMockAuction));
+	['mockPlayerSearch','mockPosFilter','mockShowDrafted'].forEach(id=>['input','change'].forEach(eventName=>document.getElementById(id).addEventListener(eventName,()=>{ state.mockPlayerPage = 1; renderMockAuction(); })));
 	['mockNominationSeconds','mockResetSeconds'].forEach(id=>document.getElementById(id).addEventListener('input', applyMockTimerConfig));
-	['slowPlayerSearch','slowPosFilter','slowShowDrafted'].forEach(id=>document.getElementById(id).addEventListener('input', renderSlowAuction));
+	['slowPlayerSearch','slowPosFilter','slowShowDrafted'].forEach(id=>['input','change'].forEach(eventName=>document.getElementById(id).addEventListener(eventName,()=>{ state.slowPlayerPage = 1; renderSlowAuction(); })));
 	['slowNominationCount','slowNominationMinutes','slowNominationUnit','slowBidMinutes','slowBidUnit','slowResetMinutes','slowResetUnit'].forEach(id=>['input','change'].forEach(eventName=>document.getElementById(id).addEventListener(eventName, applySlowTimerConfig)));
 	['ltPlayerSearch','ltPosFilter','ltShowDrafted'].forEach(id=>document.getElementById(id).addEventListener('input', renderLeagueTycoon));
 	document.getElementById('runOptimizer').addEventListener('click', refreshOptimizer);
