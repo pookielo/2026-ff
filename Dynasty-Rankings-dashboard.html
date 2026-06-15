@@ -138,6 +138,15 @@ svg { width:100%; max-width:100%; min-width:0; height:auto; display:block; }
 .result-log { display:grid; gap:7px; max-height:300px; overflow:auto; }
 .result-item { border-bottom:1px solid #e7ebf2; padding:7px 0; }
 .result-item strong { font-weight:500; }
+.tendency-table { width:100%; min-width:860px; font-size:12px; }
+.tendency-table th, .tendency-table td { padding:7px 8px; }
+.tendency-table th { cursor:default; }
+.tendency-table th::after { content:''; }
+.tendency-table td:last-child { min-width:220px; }
+.tendency-line { display:flex; flex-wrap:wrap; gap:5px; margin-top:6px; }
+.tendency-chip { display:inline-flex; border:1px solid #dbe4f0; border-radius:999px; background:white; color:#475569; padding:2px 6px; font-size:10px; font-weight:750; }
+.tell-list { display:flex; flex-wrap:wrap; gap:4px; }
+.tell-list span { display:inline-flex; border-radius:999px; background:#eef2ff; color:#334155; padding:2px 6px; font-size:11px; font-weight:750; white-space:nowrap; }
 .mock-player-list { max-height:560px; }
 #mockPlayerTable { min-width:960px; }
 #mockPlayerTable th:nth-child(2), #mockPlayerTable td:nth-child(2),
@@ -1451,15 +1460,16 @@ function marketPressureHtml(player, teams, options={}) {
 	if (!player || !teams?.length) return '';
 	const currentBid = Math.max(0, Math.round(n(options.currentBid)));
 	const maxBidForTeam = options.maxBidForTeam || (() => 0);
+	const tendencies = new Map((options.tendencies || []).map(row => [row.teamId, row]));
 	const rows = teams.filter(team => team && team.id !== 0 && team.roster.length < AUCTION_CONFIG.rosterSpots).map(team => {
 		const allowed = Math.max(0, Math.round(n(maxBidForTeam(team))));
 		const predicted = predictedTeamBid(team, player, allowed, currentBid);
-		return {team, allowed, predicted, need:positionNeedLabel(team, player.position), summary:teamNeedSummary(team)};
+		return {team, allowed, predicted, need:positionNeedLabel(team, player.position), summary:teamNeedSummary(team), tell:tendencies.get(team.id)?.tells?.[0] || ''};
 	}).sort((a,b)=>b.predicted - a.predicted || b.allowed - a.allowed).slice(0, options.limit || 6);
 	if (!rows.length) return '';
 	return `<div class="market-pressure"><h4>Other team needs and predicted bids</h4><div class="pressure-grid">${rows.map(row => {
 		const status = row.predicted > currentBid ? `up to $${row.predicted}` : 'unlikely';
-		return `<div class="pressure-item"><strong>${escapeHtml(row.team.name)} <em>${escapeHtml(status)}</em></strong><span>${escapeHtml(row.need)}</span><span>${escapeHtml(row.summary)}</span><span>Max possible $${row.allowed}</span></div>`;
+		return `<div class="pressure-item"><strong>${escapeHtml(row.team.name)} <em>${escapeHtml(status)}</em></strong><span>${escapeHtml(row.need)}</span><span>${escapeHtml(row.summary)}</span><span>Max possible $${row.allowed}</span>${row.tell ? `<span>Tell: ${escapeHtml(row.tell)}</span>` : ''}</div>`;
 	}).join('')}</div></div>`;
 }
 function ensureMockStrategyPanel() {
@@ -1584,6 +1594,126 @@ function refreshOptimizer() {
 	renderLeagueTycoon();
 }
 function shuffle(items) { const out = [...items]; for (let i = out.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [out[i], out[j]] = [out[j], out[i]]; } return out; }
+function auctionEvents(m) { if (!Array.isArray(m.events)) m.events = []; return m.events; }
+function auctionEventLotId(m) { m.lotSeq = Math.max(1, Math.round(Number(m.lotSeq) || 1)); return m.lotSeq++; }
+function auctionEventPlayer(player) {
+	return player ? {playerId:player.id, player:player.player, position:player.position, team:player.team, value:Math.max(1, Math.round(n(player.auction_value))), bidSignal:n(player.bid_signal)} : {};
+}
+function recordAuctionEvent(m, event) {
+	if (!m || !event) return;
+	auctionEvents(m).push({time:Date.now(), ...event});
+	if (m.events.length > 1200) m.events.splice(0, m.events.length - 1200);
+}
+function fastBidTiming(m) {
+	const remaining = Math.max(0, Number(m?.timerRemaining || 0)), window = Math.max(1, mockResetSeconds());
+	const elapsed = Math.max(0, Math.min(1, 1 - (remaining / window)));
+	if (elapsed <= 0.25) return 'early';
+	if (elapsed >= 0.75) return 'late';
+	return 'middle';
+}
+function slowBidTiming(lot) {
+	const window = Math.max(1, Number(lot?.bidWindow || slowBidSeconds())), remaining = Math.max(0, Number(lot?.timeRemaining || 0));
+	const elapsed = Math.max(0, Math.min(1, 1 - (remaining / window)));
+	if (elapsed <= 0.25) return 'early';
+	if (elapsed >= 0.75) return 'late';
+	return 'middle';
+}
+function overPct(amount, value) { return value ? Math.round(((amount / value) - 1) * 100) : 0; }
+function pctText(value) { return Number.isFinite(value) ? `${Math.round(value)}%` : '-'; }
+function moneyAvg(sum, count) { return count ? Math.round(sum / count) : 0; }
+function auctionTendencyRows(m) {
+	const stats = new Map();
+	(m?.teams || []).forEach(team => stats.set(team.id, {teamId:team.id, name:team.name, profile:team.profile?.label || (team.bot ? team.profileKey : 'Human'), nominations:0, bids:0, passes:0, wins:0, spent:0, overBidCount:0, over10:0, over20:0, signalBids:0, earlyBids:0, middleBids:0, lateBids:0, bidOverSum:0, maxOver:null, winOverSum:0, noFollowBidNoms:0, contestedNoms:0, ownNomWins:0}));
+	const lots = new Map();
+	auctionEvents(m).forEach(event => {
+		if (!stats.has(event.teamId) && Number.isFinite(Number(event.teamId))) stats.set(event.teamId, {teamId:event.teamId, name:`Team ${event.teamId + 1}`, profile:'', nominations:0, bids:0, passes:0, wins:0, spent:0, overBidCount:0, over10:0, over20:0, signalBids:0, earlyBids:0, middleBids:0, lateBids:0, bidOverSum:0, maxOver:null, winOverSum:0, noFollowBidNoms:0, contestedNoms:0, ownNomWins:0});
+		const row = stats.get(event.teamId);
+		const lotId = event.lotId || `${event.playerId || event.player}-${event.time || 0}`;
+		const lot = lots.get(lotId) || {lotId, nominatorId:null, bids:[], winnerId:null, value:n(event.value)};
+		if (event.type === 'nomination') { row.nominations += 1; lot.nominatorId = event.teamId; lot.value = n(event.value) || lot.value; }
+		if (event.type === 'bid') {
+			row.bids += 1;
+			const pct = overPct(n(event.amount), n(event.value));
+			row.bidOverSum += pct;
+			if (pct > 0) row.overBidCount += 1;
+			if (pct >= 10) row.over10 += 1;
+			if (pct >= 20) row.over20 += 1;
+			if (row.maxOver === null || pct > row.maxOver) row.maxOver = pct;
+			if (event.bidSignal) row.signalBids += 1;
+			if (event.timing === 'early') row.earlyBids += 1;
+			else if (event.timing === 'late') row.lateBids += 1;
+			else row.middleBids += 1;
+			lot.bids.push({teamId:event.teamId, amount:event.amount});
+			lot.value = n(event.value) || lot.value;
+		}
+		if (event.type === 'pass') row.passes += 1;
+		if (event.type === 'win') {
+			row.wins += 1;
+			row.spent += n(event.amount);
+			row.winOverSum += overPct(n(event.amount), n(event.value));
+			lot.winnerId = event.teamId;
+			lot.value = n(event.value) || lot.value;
+		}
+		lots.set(lotId, lot);
+	});
+	lots.forEach(lot => {
+		const row = stats.get(lot.nominatorId);
+		if (!row) return;
+		const followBid = lot.bids.some(bid => bid.teamId === lot.nominatorId);
+		if (!followBid) row.noFollowBidNoms += 1;
+		if (lot.bids.length > 0) row.contestedNoms += 1;
+		if (lot.winnerId === lot.nominatorId) row.ownNomWins += 1;
+	});
+	return [...stats.values()].map(row => {
+		const bidPerNom = row.nominations ? row.bids / row.nominations : row.bids;
+		const avgOver = row.bids ? row.bidOverSum / row.bids : null;
+		const avgWinOver = row.wins ? row.winOverSum / row.wins : null;
+		const lateRate = row.bids ? (row.lateBids / row.bids) * 100 : 0;
+		const earlyRate = row.bids ? (row.earlyBids / row.bids) * 100 : 0;
+		const noFollowRate = row.nominations ? (row.noFollowBidNoms / row.nominations) * 100 : 0;
+		const over20Rate = row.bids ? (row.over20 / row.bids) * 100 : 0;
+		const signalRate = row.bids ? (row.signalBids / row.bids) * 100 : 0;
+		const tells = [];
+		if (row.nominations >= 3 && noFollowRate >= 65) tells.push('nominates then watches');
+		if (row.nominations >= 3 && row.contestedNoms / row.nominations >= 0.65) tells.push('throws popular names');
+		if (row.bids >= 4 && over20Rate >= 18) tells.push('can push 20%+');
+		if (row.maxOver !== null && row.maxOver >= 30) tells.push('top-end overbidder');
+		if (row.bids >= 4 && lateRate >= 40) tells.push('late bidder');
+		if (row.bids >= 4 && earlyRate >= 55) tells.push('early pressure');
+		if (row.bids >= 4 && signalRate >= 35) tells.push('chases Bid+ targets');
+		if (row.passes > row.bids && row.passes >= 4) tells.push('quick pass');
+		if (!tells.length) tells.push(row.bids + row.nominations + row.wins >= 4 ? 'balanced/unclear' : 'needs more data');
+		return {...row, bidPerNom, avgOver, avgWinOver, lateRate, earlyRate, noFollowRate, tells};
+	}).sort((a,b)=>b.bids-a.bids || b.nominations-a.nominations || a.teamId-b.teamId);
+}
+function auctionTeamTendencyLine(m, teamId) {
+	const row = auctionTendencyRows(m).find(item => item.teamId === teamId);
+	if (!row || row.bids + row.nominations + row.wins < 2) return '';
+	return `<span class="tendency-chip">${row.bids} bids</span><span class="tendency-chip">${row.nominations} noms</span><span class="tendency-chip">${pctText(row.maxOver)} max over</span>`;
+}
+function ensureTendencyPanel(panelId, title) {
+	let root = document.getElementById(panelId);
+	if (root) return root;
+	const results = panelId === 'mockTendencies' ? document.getElementById('mockResults') : document.getElementById('slowResults');
+	const side = results?.closest('.mock-side-panel');
+	if (!side) return null;
+	const card = document.createElement('div');
+	card.className = 'card';
+	card.innerHTML = `<h2>${escapeHtml(title)}</h2><div class="table-wrap"><table id="${panelId}" class="tendency-table"></table></div>`;
+	side.appendChild(card);
+	return document.getElementById(panelId);
+}
+function renderAuctionTendencies(panelId, m, title) {
+	const table = ensureTendencyPanel(panelId, title);
+	if (!table) return;
+	const rows = auctionTendencyRows(m);
+	const activeRows = rows.filter(row => row.bids || row.nominations || row.wins || row.passes);
+	if (!activeRows.length) {
+		table.innerHTML = `<tbody><tr><td class="mock-empty">Run auction activity to learn team tendencies.</td></tr></tbody>`;
+		return;
+	}
+	table.innerHTML = `<thead><tr><th>Team</th><th>Profile</th><th>Nom</th><th>Bids</th><th>Bid/Nom</th><th>Wins</th><th>Avg Over</th><th>Max Over</th><th>Late</th><th>No-follow Nom</th><th>Tells</th></tr></thead><tbody>${activeRows.map(row => `<tr><td>${escapeHtml(row.name)}</td><td>${escapeHtml(row.profile || '-')}</td><td>${row.nominations}</td><td>${row.bids}</td><td>${rawFmt(row.bidPerNom)}</td><td>${row.wins}</td><td>${row.avgOver === null ? '-' : pctText(row.avgOver)}</td><td>${row.maxOver === null ? '-' : pctText(row.maxOver)}</td><td>${pctText(row.lateRate)}</td><td>${pctText(row.noFollowRate)}</td><td><div class="tell-list">${row.tells.map(tell => `<span>${escapeHtml(tell)}</span>`).join('')}</div></td></tr>`).join('')}</tbody>`;
+}
 function createMockTeam(id, profileKey='human') { const profile = MOCK_BOT_PROFILES[profileKey]; return {id, name:id === 0 ? 'You' : `Bot ${id}`, bot:id !== 0, profileKey, profile, budget:AUCTION_CONFIG.budget, roster:[]}; }
 function slowTimingForProfile(profileKey, id=0) {
 	const timings = {aggressive:['early','early','normal','sniper'], balanced:['early','normal','normal','sniper'], conservative:['normal','sniper','sniper','late'], value:['early','normal','sniper','normal']};
@@ -1593,7 +1723,7 @@ function slowTimingForProfile(profileKey, id=0) {
 function assignSlowTiming(team) { if (team?.bot) team.slowTiming = slowTimingForProfile(team.profileKey, team.id); return team; }
 function createMockState() {
 	const bag = shuffle(['aggressive','balanced','balanced','balanced','conservative','conservative','value','value','aggressive','balanced','conservative']);
-	return {teams:[createMockTeam(0), ...bag.map((key, i) => createMockTeam(i + 1, key))], drafted:new Set(), current:null, currentBid:0, highBidder:null, passed:new Set(), nominatorIndex:0, results:[], active:true, selectedTeamId:0, timerRemaining:mockNominationSeconds(), clockRunning:false};
+	return {teams:[createMockTeam(0), ...bag.map((key, i) => createMockTeam(i + 1, key))], drafted:new Set(), current:null, currentBid:0, highBidder:null, passed:new Set(), nominatorIndex:0, results:[], events:[], lotSeq:1, currentLotId:null, active:true, selectedTeamId:0, timerRemaining:mockNominationSeconds(), clockRunning:false};
 }
 function ensureMockState() { if (!state.mock) state.mock = createMockState(); return state.mock; }
 function stopMockClock() { if (mockClockId) clearInterval(mockClockId); mockClockId = null; if (state.mock) state.mock.clockRunning = false; }
@@ -1643,7 +1773,9 @@ function mockNominate(playerId, teamId=0) {
 	const m = ensureMockState(); if (m.current) return false;
 	const team = m.teams[teamId], player = auctionPool().find(p => p.id === playerId);
 	if (!team || !player || m.drafted.has(player.id) || mockTeamMaxBid(team) < 1) return false;
-	m.current = player; m.currentBid = 1; m.highBidder = teamId; m.passed = new Set(); resetMockTimer('nomination'); mockMaybeAutoAwardCurrent(); return true;
+	m.current = player; m.currentBid = 1; m.highBidder = teamId; m.currentLotId = auctionEventLotId(m); m.passed = new Set();
+	recordAuctionEvent(m, {type:'nomination', mode:'fast', teamId, lotId:m.currentLotId, amount:1, ...auctionEventPlayer(player)});
+	resetMockTimer('nomination'); mockMaybeAutoAwardCurrent(); return true;
 }
 function mockBotNominate() {
 	const m = ensureMockState();
@@ -1671,8 +1803,12 @@ function mockRunBotRound(auto=false) {
 	shuffle(m.teams.filter(t => t.bot)).forEach(team => {
 		if (!m.current || m.highBidder === team.id || m.passed.has(team.id) || team.roster.length >= AUCTION_CONFIG.rosterSpots) return;
 		const max = botMaxBid(team, m.current);
-		if (max > m.currentBid) { m.currentBid = Math.min(max, m.currentBid + mockBidIncrement(m.currentBid, max)); m.highBidder = team.id; changed = true; }
-		else m.passed.add(team.id);
+		if (max > m.currentBid) {
+			const previousBid = m.currentBid;
+			m.currentBid = Math.min(max, m.currentBid + mockBidIncrement(m.currentBid, max)); m.highBidder = team.id; changed = true;
+			recordAuctionEvent(m, {type:'bid', mode:'fast', source:'bot', teamId:team.id, lotId:m.currentLotId, amount:m.currentBid, previousBid, max, timing:fastBidTiming(m), ...auctionEventPlayer(m.current)});
+		}
+		else { m.passed.add(team.id); recordAuctionEvent(m, {type:'pass', mode:'fast', source:'bot', teamId:team.id, lotId:m.currentLotId, amount:m.currentBid, ...auctionEventPlayer(m.current)}); }
 	});
 	if (mockMaybeAutoAwardCurrent()) return true;
 	if (changed) resetMockTimer('bid');
@@ -1682,17 +1818,23 @@ function mockRunBotRound(auto=false) {
 function mockHumanBid(amount) {
 	const m = ensureMockState(); if (!m.current) return;
 	const team = m.teams[0], max = mockTeamMaxBid(team), bid = Math.min(max, Math.max(m.currentBid + 1, Math.round(amount)));
-	if (bid > m.currentBid) { m.currentBid = bid; m.highBidder = 0; m.passed.delete(0); resetMockTimer('bid'); mockMaybeAutoAwardCurrent(); }
+	if (bid > m.currentBid) {
+		const previousBid = m.currentBid;
+		m.currentBid = bid; m.highBidder = 0; m.passed.delete(0);
+		recordAuctionEvent(m, {type:'bid', mode:'fast', source:'human', teamId:0, lotId:m.currentLotId, amount:m.currentBid, previousBid, max, timing:fastBidTiming(m), ...auctionEventPlayer(m.current)});
+		resetMockTimer('bid'); mockMaybeAutoAwardCurrent();
+	}
 }
-function mockPassHuman() { const m = ensureMockState(); if (!m.current) return; m.passed.add(0); if (!mockRunBotRound(true) && m.current) mockAwardCurrent(); }
+function mockPassHuman() { const m = ensureMockState(); if (!m.current) return; m.passed.add(0); recordAuctionEvent(m, {type:'pass', mode:'fast', source:'human', teamId:0, lotId:m.currentLotId, amount:m.currentBid, ...auctionEventPlayer(m.current)}); if (!mockRunBotRound(true) && m.current) mockAwardCurrent(); }
 function mockAwardCurrent() {
 	const m = ensureMockState(); if (!m.current || m.highBidder === null) return;
 	const team = m.teams[m.highBidder], paid = Math.min(m.currentBid, mockTeamMaxBid(team));
 	if (paid < 1 || team.roster.length >= AUCTION_CONFIG.rosterSpots) { m.current = null; return; }
+	recordAuctionEvent(m, {type:'win', mode:'fast', teamId:m.highBidder, lotId:m.currentLotId, amount:paid, bidCount:m.events.filter(event => event.lotId === m.currentLotId && event.type === 'bid').length, ...auctionEventPlayer(m.current)});
 	team.budget -= paid; team.roster.push({...m.current, paid}); m.drafted.add(m.current.id);
 	const slot = assignRosterSlots(team.roster).find(s => s.player?.id === m.current.id)?.slot || '';
 	m.results.unshift({player:m.current.player, position:m.current.position, team:m.current.team, paid, buyer:team.name, profile:team.profile?.label || 'Human', slot});
-	m.nominatorIndex = (m.highBidder + 1) % m.teams.length; m.current = null; m.currentBid = 0; m.highBidder = null; m.passed = new Set(); resetMockTimer('nomination');
+	m.nominatorIndex = (m.highBidder + 1) % m.teams.length; m.current = null; m.currentBid = 0; m.highBidder = null; m.currentLotId = null; m.passed = new Set(); resetMockTimer('nomination');
 }
 function mockAutoResolveOne() {
 	const m = ensureMockState(); if (!m.current && !mockBotNominate()) return;
@@ -1733,7 +1875,7 @@ function renderMockCurrent(m) {
 	if (!m.current) { root.innerHTML = '<div class="mock-empty">No player nominated. Pick from the pool or auto-run a nomination.</div>'; return; }
 	const high = m.teams[m.highBidder];
 	const overValue = n(m.current.auction_value) ? `${Math.round((m.currentBid / n(m.current.auction_value) - 1) * 100)}% vs bid value` : '';
-	root.innerHTML = `<h3 class="${positionClass(m.current.position)}">${escapeHtml(displayPlayer(m.current))}</h3><div class="small">Bid value $${Math.round(m.current.auction_value)} - ${escapeHtml(m.current.auction_tier)} - ${rawFmt(n(m.current.auction_points))} fpts</div><div class="winning-bid"><div><span>Winning bid</span><strong>$${m.currentBid}</strong></div><em>${escapeHtml(high ? high.name : '-')}<br>${escapeHtml(overValue)}</em></div><div class="metric-grid">${renderMetric('Current bid', '$' + m.currentBid)}${renderMetric('High bidder', high ? high.name : '-')}<div class="metric"><span>Bid signal</span><strong>${renderBidSignal(m.current) || '-'}</strong></div>${renderMetric('To 10% over', '$' + Math.ceil(n(m.current.auction_value) * 1.1))}</div>${marketPressureHtml(m.current, m.teams, {currentBid:m.currentBid, maxBidForTeam:team => mockTeamMaxBid(team), limit:6})}`;
+	root.innerHTML = `<h3 class="${positionClass(m.current.position)}">${escapeHtml(displayPlayer(m.current))}</h3><div class="small">Bid value $${Math.round(m.current.auction_value)} - ${escapeHtml(m.current.auction_tier)} - ${rawFmt(n(m.current.auction_points))} fpts</div><div class="winning-bid"><div><span>Winning bid</span><strong>$${m.currentBid}</strong></div><em>${escapeHtml(high ? high.name : '-')}<br>${escapeHtml(overValue)}</em></div><div class="metric-grid">${renderMetric('Current bid', '$' + m.currentBid)}${renderMetric('High bidder', high ? high.name : '-')}<div class="metric"><span>Bid signal</span><strong>${renderBidSignal(m.current) || '-'}</strong></div>${renderMetric('To 10% over', '$' + Math.ceil(n(m.current.auction_value) * 1.1))}</div>${marketPressureHtml(m.current, m.teams, {currentBid:m.currentBid, maxBidForTeam:team => mockTeamMaxBid(team), limit:6, tendencies:auctionTendencyRows(m)})}`;
 	root.querySelectorAll('.bid-pill').forEach(btn=>btn.addEventListener('click',()=>showNote(btn.dataset.tip)));
 }
 function renderMockTimer(m) {
@@ -1751,7 +1893,7 @@ function setMockTeamProfile(teamId, profileKey) {
 }
 function renderMockTeams(m) {
 	const root = document.getElementById('mockTeams'); if (!root) return;
-	root.innerHTML = m.teams.map(team => `<div class="team-tile ${team.id === 0 ? 'human' : ''} ${m.selectedTeamId === team.id ? 'active' : ''}" data-team-id="${team.id}" role="button" tabindex="0"><strong>${escapeHtml(team.name)}</strong><span class="small">$${team.budget} left - max $${mockTeamMaxBid(team)} - ${team.roster.length}/${AUCTION_CONFIG.rosterSpots}</span>${team.bot ? `<select class="bot-profile-select" data-profile-team-id="${team.id}">${botProfileOptions(team.profileKey)}</select>` : '<span class="personality">Human</span>'}</div>`).join('');
+	root.innerHTML = m.teams.map(team => `<div class="team-tile ${team.id === 0 ? 'human' : ''} ${m.selectedTeamId === team.id ? 'active' : ''}" data-team-id="${team.id}" role="button" tabindex="0"><strong>${escapeHtml(team.name)}</strong><span class="small">$${team.budget} left - max $${mockTeamMaxBid(team)} - ${team.roster.length}/${AUCTION_CONFIG.rosterSpots}</span><div class="tendency-line">${auctionTeamTendencyLine(m, team.id)}</div>${team.bot ? `<select class="bot-profile-select" data-profile-team-id="${team.id}">${botProfileOptions(team.profileKey)}</select>` : '<span class="personality">Human</span>'}</div>`).join('');
 	root.querySelectorAll('[data-team-id]').forEach(tile => tile.addEventListener('click', e => { if (e.target.closest('[data-profile-team-id]')) return; m.selectedTeamId = Number(tile.dataset.teamId); renderMockAuction(); }));
 	root.querySelectorAll('[data-profile-team-id]').forEach(select => select.addEventListener('change', e => { setMockTeamProfile(select.dataset.profileTeamId, select.value); renderMockAuction(); }));
 }
@@ -1863,7 +2005,7 @@ function renderMockPlayerTable(m) {
 function renderMockAuction() {
 	if (!document.getElementById('mockAuction')) return;
 	const m = ensureMockState();
-	renderMockTimer(m); renderMockCurrent(m); renderMockStrategy(m); renderMockDraftBoard(m); renderMockTeams(m); renderMockSelectedTeam(m); renderMockResults(m); renderMockPlayerTable(m); scheduleAutoSave();
+	renderMockTimer(m); renderMockCurrent(m); renderMockStrategy(m); renderMockDraftBoard(m); renderMockTeams(m); renderMockSelectedTeam(m); renderMockResults(m); renderAuctionTendencies('mockTendencies', m, 'Fast Auction Tendencies'); renderMockPlayerTable(m); scheduleAutoSave();
 }
 function ensureLeagueTycoonPanel() {
 	if (document.getElementById('leagueTycoon')) return;
@@ -2131,7 +2273,7 @@ function slowClockDetail(seconds) {
 function createSlowState() {
 	const bag = shuffle(['aggressive','balanced','balanced','balanced','conservative','conservative','value','value','aggressive','balanced','conservative']);
 	const teams = [createMockTeam(0), ...bag.map((key, i) => assignSlowTiming(createMockTeam(i + 1, key)))];
-	return {teams, nominationOrder:shuffle(teams.map(team => team.id)), drafted:new Set(), lots:[], lotSeq:1, nominatorIndex:0, results:[], active:true, selectedTeamId:0, selectedLotId:null, nominationCooldown:slowNominationSeconds(), botBidCooldown:slowBotBidIntervalSeconds(), botNominationCooldown:slowBotNominationIntervalSeconds(), clockRunning:false};
+	return {teams, nominationOrder:shuffle(teams.map(team => team.id)), drafted:new Set(), lots:[], lotSeq:1, nominatorIndex:0, results:[], events:[], active:true, selectedTeamId:0, selectedLotId:null, nominationCooldown:slowNominationSeconds(), botBidCooldown:slowBotBidIntervalSeconds(), botNominationCooldown:slowBotNominationIntervalSeconds(), clockRunning:false};
 }
 function ensureSlowState() { if (!state.slow) state.slow = createSlowState(); return state.slow; }
 function stopSlowClock() { if (slowClockId) clearInterval(slowClockId); slowClockId = null; if (state.slow) state.slow.clockRunning = false; }
@@ -2190,9 +2332,11 @@ function slowApplyProxyBids(lot) {
 		candidates.sort((a,b)=>b.max-a.max || a.team.id-b.team.id);
 		const next = candidates[0], bid = Math.min(next.max, slowTeamMaxBid(next.team, lot.id), lot.currentBid + 1);
 		if (bid <= lot.currentBid) break;
+		const previousBid = lot.currentBid;
 		lot.currentBid = bid;
 		lot.highBidder = next.team.id;
 		lot.bidCount += 1;
+		recordAuctionEvent(m, {type:'bid', mode:'slow', source:'proxy', teamId:next.team.id, lotId:lot.id, amount:lot.currentBid, previousBid, max:next.max, timing:slowBidTiming(lot), ...auctionEventPlayer(lot.player)});
 		slowTouchTimer(lot);
 		changed = true;
 	}
@@ -2238,6 +2382,7 @@ function slowNominate(playerId, teamId=0, advanceOrder=true) {
 	const lot = {id:m.lotSeq++, player, nominatorId:teamId, currentBid:1, highBidder:teamId, timeRemaining:bidWindow, bidWindow, bidCount:1, humanBid:teamId === 0};
 	m.lots.push(lot);
 	m.selectedLotId = lot.id;
+	recordAuctionEvent(m, {type:'nomination', mode:'slow', teamId, lotId:lot.id, amount:1, ...auctionEventPlayer(player)});
 	if (advanceOrder) slowAdvanceNominator(m, teamId);
 	m.nominationCooldown = slowNominationSeconds();
 	slowMaybeAutoAwardLot(lot.id);
@@ -2326,9 +2471,11 @@ function slowRunBotBids(force=false) {
 			if (Math.random() > slowBotBidChance(team, lot, force)) return;
 			const max = slowBotMaxBid(team, lot);
 			if (max > lot.currentBid) {
+				const previousBid = lot.currentBid;
 				lot.currentBid = Math.min(max, lot.currentBid + slowBidIncrement(lot.currentBid, max));
 				lot.highBidder = team.id;
 				lot.bidCount += 1;
+				recordAuctionEvent(m, {type:'bid', mode:'slow', source:'bot', teamId:team.id, lotId:lot.id, amount:lot.currentBid, previousBid, max, timing:slowBidTiming(lot), ...auctionEventPlayer(lot.player)});
 				slowTouchTimer(lot);
 				changed = true;
 				if (slowApplyProxyBids(lot)) changed = true;
@@ -2347,10 +2494,12 @@ function slowHumanBid(amount, lotId=null) {
 	if (!lot) return false;
 	const team = m.teams[0], max = slowTeamMaxBid(team, lot.id), bid = Math.min(max, Math.max(lot.currentBid + 1, Math.round(Number(amount))));
 	if (bid > lot.currentBid) {
+		const previousBid = lot.currentBid;
 		lot.currentBid = bid;
 		lot.highBidder = 0;
 		lot.humanBid = true;
 		lot.bidCount += 1;
+		recordAuctionEvent(m, {type:'bid', mode:'slow', source:'human', teamId:0, lotId:lot.id, amount:lot.currentBid, previousBid, max, timing:slowBidTiming(lot), ...auctionEventPlayer(lot.player)});
 		m.selectedLotId = lot.id;
 		slowTouchTimer(lot);
 		slowApplyProxyBids(lot);
@@ -2365,6 +2514,7 @@ function slowAwardLot(lotId) {
 	const lot = m.lots[idx], team = m.teams[lot.highBidder];
 	if (!team || team.roster.length >= AUCTION_CONFIG.rosterSpots || slowTeamMaxBid(team, lot.id) < lot.currentBid) { lot.timeRemaining = slowResetSeconds(); return false; }
 	const paid = Math.max(1, lot.currentBid);
+	recordAuctionEvent(m, {type:'win', mode:'slow', teamId:lot.highBidder, lotId:lot.id, amount:paid, bidCount:lot.bidCount, ...auctionEventPlayer(lot.player)});
 	team.budget -= paid;
 	team.roster.push({...lot.player, paid});
 	m.drafted.add(lot.player.id);
@@ -2487,6 +2637,7 @@ function renderSlowLots(m) {
 	const root = document.getElementById('slowLots'); if (!root) return;
 	if (!m.lots.length) { root.innerHTML = '<div class="mock-empty">No active auctions. Fill nominations or nominate from the pool.</div>'; return; }
 	const focusedInput = captureSlowLotInputFocus(root);
+	const tendencies = auctionTendencyRows(m);
 	root.innerHTML = [...m.lots].sort((a,b)=>a.timeRemaining-b.timeRemaining).map(lot => {
 		const high = m.teams[lot.highBidder], nominator = m.teams[lot.nominatorId], expiring = lot.timeRemaining <= slowResetSeconds();
 		const humanBidState = lot.highBidder === 0 ? 'human-winning' : slowHumanHasBid(lot) ? 'human-outbid' : '';
@@ -2494,7 +2645,7 @@ function renderSlowLots(m) {
 		const humanMaxAllowed = slowTeamMaxBid(m.teams[0], lot.id);
 		const strategy = auctionStrategy(lot.player, m.teams[0], lot.currentBid, humanMaxAllowed, slowTeamCommitted(m.teams[0], lot.id));
 		const guidance = slowLotGuidanceHtml(strategy, lot.player);
-		const pressure = marketPressureHtml(lot.player, m.teams, {currentBid:lot.currentBid, maxBidForTeam:team => slowTeamMaxBid(team, lot.id), limit:3});
+		const pressure = marketPressureHtml(lot.player, m.teams, {currentBid:lot.currentBid, maxBidForTeam:team => slowTeamMaxBid(team, lot.id), limit:3, tendencies});
 		const valueAmount = Math.min(humanMaxAllowed, Math.max(lot.currentBid + 1, Math.round(n(lot.player.auction_value))));
 		const maxAmount = Math.min(humanMaxAllowed, Math.max(lot.currentBid + 1, humanMax || Math.ceil(n(lot.player.auction_value) * 1.1) || lot.currentBid + 1));
 		return `<div class="slow-lot ${m.selectedLotId === lot.id ? 'active' : ''} ${expiring ? 'expiring' : ''} ${humanBidState}" data-slow-lot="${lot.id}" role="button" tabindex="0"><div class="slow-lot-status"><strong>Bid ${escapeHtml(slowClockDetail(lot.timeRemaining))}</strong><span>${lot.bidCount} bids</span></div><h3 class="${positionClass(lot.player.position)}">${escapeHtml(lot.player.player)}</h3><div class="slow-lot-meta"><span>${escapeHtml(lot.player.position)}${lot.player.team ? ' ' + escapeHtml(lot.player.team) : ''}</span><span>$${Math.round(n(lot.player.auction_value))} value</span></div><div class="slow-lot-meta"><span>Nom: ${escapeHtml(nominator ? nominator.name : '-')}</span><span>${escapeHtml(lot.player.auction_tier || '')}</span></div>${humanMax ? `<span class="proxy-pill">Your max $${humanMax}</span>` : ''}<div class="slow-lot-bid"><div><span>Winning bid</span><strong>$${lot.currentBid}</strong></div><em>${escapeHtml(high ? high.name : '-')}<br>${escapeHtml(lot.player.auction_tier || '')}</em></div>${guidance}${pressure}<div class="slow-actions"><button type="button" data-slow-bid="${lot.id}" data-amount="${lot.currentBid + 1}">+$1</button><button type="button" data-slow-bid="${lot.id}" data-amount="${lot.currentBid + 5}">+$5</button></div><div class="slow-lot-controls"><label>Value<input type="number" min="${lot.currentBid + 1}" max="${humanMaxAllowed}" step="1" value="${valueAmount}" data-slow-value-input="${lot.id}"></label><button type="button" data-slow-bid-value="${lot.id}">Bid value</button><label>Max<input type="number" min="${lot.currentBid + 1}" max="${humanMaxAllowed}" step="1" value="${maxAmount}" data-slow-max-input="${lot.id}"></label><button type="button" data-slow-set-max="${lot.id}">Set max</button></div></div>`;
@@ -2508,7 +2659,7 @@ function renderSlowLots(m) {
 }
 function renderSlowTeams(m) {
 	const root = document.getElementById('slowTeams'); if (!root) return;
-	root.innerHTML = m.teams.map(team => `<div class="team-tile ${team.id === 0 ? 'human' : ''} ${m.selectedTeamId === team.id ? 'active' : ''}" data-slow-team-id="${team.id}" role="button" tabindex="0"><strong>${escapeHtml(team.name)}</strong><span class="small">$${team.budget} left - committed $${slowTeamCommitted(team)} - max $${slowTeamMaxBid(team)} - ${team.roster.length}/${AUCTION_CONFIG.rosterSpots}</span>${team.bot ? `<select class="bot-profile-select" data-slow-profile-team-id="${team.id}">${botProfileOptions(team.profileKey)}</select>` : '<span class="personality">Human</span>'}</div>`).join('');
+	root.innerHTML = m.teams.map(team => `<div class="team-tile ${team.id === 0 ? 'human' : ''} ${m.selectedTeamId === team.id ? 'active' : ''}" data-slow-team-id="${team.id}" role="button" tabindex="0"><strong>${escapeHtml(team.name)}</strong><span class="small">$${team.budget} left - committed $${slowTeamCommitted(team)} - max $${slowTeamMaxBid(team)} - ${team.roster.length}/${AUCTION_CONFIG.rosterSpots}</span><div class="tendency-line">${auctionTeamTendencyLine(m, team.id)}</div>${team.bot ? `<select class="bot-profile-select" data-slow-profile-team-id="${team.id}">${botProfileOptions(team.profileKey)}</select>` : '<span class="personality">Human</span>'}</div>`).join('');
 	root.querySelectorAll('[data-slow-team-id]').forEach(tile => tile.addEventListener('click', e => { if (e.target.closest('[data-slow-profile-team-id]')) return; m.selectedTeamId = Number(tile.dataset.slowTeamId); renderSlowAuction(); }));
 	root.querySelectorAll('[data-slow-profile-team-id]').forEach(select => select.addEventListener('change', () => { setSlowTeamProfile(select.dataset.slowProfileTeamId, select.value); renderSlowAuction(); }));
 }
@@ -2555,7 +2706,7 @@ function renderSlowPlayerTable(m) {
 function renderSlowAuction() {
 	if (!document.getElementById('slowAuction')) return;
 	const m = ensureSlowState();
-	renderSlowTopbar(m); renderSlowSummary(m); renderSlowDraftBoard(m); renderSlowLots(m); renderSlowTeams(m); renderSlowSelectedTeam(m); renderSlowResults(m); renderSlowPlayerTable(m); scheduleAutoSave();
+	renderSlowTopbar(m); renderSlowSummary(m); renderSlowDraftBoard(m); renderSlowLots(m); renderSlowTeams(m); renderSlowSelectedTeam(m); renderSlowResults(m); renderAuctionTendencies('slowTendencies', m, 'Slow Auction Tendencies'); renderSlowPlayerTable(m); scheduleAutoSave();
 }
 function filteredTopLimit() { const value = Number(document.getElementById('filteredTopLimit')?.value); return [10, 20, 50, 100].includes(value) ? value : 20; }
 function currentCheatMode() { return document.getElementById('rankMode')?.value || 'waldman'; }
