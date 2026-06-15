@@ -50,6 +50,9 @@ tbody tr.colored-row:hover td { filter:brightness(.97); }
 #cheatsTable tbody tr.colored-row td.sticky-cheat { background:var(--row-bg); }
 #cheatsTable tbody tr:hover td.sticky-cheat { background:#f8fafc; }
 #cheatsTable tbody tr.colored-row:hover td.sticky-cheat { background:var(--row-bg); filter:brightness(.97); }
+#playersTable th:nth-child(1), #playersTable td:nth-child(1) { position:sticky; left:0; z-index:4; width:170px; min-width:170px; max-width:170px; background:white; box-shadow:10px 0 12px -12px rgba(15,23,42,.55); overflow-wrap:anywhere; }
+#playersTable th:nth-child(1) { background:#eef2f7; z-index:7; }
+#playersTable tbody tr:hover td:nth-child(1) { background:#f8fafc; }
 .small { color:var(--muted); font-size:12px; }
 svg { width:100%; max-width:100%; min-width:0; height:auto; display:block; }
 .bar-label { font-size:16px; fill:#334155; }
@@ -273,6 +276,7 @@ svg { width:100%; max-width:100%; min-width:0; height:auto; display:block; }
 .pressure-item strong { display:flex; align-items:center; justify-content:space-between; gap:8px; color:var(--ink); font-size:13px; }
 .pressure-item span { display:block; color:var(--muted); font-size:11px; margin-top:3px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
 .pressure-item em { color:#0f172a; font-style:normal; font-weight:850; }
+.pressure-line { margin:0; color:#334155; font-size:12px; line-height:1.35; overflow-wrap:anywhere; }
 .slow-lot .market-pressure { margin:0; padding:6px; }
 .slow-lot .market-pressure h4 { margin-bottom:5px; }
 .slow-lot .pressure-grid { grid-template-columns:1fr; }
@@ -299,6 +303,7 @@ svg { width:100%; max-width:100%; min-width:0; height:auto; display:block; }
 @media (max-width: 1200px) { .mock-grid, .mock-draft-layout, .slow-auction-layout, .lt-two-col { grid-template-columns:1fr; } .mock-board { grid-template-columns:repeat(3, minmax(120px, 1fr)); } .slow-topbar { grid-template-columns:1fr; } .strategy-panel, .tier-drop-grid { grid-template-columns:repeat(2, minmax(180px, 1fr)); } }
 @media (max-width: 900px) { main { padding:8px 10px 28px; } .tabs { position:sticky; top:0; z-index:30; background:rgba(245,247,251,.96); backdrop-filter:blur(8px); margin:0 -2px 10px; padding:8px 0 6px; } .grid { grid-template-columns:1fr; } .card { padding:12px; } input[type=search] { min-width:100%; max-width:none; } .tabs, .subtabs { flex-wrap:nowrap; overflow-x:auto; padding-bottom:4px; -webkit-overflow-scrolling:touch; } .tab, .subtab { white-space:nowrap; font-size:13px; padding:8px 10px; } .toolbar { gap:8px; } table { font-size:12px; min-width:880px; } th, td { padding:7px; } svg { min-width:0; } .table-wrap { max-height:none; -webkit-overflow-scrolling:touch; } .current-auction { padding:12px; } .winning-bid { align-items:flex-start; flex-direction:column; } .winning-bid em { text-align:left; } .strategy-panel { grid-template-columns:1fr 1fr; } #mockAuction > .card > .toolbar, #slowAuction > .card > .toolbar { background:rgba(255,255,255,.97); border:1px solid var(--line); border-radius:8px; padding:8px; } .auction-settings-wrap { flex:1 1 100%; } .auction-settings-menu { position:static; width:100%; max-height:none; margin-top:8px; box-shadow:none; align-content:flex-start; align-items:flex-start; overflow:visible; } .auction-settings-menu-head { position:static; top:auto; } .slow-lot-grid { max-height:none; } }
 @media (max-width: 520px) { input, select, button { font-size:13px; min-height:36px; } .toolbar { gap:7px; } .toolbar select, .toolbar button, .age-range-filter, .inline-control { flex:1 1 140px; } .inline-control input, .inline-control select { width:100%; min-width:0; } .range-row input[type=range] { width:74px; } .card h2 { font-size:18px; } .scoring-settings { gap:7px; padding:9px; } .scoring-settings strong { flex-basis:100%; padding-bottom:0; } .scoring-settings input { width:74px; font-size:12px; min-height:34px; } table { font-size:11px; min-width:760px; } th, td { padding:6px; } #cheatsTable { min-width:860px; } #mockPlayerTable, #slowPlayerTable, #ltPlayerTable { min-width:760px; } #teamY1Table, #teamY2Table { min-width:1260px; } #teamY1Table th:nth-child(1), #teamY1Table td:nth-child(1), #teamY2Table th:nth-child(1), #teamY2Table td:nth-child(1) { width:48px; min-width:48px; max-width:48px; } #teamY1Table th:nth-child(2), #teamY1Table td:nth-child(2), #teamY2Table th:nth-child(2), #teamY2Table td:nth-child(2) { left:48px; width:122px; min-width:122px; max-width:122px; } .metric-grid, .mock-board, .current-auction .metric-grid, .strategy-panel, .tier-drop-grid { grid-template-columns:1fr 1fr; } .metric, .strategy-card { padding:8px; } .metric strong, .strategy-card strong { font-size:17px; } .current-auction h3 { font-size:22px; } .current-auction .metric { padding:9px; } .current-auction .metric strong { font-size:18px; } .mock-board-grid { grid-template-columns:72px repeat(12, minmax(132px, 1fr)); min-width:1656px; } .mock-slot-head, .mock-team-head, .mock-slot-label, .mock-roster-cell { min-height:46px; } .slow-lot-grid { grid-template-columns:repeat(auto-fill, minmax(168px, 1fr)); } .slow-lot { min-height:0; } .slow-lot-controls { grid-template-columns:1fr 1fr; } .tier-drop-row summary { grid-template-columns:1fr; } .tier-drop-score { text-align:left; } .tier-player-list { padding-left:10px; } }
+@media (max-width: 520px) { #playersTable th:nth-child(1), #playersTable td:nth-child(1) { width:132px; min-width:132px; max-width:132px; } }
 @media (max-width: 430px) and (orientation: portrait) { table { font-size:10.5px; } th, td { padding:5px; } #cheatsTable { min-width:820px; } }
 @media (max-width: 520px) { #cheatsTable { --cheat-rank-width:52px; --cheat-player-width:136px; min-width:780px; } }
 @media (max-width: 430px) and (orientation: portrait) { #cheatsTable { --cheat-player-width:130px; min-width:760px; } }
@@ -309,7 +314,7 @@ svg { width:100%; max-width:100%; min-width:0; height:auto; display:block; }
 <nav class="tabs" id="tabs"></nav>
 <div class="save-strip"><span id="saveStatus">Auto-save ready</span><button id="resetSavedState" type="button">Reset saved state</button></div>
 <section id="overview" class="panel active"><div class="grid"><div class="card"><h2>Players By Position</h2><div id="chartPos"></div></div><div class="card"><h2>Age Distribution</h2><div id="chartAge"></div></div><div class="card"><h2>Top Team Average PPR</h2><div id="chartTeam"></div><p class="small">Average uses each team's top 20 projected PPR values. Invalid team labels are excluded.</p></div><div class="card"><h2>Tier Drop-Offs</h2><p class="small tier-drop-note">These are cliffs after a tier ends. A $0 drop means the next tier starts in the same rounded auction-dollar bucket. Open a row to see the players in that tier.</p><div id="tierDropSummary" class="metric-grid"></div><div id="tierDropCharts" class="tier-drop-grid"></div></div></div></section>
-<section id="players" class="panel"><div class="toolbar"><input id="playerSearch" type="search" placeholder="Search players, teams, positions, comments"><select id="posFilter"><option value="">All positions</option></select><select id="teamFilter"><option value="">All teams</option></select><button id="resetPlayers">Reset</button></div><p class="small">Upside is the source ceiling score; Downside is the source miss-risk score. Higher numbers mean more of that trait. Auction values assume 12 teams, $200 budgets, superflex, PPR, and TE premium. Bid+ means an analyst target signal; Bid++ means a stronger signal such as Harmon SUPER BUY or multiple target signals. Hover or click a Bid marker for the source.</p><div class="grid"><div class="card"><h2>Filtered Top Fpts</h2><div class="toolbar"><select id="filteredTopLimit"><option value="10">Top 10</option><option value="20" selected>Top 20</option><option value="50">Top 50</option><option value="100">Top 100</option></select></div><div id="chartFilteredPpr"></div></div><div class="card"><h2>Filtered Position Mix</h2><div id="chartFilteredPos"></div></div></div><div class="table-wrap"><table id="playersTable"></table></div></section>
+<section id="players" class="panel"><div class="toolbar"><input id="playerSearch" type="search" placeholder="Search players, teams, positions, comments"><select id="posFilter"><option value="">All positions</option></select><select id="teamFilter"><option value="">All teams</option></select><button id="resetPlayers">Reset</button></div><p class="small">Upside is the source ceiling score; Downside is the source miss-risk score. Higher numbers mean more of that trait. Auction values assume 12 teams, $200 budgets, super-super-flex depth, PPR, TE premium, and strategic 3-deep QB/RB/WR/TE targets. Bid+ means an analyst target signal; Bid++ means a stronger signal such as Harmon SUPER BUY or multiple target signals. Hover or click a Bid marker for the source.</p><div class="grid"><div class="card"><h2>Filtered Top Fpts</h2><div class="toolbar"><select id="filteredTopLimit"><option value="10">Top 10</option><option value="20" selected>Top 20</option><option value="50">Top 50</option><option value="100">Top 100</option></select></div><div id="chartFilteredPpr"></div></div><div class="card"><h2>Filtered Position Mix</h2><div id="chartFilteredPos"></div></div></div><div class="table-wrap"><table id="playersTable"></table></div></section>
 <section id="cheatsheets" class="panel"><div class="toolbar"><input id="cheatSearch" type="search" placeholder="Search cheatsheets"><select id="rankMode"><option value="waldman">Waldman ranks</option><option value="kyle">Kyle ranks</option><option value="fantasypros">FantasyPros ranks</option><option value="harmon">Harmon WR ranks</option><option value="combined">Combined rank</option><option value="compare">Differences</option></select><select id="buildFilter"><option value="">All builds</option><option>Win-Now</option><option>Long Build</option></select><select id="cheatPosFilter"><option value="">All positions</option></select><select id="harmonMarketFilter"><option value="">All Harmon markets</option></select><label class="age-range-filter">Age <span id="cheatAgeRangeLabel">20-50</span><span class="range-row"><input id="cheatAgeMin" type="range" min="20" max="50" value="20"><input id="cheatAgeMax" type="range" min="20" max="50" value="50"></span></label></div><p class="small" id="cheatModeNote">Waldman mode keeps workbook tier colors. Kyle mode uses the supplied rankings and tier shading. FantasyPros mode uses the imported 2026 dynasty ECR CSV.</p><div class="legend" id="tierLegend"></div><div class="table-wrap"><table id="cheatsTable"></table></div></section>
 
 <section id="auctionBuilder" class="panel"><div class="card"><h2>Best Team Builder</h2><div class="toolbar"><label class="inline-control">Premium<select id="optimizerPremium"><option value="0">At bid</option><option value="0.05" selected>5% over</option><option value="0.1">10% over</option><option value="0.15">15% over</option></select></label><label class="inline-control">Build focus<select id="optimizerFocus"><option value="balanced" selected>Balanced</option><option value="qb">Better QBs</option><option value="rb">Better RBs</option><option value="wr">Better WRs</option><option value="te">Better TEs</option><option value="qb_wr">QB + WR</option><option value="qb_wr_te">QB + WR + TE</option><option value="rb_wr">RB + WR</option><option value="rb_te">RB + TE</option><option value="custom">Custom Mix</option></select></label><label class="inline-control">Preferred<select id="optimizerPreference"><option value="none" selected>Value only</option><option value="waldman_win">Waldman Win Now</option><option value="waldman_long">Waldman Long-Term</option><option value="waldman">Waldman Overall</option><option value="harmon">Harmon Buy/Super Buy</option><option value="kyle">Kyle Suggestions</option><option value="fantasypros">FantasyPros Suggestions</option><option value="common">Common Preferred</option></select></label><label class="inline-control">Shape<select id="optimizerShape"><option value="stars" selected>Stars + values</option><option value="balanced">Balanced spend</option><option value="breakout">Young breakouts</option></select></label><label class="inline-control">Age cap<select id="optimizerAgeCap"><option value="">No cap</option><option value="29">29 or younger</option><option value="27">27 or younger</option><option value="25">25 or younger</option></select></label><label class="inline-control">Budget<input id="optimizerBudget" type="number" min="25" max="200" step="1" value="200"></label><button id="runOptimizer" type="button">Build team</button></div><div class="toolbar mix-toolbar"><label class="inline-control">QB mix<input id="optimizerMixQB" type="number" min="0.5" max="2" step="0.1" value="1"></label><label class="inline-control">RB mix<input id="optimizerMixRB" type="number" min="0.5" max="2" step="0.1" value="1"></label><label class="inline-control">WR mix<input id="optimizerMixWR" type="number" min="0.5" max="2" step="0.1" value="1"></label><label class="inline-control">TE mix<input id="optimizerMixTE" type="number" min="0.5" max="2" step="0.1" value="1"></label></div><p class="small">Builds a 25-player roster using tier-banded bid values plus the selected premium. Shape controls whether the optimizer chases premium stars, balances spend, or leans into younger mid-priced breakout profiles. Age cap excludes players with known ages above the selected limit.</p><div id="optimizerSummary" class="metric-grid"></div><div id="optimizerByPosition" class="position-list"></div><div id="optimizerRoster" class="roster-slots"></div></div></section>
@@ -326,9 +331,10 @@ const DEFAULT_SORTS = { playersTable:{key:'ppr',dir:-1}, cheatsTable:{key:'rank'
 const DEFAULT_SCORING = { scorePassYards:0.04, scorePassTd:6, scoreInt:-2, scoreRushYards:0.1, scoreRushTd:6, scoreRecYards:0.1, scoreRecTd:6, scoreReception:1, scoreTeBonus:0.5 };
 const AUCTION_CONFIG = { teams:12, budget:200, rosterSpots:25, draftablePlayers:300 };
 const AUCTION_ROSTER_RULES = { QB:1, RB:1, WR:1, TE:1, FLEX:5, SUPER_FLEX:1, bench:15 };
-const OPTIMIZER_MINIMUMS = { QB:3, RB:3, WR:1, TE:2 };
-const OPTIMIZER_TARGETS = { QB:3, TE:3 };
-const OPTIMIZER_POSITION_CAPS = { QB:4, TE:3 };
+const AUCTION_POSITION_TARGETS = { QB:3, RB:3, WR:3, TE:3 };
+const OPTIMIZER_MINIMUMS = { QB:3, RB:3, WR:3, TE:3 };
+const OPTIMIZER_TARGETS = { QB:3, RB:3, WR:3, TE:3 };
+const OPTIMIZER_POSITION_CAPS = { QB:5, RB:8, WR:9, TE:5 };
 const OPTIMIZER_MIX_IDS = { QB:'optimizerMixQB', RB:'optimizerMixRB', WR:'optimizerMixWR', TE:'optimizerMixTE' };
 const MARKET_CONTROL_IDS = ['marketPreset','marketScale','marketQB','marketRB','marketWR','marketTE'];
 const OPTIMIZER_DEFAULT_MIX = { QB:1, RB:1, WR:1, TE:1 };
@@ -736,6 +742,8 @@ function fmt(v, type) { if (v === null || v === undefined || v === '') return ''
 function norm(v) { return String(v ?? '').toLowerCase(); }
 function playerKey(name) { let s = String(name || '').replace(/\*/g, '').trim(); if (s.includes(',')) { const parts = s.split(','); s = `${parts.slice(1).join(' ')} ${parts[0]}`; } return s.toLowerCase().replace(/\b(jr|sr|ii|iii|iv)\.?\b/g, '').replace(/[^a-z0-9]/g, '').replace('jaxsonsmithnjigba', 'jaxonsmithnjigba').replace('tremcbride', 'treymcbride').replace('chubahubbard', 'chubbahubbard'); }
 function rankKey(row) { return `${row.position}|${playerKey(row.player)}`; }
+function stableHash(text) { let hash = 2166136261; String(text || '').split('').forEach(ch => { hash ^= ch.charCodeAt(0); hash = Math.imul(hash, 16777619); }); return hash >>> 0; }
+function stableRatio(...parts) { return stableHash(parts.join('|')) / 4294967295; }
 function escapeHtml(s) { return String(s).replace(/[&<>"']/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch])); }
 function isBlankSortValue(v) { return v === null || v === undefined || v === ''; }
 function cmp(a,b,key,dir) { const av=a[key], bv=b[key], ab=isBlankSortValue(av), bb=isBlankSortValue(bv); if (ab && bb) return 0; if (ab) return 1; if (bb) return -1; const an=parseFloat(av), bn=parseFloat(bv); let r; if(!Number.isNaN(an)&&!Number.isNaN(bn)) r=an-bn; else r=String(av).localeCompare(String(bv), undefined, {numeric:true,sensitivity:'base'}); return r*dir; }
@@ -1382,8 +1390,9 @@ function strategyBudgetProfile(team, committed=0) {
 	return {key:'steady', label:'On pace', detail:`$${Math.round(spent)} spent vs $${Math.round(expected)} pace`};
 }
 function positionNeedLabel(team, pos) {
-	const counts = rosterCounts(team?.roster || []), count = counts[pos] || 0, min = OPTIMIZER_MINIMUMS[pos] || 0, target = (optimizerFocusConfig().targets || OPTIMIZER_TARGETS)[pos] || min;
-	if (count < min) return `${pos} need ${count}/${min}`;
+	const roster = team?.roster || [];
+	if (!roster.length) return '';
+	const counts = rosterCounts(roster), count = counts[pos] || 0, target = AUCTION_POSITION_TARGETS[pos] || OPTIMIZER_TARGETS[pos] || OPTIMIZER_MINIMUMS[pos] || 0;
 	if (count < target) return `${pos} target ${count}/${target}`;
 	return `${pos} depth ${count}`;
 }
@@ -1399,7 +1408,7 @@ function auctionStrategy(player, team, currentBid=0, maxBid=0, committed=0) {
 	if (!player || !team) return null;
 	const value = Math.max(1, n(player.auction_value)), current = Math.max(0, Math.round(n(currentBid))), allowed = Math.max(0, Math.round(n(maxBid)));
 	const need = mockPositionNeed(team, player.position), pace = strategyBudgetProfile(team, committed), fit = strategyFitForPlayer(player);
-	let multiplier = 1 + Math.max(0, need - 1) * 0.65 + fit.boost;
+	let multiplier = premiumPlayerMultiplier(player) + Math.max(0, need - 1) * 0.65 + fit.boost;
 	if (player.bid_signal === -2) multiplier += 0.12;
 	else if (player.bid_signal === -1) multiplier += 0.06;
 	if (pace.key === 'tight') multiplier -= 0.12;
@@ -1416,28 +1425,75 @@ function auctionStrategy(player, team, currentBid=0, maxBid=0, committed=0) {
 function strategyHtml(strategy, player) {
 	if (!strategy) return '<div class="strategy-card"><span>Strategy</span><strong>No active auction</strong><em>Nominate a player to see bid guidance.</em></div>';
 	const gap = strategy.gap >= 0 ? `$${strategy.gap} room` : `$${Math.abs(strategy.gap)} over`;
-	return [
+	const cards = [
 		`<div class="strategy-card strategy-status ${strategy.status}"><span>Strategy</span><strong>${escapeHtml(strategy.label)}</strong><em>${escapeHtml(displayPlayer(player))}</em></div>`,
 		`<div class="strategy-card"><span>Recommended max</span><strong>$${strategy.recommended}</strong><em>Next $${strategy.nextBid} - ${gap}</em></div>`,
 		`<div class="strategy-card"><span>Bid value</span><strong>$${Math.round(strategy.value)}</strong><em>${escapeHtml(player.auction_tier || '')}</em></div>`,
-		`<div class="strategy-card"><span>Roster need</span><strong>${escapeHtml(strategy.needLabel)}</strong><em>${rawFmt(n(player.auction_points))} fpts</em></div>`,
 		`<div class="strategy-card"><span>Budget pace</span><strong>${escapeHtml(strategy.pace.label)}</strong><em>${escapeHtml(strategy.pace.detail)}</em></div>`,
 		`<div class="strategy-card"><span>Build fit</span><strong>${escapeHtml(strategy.fit.label)}</strong><em>${escapeHtml(strategy.fit.detail)}</em></div>`
-	].join('');
+	];
+	if (strategy.needLabel) cards.splice(3, 0, `<div class="strategy-card"><span>Roster need</span><strong>${escapeHtml(strategy.needLabel)}</strong><em>${rawFmt(n(player.auction_points))} fpts</em></div>`);
+	return cards.join('');
 }
 function slowLotGuidanceHtml(strategy, player) {
 	if (!strategy || !player) return '';
 	const gap = strategy.gap >= 0 ? `$${strategy.gap} room` : `$${Math.abs(strategy.gap)} over`;
-	return `<div class="slow-lot-guidance"><div class="slow-guide-chip strategy-status ${strategy.status}"><span>Strategy</span><strong>${escapeHtml(strategy.label)}</strong><em>${escapeHtml(gap)}</em></div><div class="slow-guide-chip"><span>Rec max</span><strong>$${strategy.recommended}</strong><em>Next $${strategy.nextBid}</em></div><div class="slow-guide-chip"><span>Bid value</span><strong>$${Math.round(strategy.value)}</strong><em>${escapeHtml(player.auction_tier || '')}</em></div><div class="slow-guide-chip"><span>Roster need</span><strong>${escapeHtml(strategy.needLabel)}</strong><em>${rawFmt(n(player.auction_points))} fpts</em></div></div>`;
+	const need = strategy.needLabel ? `<div class="slow-guide-chip"><span>Roster need</span><strong>${escapeHtml(strategy.needLabel)}</strong><em>${rawFmt(n(player.auction_points))} fpts</em></div>` : '';
+	return `<div class="slow-lot-guidance"><div class="slow-guide-chip strategy-status ${strategy.status}"><span>Strategy</span><strong>${escapeHtml(strategy.label)}</strong><em>${escapeHtml(gap)}</em></div><div class="slow-guide-chip"><span>Rec max</span><strong>$${strategy.recommended}</strong><em>Next $${strategy.nextBid}</em></div><div class="slow-guide-chip"><span>Bid value</span><strong>$${Math.round(strategy.value)}</strong><em>${escapeHtml(player.auction_tier || '')}</em></div>${need}</div>`;
 }
 function teamNeedSummary(team) {
-	const counts = rosterCounts(team?.roster || []);
-	const needs = ['QB','RB','WR','TE'].map(pos => ({pos, count:counts[pos] || 0, target:OPTIMIZER_TARGETS[pos] || OPTIMIZER_MINIMUMS[pos] || 0}))
+	const roster = team?.roster || [];
+	if (!roster.length) return '';
+	const counts = rosterCounts(roster);
+	const needs = ['QB','RB','WR','TE'].map(pos => ({pos, count:counts[pos] || 0, target:AUCTION_POSITION_TARGETS[pos] || OPTIMIZER_TARGETS[pos] || OPTIMIZER_MINIMUMS[pos] || 0}))
 		.filter(item => item.count < item.target)
 		.sort((a,b)=>(b.target - b.count) - (a.target - a.count))
 		.slice(0, 3)
 		.map(item => `${item.pos} ${item.count}/${item.target}`);
 	return needs.length ? needs.join(' - ') : 'Depth only';
+}
+function premiumPlayerMultiplier(player) {
+	const tier = optimizerTierIndex(player);
+	if (tier > 3) return 1;
+	if (player.position === 'QB') return tier <= 2 ? 1.1 : 1.05;
+	if (player.position === 'TE') return tier <= 2 ? 1.15 : 1.08;
+	if (player.position === 'WR') return tier <= 2 ? 1.1 : 1.05;
+	if (player.position === 'RB') {
+		const receptionLift = Math.max(0, n(player.ppr) - n(player.non_ppr));
+		const passGameBoost = receptionLift >= 55 ? 0.05 : receptionLift >= 35 ? 0.03 : 0;
+		return (tier <= 2 ? 1.07 : 1.03) + passGameBoost;
+	}
+	return 1;
+}
+function botPlayerOpinion(team, player) {
+	if (!team?.bot || !player) return {multiplier:1, label:''};
+	const key = `${team.id}|${team.profileKey}|${rankKey(player)}`;
+	const playerRoll = stableRatio(key, 'player');
+	const positionRoll = stableRatio(team.id, team.profileKey, player.position, 'position');
+	let multiplier = 1, label = '';
+	if (playerRoll >= 0.965) { multiplier *= team.profileKey === 'aggressive' ? 1.28 : team.profileKey === 'conservative' ? 1.1 : 1.2; label = 'favorite'; }
+	else if (playerRoll >= 0.9) { multiplier *= team.profileKey === 'conservative' ? 1.05 : 1.1; label = 'likes'; }
+	else if (playerRoll <= 0.035) { multiplier *= team.profileKey === 'aggressive' ? 0.78 : 0.72; label = 'fade'; }
+	else if (playerRoll <= 0.1) { multiplier *= 0.9; label = 'low'; }
+	if (positionRoll >= 0.82) { multiplier *= 1.06; if (!label) label = `${player.position} lean`; }
+	else if (positionRoll <= 0.14) { multiplier *= 0.94; if (!label) label = `${player.position} cold`; }
+	const min = team.profileKey === 'aggressive' ? 0.76 : 0.7;
+	const max = team.profileKey === 'aggressive' ? 1.32 : team.profileKey === 'conservative' ? 1.12 : 1.22;
+	return {multiplier:Math.max(min, Math.min(max, multiplier)), label};
+}
+function botPriceDiscipline(team, player, max) {
+	if (team?.profileKey !== 'conservative') return max;
+	const base = Math.max(1, n(player?.auction_value));
+	const counts = rosterCounts(team.roster || []);
+	const opinion = botPlayerOpinion(team, player);
+	let ceiling = team.roster.length < 8 ? 0.88 : 0.98;
+	if ((counts[player.position] || 0) < 2) ceiling += 0.04;
+	if (player.bid_signal) ceiling += 0.04;
+	if (opinion.label === 'favorite') ceiling += 0.08;
+	else if (opinion.label === 'likes') ceiling += 0.04;
+	else if (opinion.label === 'fade') ceiling -= 0.08;
+	else if (opinion.label === 'low') ceiling -= 0.04;
+	return Math.min(max, Math.ceil(base * Math.min(1.08, ceiling)));
 }
 function predictedTeamBid(team, player, allowed, currentBid=0) {
 	if (!team || !player || allowed < 1 || team.roster.length >= AUCTION_CONFIG.rosterSpots) return 0;
@@ -1448,29 +1504,31 @@ function predictedTeamBid(team, player, allowed, currentBid=0) {
 	const profile = team.profile || MOCK_BOT_PROFILES.balanced, base = Math.max(1, n(player.auction_value));
 	const midpoint = profile.min + ((profile.max - profile.min) * 0.58);
 	const signalBoost = player.bid_signal ? profile.signal : 1;
-	let max = Math.round(base * midpoint * mockPositionNeed(team, player.position) * mockPacingMultiplier(team) * signalBoost);
+	const opinion = botPlayerOpinion(team, player);
+	let max = Math.round(base * midpoint * mockPositionNeed(team, player.position) * mockPacingMultiplier(team) * signalBoost * premiumPlayerMultiplier(player) * opinion.multiplier);
 	if (team.profileKey === 'conservative' && team.roster.length < 8) max = Math.min(max, Math.ceil(base * 0.96));
 	if (team.profileKey === 'aggressive' && player.auction_value >= 20) max = Math.max(max, Math.ceil(base * 1.18));
 	const aggressiveTopTarget = team.profileKey === 'aggressive' && (player.bid_signal || player.auction_value >= 35);
 	const cap = team.profileKey === 'aggressive' ? (aggressiveTopTarget ? 1.33 : 1.25) : profile.cap;
 	max = Math.min(max, Math.ceil(base * cap) + (player.bid_signal ? 2 : 0));
+	max = botPriceDiscipline(team, player, max);
 	return Math.min(allowed, Math.max(0, max));
 }
 function marketPressureHtml(player, teams, options={}) {
 	if (!player || !teams?.length) return '';
 	const currentBid = Math.max(0, Math.round(n(options.currentBid)));
 	const maxBidForTeam = options.maxBidForTeam || (() => 0);
-	const tendencies = new Map((options.tendencies || []).map(row => [row.teamId, row]));
 	const rows = teams.filter(team => team && team.id !== 0 && team.roster.length < AUCTION_CONFIG.rosterSpots).map(team => {
 		const allowed = Math.max(0, Math.round(n(maxBidForTeam(team))));
 		const predicted = predictedTeamBid(team, player, allowed, currentBid);
-		return {team, allowed, predicted, need:positionNeedLabel(team, player.position), summary:teamNeedSummary(team), tell:tendencies.get(team.id)?.tells?.[0] || ''};
+		return {team, allowed, predicted};
 	}).sort((a,b)=>b.predicted - a.predicted || b.allowed - a.allowed).slice(0, options.limit || 6);
 	if (!rows.length) return '';
-	return `<div class="market-pressure"><h4>Other team needs and predicted bids</h4><div class="pressure-grid">${rows.map(row => {
+	const line = rows.map(row => {
 		const status = row.predicted > currentBid ? `up to $${row.predicted}` : 'unlikely';
-		return `<div class="pressure-item"><strong>${escapeHtml(row.team.name)} <em>${escapeHtml(status)}</em></strong><span>${escapeHtml(row.need)}</span><span>${escapeHtml(row.summary)}</span><span>Max possible $${row.allowed}</span>${row.tell ? `<span>Tell: ${escapeHtml(row.tell)}</span>` : ''}</div>`;
-	}).join('')}</div></div>`;
+		return `${row.team.name} ${status}`;
+	}).join('; ');
+	return `<div class="market-pressure"><h4>Projected bids</h4><p class="pressure-line">${escapeHtml(line)}</p></div>`;
 }
 function ensureMockStrategyPanel() {
 	let root = document.getElementById('mockStrategy');
@@ -1691,6 +1749,18 @@ function auctionTeamTendencyLine(m, teamId) {
 	if (!row || row.bids + row.nominations + row.wins < 2) return '';
 	return `<span class="tendency-chip">${row.bids} bids</span><span class="tendency-chip">${row.nominations} noms</span><span class="tendency-chip">${pctText(row.maxOver)} max over</span>`;
 }
+function slowTeamIntelHtml(m, team) {
+	const row = auctionTendencyRows(m).find(item => item.teamId === team.id);
+	const needs = teamNeedSummary(team);
+	const selected = m.lots.find(lot => lot.id === m.selectedLotId) || m.lots[0];
+	const opinion = selected && team.bot ? botPlayerOpinion(team, selected.player) : null;
+	const tells = (row?.tells || []).filter(tell => tell !== 'needs more data').slice(0, 2);
+	const chips = [];
+	if (needs) chips.push(`<span class="tendency-chip">Needs ${escapeHtml(needs)}</span>`);
+	if (opinion?.label) chips.push(`<span class="tendency-chip">On lot ${escapeHtml(opinion.label)}</span>`);
+	tells.forEach(tell => chips.push(`<span class="tendency-chip">Tell ${escapeHtml(tell)}</span>`));
+	return chips.length ? `<div class="tendency-line">${chips.join('')}</div>` : '';
+}
 function ensureTendencyPanel(panelId, title) {
 	let root = document.getElementById(panelId);
 	if (root) return root;
@@ -1735,11 +1805,13 @@ function mockClockLabel(m) { const value = Math.max(0, Number(m.timerRemaining ?
 function mockTeamMaxBid(team) { const open = AUCTION_CONFIG.rosterSpots - team.roster.length; if (open <= 0) return 0; return Math.max(0, team.budget - Math.max(0, open - 1)); }
 function mockTeamSpent(team) { return AUCTION_CONFIG.budget - team.budget; }
 function mockPositionNeed(team, pos) {
-	const counts = rosterCounts(team.roster), count = counts[pos] || 0, min = OPTIMIZER_MINIMUMS[pos] || 0, target = OPTIMIZER_TARGETS[pos] || min;
-	let need = count < min ? 1.18 : 1;
-	if (pos !== 'QB' && (counts.RB || 0) + (counts.WR || 0) + (counts.TE || 0) < 8) need += 0.06;
-	if (pos === 'QB' && count < target) need += 0.12;
+	const counts = rosterCounts(team.roster), count = counts[pos] || 0, target = AUCTION_POSITION_TARGETS[pos] || 3;
+	let need = count < target ? 1 + Math.min(0.26, (target - count) * 0.08) : 1;
+	if (pos === 'QB' && count < target) need += 0.1;
 	if (pos === 'TE' && count < target) need += 0.08;
+	if (pos === 'WR' && count < target) need += 0.05;
+	if (pos === 'RB' && count < target) need += 0.04;
+	if (pos !== 'QB' && (counts.RB || 0) + (counts.WR || 0) + (counts.TE || 0) < 9) need += 0.04;
 	return need;
 }
 function mockPacingMultiplier(team) {
@@ -1752,22 +1824,28 @@ function botMaxBid(team, player) {
 	const profile = team.profile || MOCK_BOT_PROFILES.balanced, base = Math.max(1, n(player.auction_value));
 	const variance = profile.min + Math.random() * (profile.max - profile.min);
 	const signalBoost = player.bid_signal ? profile.signal : 1;
-	let max = Math.round(base * variance * mockPositionNeed(team, player.position) * mockPacingMultiplier(team) * signalBoost);
+	const opinion = botPlayerOpinion(team, player);
+	let max = Math.round(base * variance * mockPositionNeed(team, player.position) * mockPacingMultiplier(team) * signalBoost * premiumPlayerMultiplier(player) * opinion.multiplier);
 	if (team.profileKey === 'conservative' && team.roster.length < 8) max = Math.min(max, Math.ceil(base * 0.96));
 	if (team.profileKey === 'aggressive' && player.auction_value >= 20) max = Math.max(max, Math.ceil(base * 1.18));
 	const aggressiveTopTarget = team.profileKey === 'aggressive' && (player.bid_signal || player.auction_value >= 35 || Math.random() < 0.18);
 	const cap = team.profileKey === 'aggressive' ? (aggressiveTopTarget ? 1.33 : 1.25) : profile.cap;
 	max = Math.min(max, Math.ceil(base * cap) + (player.bid_signal ? 2 : 0));
+	max = botPriceDiscipline(team, player, max);
 	return Math.min(mockTeamMaxBid(team), Math.max(0, max));
 }
 function randomTop(rows, size) { const top = rows.slice(0, Math.max(1, Math.min(size, rows.length))); return top[Math.floor(Math.random() * top.length)]; }
+function botNominationScore(team, player) {
+	const signalBoost = player.bid_signal ? 1.08 : 1;
+	return n(player.auction_value) * mockPositionNeed(team, player.position) * premiumPlayerMultiplier(player) * botPlayerOpinion(team, player).multiplier * signalBoost;
+}
 function mockNominationChoice(team) {
 	const rows = auctionPool().filter(p => !ensureMockState().drafted.has(p.id) && mockTeamMaxBid(team) >= 1);
 	if (!rows.length) return null;
-	if (team.profileKey === 'value') return randomTop([...rows].sort((a,b)=>n(b.bid_signal)-n(a.bid_signal) || n(b.auction_value)-n(a.auction_value)), 18);
-	if (team.profileKey === 'conservative' && team.roster.length < 8) return randomTop([...rows].sort((a,b)=>n(b.auction_value)-n(a.auction_value)), 24);
-	if (team.profileKey === 'aggressive') return randomTop([...rows].sort((a,b)=>n(b.auction_value) * mockPositionNeed(team,b.position) - n(a.auction_value) * mockPositionNeed(team,a.position)), 14);
-	return randomTop(rows, 22);
+	if (team.profileKey === 'value') return randomTop([...rows].sort((a,b)=>n(b.bid_signal)-n(a.bid_signal) || botNominationScore(team,b)-botNominationScore(team,a)), 18);
+	if (team.profileKey === 'conservative' && team.roster.length < 8) return randomTop([...rows].sort((a,b)=>botNominationScore(team,b)-botNominationScore(team,a)), 24);
+	if (team.profileKey === 'aggressive') return randomTop([...rows].sort((a,b)=>botNominationScore(team,b)-botNominationScore(team,a)), 14);
+	return randomTop([...rows].sort((a,b)=>botNominationScore(team,b)-botNominationScore(team,a)), 22);
 }
 function mockNominate(playerId, teamId=0) {
 	const m = ensureMockState(); if (m.current) return false;
@@ -2368,10 +2446,10 @@ function slowAvailablePool(m=ensureSlowState()) {
 function slowNominationChoice(team) {
 	const rows = slowAvailablePool().filter(p => slowTeamMaxBid(team) >= 1);
 	if (!rows.length) return null;
-	if (team.profileKey === 'value') return randomTop([...rows].sort((a,b)=>n(b.bid_signal)-n(a.bid_signal) || n(b.auction_value)-n(a.auction_value)), 22);
-	if (team.profileKey === 'conservative') return randomTop([...rows].sort((a,b)=>n(b.auction_value)-n(a.auction_value)), 34);
-	if (team.profileKey === 'aggressive') return randomTop([...rows].sort((a,b)=>n(b.auction_value) * mockPositionNeed(team,b.position) - n(a.auction_value) * mockPositionNeed(team,a.position)), 18);
-	return randomTop(rows, 28);
+	if (team.profileKey === 'value') return randomTop([...rows].sort((a,b)=>n(b.bid_signal)-n(a.bid_signal) || botNominationScore(team,b)-botNominationScore(team,a)), 22);
+	if (team.profileKey === 'conservative') return randomTop([...rows].sort((a,b)=>botNominationScore(team,b)-botNominationScore(team,a)), 34);
+	if (team.profileKey === 'aggressive') return randomTop([...rows].sort((a,b)=>botNominationScore(team,b)-botNominationScore(team,a)), 18);
+	return randomTop([...rows].sort((a,b)=>botNominationScore(team,b)-botNominationScore(team,a)), 28);
 }
 function slowNominate(playerId, teamId=0, advanceOrder=true) {
 	const m = ensureSlowState(), limit = slowLotLimit();
@@ -2433,12 +2511,14 @@ function slowBotMaxBid(team, lot) {
 	const profile = team.profile || MOCK_BOT_PROFILES.balanced, base = Math.max(1, n(lot.player.auction_value));
 	const variance = profile.min + Math.random() * (profile.max - profile.min);
 	const signalBoost = lot.player.bid_signal ? profile.signal : 1;
-	let max = Math.round(base * variance * mockPositionNeed(team, lot.player.position) * mockPacingMultiplier(team) * signalBoost);
+	const opinion = botPlayerOpinion(team, lot.player);
+	let max = Math.round(base * variance * mockPositionNeed(team, lot.player.position) * mockPacingMultiplier(team) * signalBoost * premiumPlayerMultiplier(lot.player) * opinion.multiplier);
 	if (team.profileKey === 'conservative' && team.roster.length < 8) max = Math.min(max, Math.ceil(base * 0.96));
 	if (team.profileKey === 'aggressive' && lot.player.auction_value >= 20) max = Math.max(max, Math.ceil(base * 1.18));
 	const aggressiveTopTarget = team.profileKey === 'aggressive' && (lot.player.bid_signal || lot.player.auction_value >= 35 || Math.random() < 0.18);
 	const cap = team.profileKey === 'aggressive' ? (aggressiveTopTarget ? 1.33 : 1.25) : profile.cap;
 	max = Math.min(max, Math.ceil(base * cap) + (lot.player.bid_signal ? 2 : 0));
+	max = botPriceDiscipline(team, lot.player, max);
 	return Math.min(slowTeamMaxBid(team, lot.id), Math.max(0, max));
 }
 function slowBidIncrement(current, max) { return mockBidIncrement(current, max); }
@@ -2637,7 +2717,6 @@ function renderSlowLots(m) {
 	const root = document.getElementById('slowLots'); if (!root) return;
 	if (!m.lots.length) { root.innerHTML = '<div class="mock-empty">No active auctions. Fill nominations or nominate from the pool.</div>'; return; }
 	const focusedInput = captureSlowLotInputFocus(root);
-	const tendencies = auctionTendencyRows(m);
 	root.innerHTML = [...m.lots].sort((a,b)=>a.timeRemaining-b.timeRemaining).map(lot => {
 		const high = m.teams[lot.highBidder], nominator = m.teams[lot.nominatorId], expiring = lot.timeRemaining <= slowResetSeconds();
 		const humanBidState = lot.highBidder === 0 ? 'human-winning' : slowHumanHasBid(lot) ? 'human-outbid' : '';
@@ -2645,7 +2724,7 @@ function renderSlowLots(m) {
 		const humanMaxAllowed = slowTeamMaxBid(m.teams[0], lot.id);
 		const strategy = auctionStrategy(lot.player, m.teams[0], lot.currentBid, humanMaxAllowed, slowTeamCommitted(m.teams[0], lot.id));
 		const guidance = slowLotGuidanceHtml(strategy, lot.player);
-		const pressure = marketPressureHtml(lot.player, m.teams, {currentBid:lot.currentBid, maxBidForTeam:team => slowTeamMaxBid(team, lot.id), limit:3, tendencies});
+		const pressure = marketPressureHtml(lot.player, m.teams, {currentBid:lot.currentBid, maxBidForTeam:team => slowTeamMaxBid(team, lot.id), limit:3});
 		const valueAmount = Math.min(humanMaxAllowed, Math.max(lot.currentBid + 1, Math.round(n(lot.player.auction_value))));
 		const maxAmount = Math.min(humanMaxAllowed, Math.max(lot.currentBid + 1, humanMax || Math.ceil(n(lot.player.auction_value) * 1.1) || lot.currentBid + 1));
 		return `<div class="slow-lot ${m.selectedLotId === lot.id ? 'active' : ''} ${expiring ? 'expiring' : ''} ${humanBidState}" data-slow-lot="${lot.id}" role="button" tabindex="0"><div class="slow-lot-status"><strong>Bid ${escapeHtml(slowClockDetail(lot.timeRemaining))}</strong><span>${lot.bidCount} bids</span></div><h3 class="${positionClass(lot.player.position)}">${escapeHtml(lot.player.player)}</h3><div class="slow-lot-meta"><span>${escapeHtml(lot.player.position)}${lot.player.team ? ' ' + escapeHtml(lot.player.team) : ''}</span><span>$${Math.round(n(lot.player.auction_value))} value</span></div><div class="slow-lot-meta"><span>Nom: ${escapeHtml(nominator ? nominator.name : '-')}</span><span>${escapeHtml(lot.player.auction_tier || '')}</span></div>${humanMax ? `<span class="proxy-pill">Your max $${humanMax}</span>` : ''}<div class="slow-lot-bid"><div><span>Winning bid</span><strong>$${lot.currentBid}</strong></div><em>${escapeHtml(high ? high.name : '-')}<br>${escapeHtml(lot.player.auction_tier || '')}</em></div>${guidance}${pressure}<div class="slow-actions"><button type="button" data-slow-bid="${lot.id}" data-amount="${lot.currentBid + 1}">+$1</button><button type="button" data-slow-bid="${lot.id}" data-amount="${lot.currentBid + 5}">+$5</button></div><div class="slow-lot-controls"><label>Value<input type="number" min="${lot.currentBid + 1}" max="${humanMaxAllowed}" step="1" value="${valueAmount}" data-slow-value-input="${lot.id}"></label><button type="button" data-slow-bid-value="${lot.id}">Bid value</button><label>Max<input type="number" min="${lot.currentBid + 1}" max="${humanMaxAllowed}" step="1" value="${maxAmount}" data-slow-max-input="${lot.id}"></label><button type="button" data-slow-set-max="${lot.id}">Set max</button></div></div>`;
@@ -2659,7 +2738,7 @@ function renderSlowLots(m) {
 }
 function renderSlowTeams(m) {
 	const root = document.getElementById('slowTeams'); if (!root) return;
-	root.innerHTML = m.teams.map(team => `<div class="team-tile ${team.id === 0 ? 'human' : ''} ${m.selectedTeamId === team.id ? 'active' : ''}" data-slow-team-id="${team.id}" role="button" tabindex="0"><strong>${escapeHtml(team.name)}</strong><span class="small">$${team.budget} left - committed $${slowTeamCommitted(team)} - max $${slowTeamMaxBid(team)} - ${team.roster.length}/${AUCTION_CONFIG.rosterSpots}</span><div class="tendency-line">${auctionTeamTendencyLine(m, team.id)}</div>${team.bot ? `<select class="bot-profile-select" data-slow-profile-team-id="${team.id}">${botProfileOptions(team.profileKey)}</select>` : '<span class="personality">Human</span>'}</div>`).join('');
+	root.innerHTML = m.teams.map(team => `<div class="team-tile ${team.id === 0 ? 'human' : ''} ${m.selectedTeamId === team.id ? 'active' : ''}" data-slow-team-id="${team.id}" role="button" tabindex="0"><strong>${escapeHtml(team.name)}</strong><span class="small">$${team.budget} left - committed $${slowTeamCommitted(team)} - max $${slowTeamMaxBid(team)} - ${team.roster.length}/${AUCTION_CONFIG.rosterSpots}</span>${slowTeamIntelHtml(m, team)}<div class="tendency-line">${auctionTeamTendencyLine(m, team.id)}</div>${team.bot ? `<select class="bot-profile-select" data-slow-profile-team-id="${team.id}">${botProfileOptions(team.profileKey)}</select>` : '<span class="personality">Human</span>'}</div>`).join('');
 	root.querySelectorAll('[data-slow-team-id]').forEach(tile => tile.addEventListener('click', e => { if (e.target.closest('[data-slow-profile-team-id]')) return; m.selectedTeamId = Number(tile.dataset.slowTeamId); renderSlowAuction(); }));
 	root.querySelectorAll('[data-slow-profile-team-id]').forEach(select => select.addEventListener('change', () => { setSlowTeamProfile(select.dataset.slowProfileTeamId, select.value); renderSlowAuction(); }));
 }
