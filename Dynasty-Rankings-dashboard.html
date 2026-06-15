@@ -228,7 +228,7 @@ button.tendency-chip:hover, button.tendency-chip:focus-visible { border-color:#9
 .par-sheet-head strong { display:block; }
 .par-sheet-head span { color:var(--muted); font-size:12px; }
 .par-table { display:grid; }
-.par-row { display:grid; grid-template-columns:48px 62px minmax(70px, .9fr) repeat(4, minmax(54px, 1fr)); gap:8px; align-items:center; min-width:560px; padding:8px 10px; border-top:1px solid #e2e8f0; font-size:12px; }
+.par-row { display:grid; grid-template-columns:48px minmax(72px, .7fr) minmax(78px, .9fr) repeat(4, minmax(54px, 1fr)); gap:8px; align-items:center; min-width:600px; padding:8px 10px; border-top:1px solid #e2e8f0; font-size:12px; }
 .par-row.header { color:var(--muted); font-weight:850; text-transform:uppercase; background:#f8fafc; }
 .par-row strong { font-size:14px; }
 .par-row input { width:100%; min-height:32px; padding:5px 7px; font-size:12px; }
@@ -762,7 +762,7 @@ const HARMON_RANKS = `1|Ja'Marr Chase|CIN|26.3|'21|BUY|Market Aligned||1
 	const [rank, player, team, age, draft, action, market, delta, market_rank] = line.split('|');
 	return {position:'WR', rank:Number(rank), player, team, age, draft, action, market, delta, market_rank, commentary:HARMON_COMMENTS[rank] || '', tier:action, tier_color:HARMON_ACTION_COLORS[action] || HARMON_MARKET_COLORS[market] || '#ffffff'};
 });
-const state = { sorts: new Map(), cheatTierColor: '', optimizer:null, mock:null, slow:null, leagueTycoon:null, parTargets:{}, playerQueues:{want:[], avoid:[]}, mockPlayerPage:1, slowPlayerPage:1 };
+const state = { sorts: new Map(), cheatTierColor: '', optimizer:null, mock:null, slow:null, leagueTycoon:null, parTargets:{}, parCounts:{}, playerQueues:{want:[], avoid:[]}, mockPlayerPage:1, slowPlayerPage:1 };
 let mockClockId = null, slowClockId = null;
 const DASHBOARD_STORAGE_KEY = 'rspDynastyDashboardState:v1';
 const DASHBOARD_STORAGE_VERSION = 1;
@@ -1030,6 +1030,7 @@ function dashboardSavePayload() {
 		sorts:[...state.sorts.entries()],
 		cheatTierColor:state.cheatTierColor || '',
 		parTargets:{...(state.parTargets || {})},
+		parCounts:{...(state.parCounts || {})},
 		playerQueues:{want:[...ensurePlayerQueues().want], avoid:[...ensurePlayerQueues().avoid]},
 		mockPlayerPage:state.mockPlayerPage || 1,
 		slowPlayerPage:state.slowPlayerPage || 1,
@@ -1062,6 +1063,7 @@ function restoreDashboardState() {
 	state.sorts = new Map(Array.isArray(saved.sorts) ? saved.sorts : []);
 	state.cheatTierColor = saved.cheatTierColor || '';
 	state.parTargets = saved.parTargets && typeof saved.parTargets === 'object' ? saved.parTargets : {};
+	state.parCounts = saved.parCounts && typeof saved.parCounts === 'object' ? saved.parCounts : {};
 	state.playerQueues = {
 		want:Array.isArray(saved.playerQueues?.want) ? saved.playerQueues.want.map(String).filter(Boolean) : [],
 		avoid:Array.isArray(saved.playerQueues?.avoid) ? saved.playerQueues.avoid.map(String).filter(Boolean) : []
@@ -2310,24 +2312,70 @@ function botOpinionText(opinion) {
 	const map = {favorite:'loves player', likes:'likes player', fade:'fading player', low:'low on player'};
 	return map[label] || label;
 }
+const PAR_POSITIONS = ['QB','RB','WR','TE'];
+function parClampCount(value) {
+	const count = Math.round(Number(value));
+	return Number.isFinite(count) ? Math.max(0, Math.min(AUCTION_CONFIG.rosterSpots, count)) : 0;
+}
+function parHasCountOverride(pos) {
+	return Object.prototype.hasOwnProperty.call(state.parCounts || {}, pos);
+}
+function parTargetCount(pos, suggestedCount) {
+	return parHasCountOverride(pos) ? parClampCount(state.parCounts[pos]) : parClampCount(suggestedCount);
+}
+function parPlayerKey(player) {
+	return player?.id || rankKey(player || {});
+}
+function parSuggestedPlayers(pos, targetCount, idealPlayers=[]) {
+	const picked = [];
+	const pickedKeys = new Set();
+	idealPlayers
+		.filter(player => player.position === pos)
+		.map(player => ({...player, par_price:n(player.buy_price ?? player.auction_value ?? player.paid)}))
+		.sort((a,b)=>n(b.par_price)-n(a.par_price))
+		.forEach(player => {
+			if (picked.length >= targetCount) return;
+			const key = parPlayerKey(player);
+			if (pickedKeys.has(key)) return;
+			picked.push(player);
+			pickedKeys.add(key);
+		});
+	if (picked.length < targetCount) {
+		DATA.players
+			.map(withPlayerMetadata)
+			.filter(player => player.position === pos && !pickedKeys.has(parPlayerKey(player)))
+			.sort((a,b)=>n(b.auction_value)-n(a.auction_value) || n(b.auction_points)-n(a.auction_points))
+			.slice(0, targetCount - picked.length)
+			.forEach(player => picked.push({...player, par_price:n(player.auction_value)}));
+	}
+	return picked;
+}
+function parSuggestedTotal(pos, targetCount, idealPlayers=[]) {
+	return Math.round(parSuggestedPlayers(pos, targetCount, idealPlayers).reduce((sum, player) => sum + n(player.par_price ?? player.buy_price ?? player.auction_value), 0));
+}
 function renderParSheet(root, team, commitments=[]) {
 	if (!root || !team) return;
 	const ideal = buildOptimizedTeam(), idealTotals = parPositionTotals(ideal.players, 'buy_price'), spentTotals = parPositionTotals(team.roster || [], 'paid');
 	const idealCounts = rosterCounts(ideal.players);
 	const committedTotals = parPositionTotals(commitments.map(item => ({...item.player, paid:item.currentBid})), 'paid');
-	const rows = ['QB','RB','WR','TE'].map(pos => {
-		const idealValue = Math.round(idealTotals[pos] || 0), idealCount = idealCounts[pos] || 0, hasOverride = Object.prototype.hasOwnProperty.call(state.parTargets || {}, pos), target = hasOverride ? Math.max(0, Math.round(n(state.parTargets[pos]))) : idealValue, spent = Math.round(spentTotals[pos] || 0), committed = Math.round(committedTotals[pos] || 0), actual = spent + committed, delta = actual - target;
+	const rows = PAR_POSITIONS.map(pos => {
+		const suggestedCount = idealCounts[pos] || 0, targetCount = parTargetCount(pos, suggestedCount), idealValue = parSuggestedTotal(pos, targetCount, ideal.players), hasOverride = Object.prototype.hasOwnProperty.call(state.parTargets || {}, pos), target = hasOverride ? Math.max(0, Math.round(n(state.parTargets[pos]))) : idealValue, spent = Math.round(spentTotals[pos] || 0), committed = Math.round(committedTotals[pos] || 0), actual = spent + committed, delta = actual - target;
 		const deltaClass = delta > 0 ? 'over' : delta < 0 ? 'under' : 'even';
 		const deltaText = delta > 0 ? `+$${delta}` : delta < 0 ? `-$${Math.abs(delta)}` : '$0';
-		return `<div class="par-row"><strong>${pos}</strong><span>${idealCount}</span><input type="number" min="0" max="${AUCTION_CONFIG.budget}" step="1" value="${target}" data-par-input="${pos}" title="Total planned ${pos} spend"><span>$${idealValue}</span><span>$${spent}</span><span>$${committed}</span><span class="par-delta ${deltaClass}">${deltaText}</span></div>`;
+		return `<div class="par-row"><strong>${pos}</strong><input type="number" min="0" max="${AUCTION_CONFIG.rosterSpots}" step="1" value="${targetCount}" data-par-count="${pos}" title="Target ${pos} player count"><input type="number" min="0" max="${AUCTION_CONFIG.budget}" step="1" value="${target}" data-par-input="${pos}" title="Total planned ${pos} spend"><span>$${idealValue}</span><span>$${spent}</span><span>$${committed}</span><span class="par-delta ${deltaClass}">${deltaText}</span></div>`;
 	}).join('');
-	root.innerHTML = `<div class="par-sheet-head"><div><strong>Par Sheet</strong><span>Target is total planned spend for that whole position group. Suggested is from the current Best Team build.</span></div><button type="button" class="par-reset" data-par-reset>Reset</button></div><div class="par-table"><div class="par-row header"><span>Pos</span><span>Players</span><span>Target</span><span>Suggest</span><span>Spent</span><span>Live</span><span>+/-</span></div>${rows}</div>`;
+	root.innerHTML = `<div class="par-sheet-head"><div><strong>Par Sheet</strong><span>Set target player counts and planned spend by position. Suggested spend follows the target count unless you override the dollar target.</span></div><button type="button" class="par-reset" data-par-reset>Reset</button></div><div class="par-table"><div class="par-row header"><span>Pos</span><span>Target #</span><span>Target $</span><span>Suggest</span><span>Spent</span><span>Live</span><span>+/-</span></div>${rows}</div>`;
+	root.querySelectorAll('[data-par-count]').forEach(input => input.addEventListener('change', () => {
+		const pos = input.dataset.parCount, value = parClampCount(input.value);
+		state.parCounts[pos] = value;
+		renderMockAuction(); renderSlowAuction(); renderLeagueTycoon(); scheduleAutoSave();
+	}));
 	root.querySelectorAll('[data-par-input]').forEach(input => input.addEventListener('change', () => {
 		const pos = input.dataset.parInput, value = Math.max(0, Math.min(AUCTION_CONFIG.budget, Math.round(Number(input.value))));
 		if (Number.isFinite(value)) state.parTargets[pos] = value;
 		renderMockAuction(); renderSlowAuction(); renderLeagueTycoon(); scheduleAutoSave();
 	}));
-	root.querySelector('[data-par-reset]')?.addEventListener('click', () => { state.parTargets = {}; renderMockAuction(); renderSlowAuction(); renderLeagueTycoon(); scheduleAutoSave(); });
+	root.querySelector('[data-par-reset]')?.addEventListener('click', () => { state.parTargets = {}; state.parCounts = {}; renderMockAuction(); renderSlowAuction(); renderLeagueTycoon(); scheduleAutoSave(); });
 }
 function renderMockSelectedTeam(m) {
 	const team = m.teams.find(t => t.id === m.selectedTeamId) || m.teams[0], summary = document.getElementById('mockHumanTeam'), roster = document.getElementById('mockHumanRoster');
