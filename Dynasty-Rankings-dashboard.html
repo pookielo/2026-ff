@@ -168,9 +168,13 @@ svg { width:100%; max-width:100%; min-width:0; height:auto; display:block; }
 #slowTendencies th:first-child { background:#eef2f7; z-index:7; }
 #slowTendencies tbody tr:hover td:first-child { background:#f8fafc; }
 .tendency-line { display:flex; flex-wrap:wrap; gap:5px; margin-top:6px; }
-.tendency-chip { display:inline-flex; border:1px solid #dbe4f0; border-radius:999px; background:white; color:#475569; padding:2px 6px; font-size:10px; font-weight:750; }
+.tendency-chip { display:inline-flex; align-items:center; border:1px solid #dbe4f0; border-radius:999px; background:white; color:#475569; padding:2px 6px; font-family:inherit; font-size:10px; line-height:1.3; font-weight:750; text-align:left; cursor:help; }
+button.tendency-chip:hover, button.tendency-chip:focus-visible { border-color:#93c5fd; color:#1d4ed8; }
+.grade-explain { grid-column:1/-1; border:1px solid #dbe4f0; border-radius:8px; background:#f8fafc; color:#475569; padding:8px 10px; font-size:12px; line-height:1.35; }
+.grade-explain strong { color:var(--ink); font-weight:850; }
+.grade-explain span { display:block; margin-top:3px; }
 .tell-list { display:flex; flex-wrap:wrap; gap:4px; }
-.tell-list span { display:inline-flex; border-radius:999px; background:#eef2ff; color:#334155; padding:2px 6px; font-size:11px; font-weight:750; white-space:nowrap; }
+.tell-list .tendency-chip { background:#eef2ff; color:#334155; font-size:11px; white-space:nowrap; }
 .mock-player-list { max-height:560px; }
 #mockPlayerTable { min-width:960px; }
 #mockPlayerTable th:nth-child(2), #mockPlayerTable td:nth-child(2),
@@ -1082,6 +1086,16 @@ function resetSavedDashboardState() {
 	window.location.reload();
 }
 function showNote(text) { const el=document.getElementById('noteToast'); el.textContent=text; el.classList.add('show'); clearTimeout(showNote.timer); showNote.timer=setTimeout(()=>el.classList.remove('show'), 3200); }
+function attachTipHandlers(root) {
+	if (!root) return;
+	root.querySelectorAll('[data-tip]').forEach(el => el.addEventListener('click', e => {
+		e.stopPropagation();
+		showNote(el.dataset.tip || el.getAttribute('title') || '');
+	}));
+}
+function tipChip(label, detail, className='tendency-chip') {
+	return `<button type="button" class="${className}" title="${escapeHtml(detail)}" data-tip="${escapeHtml(detail)}">${escapeHtml(label)}</button>`;
+}
 function optionValues(rows,key) { return [...new Set(rows.map(r=>r[key]).filter(Boolean))].sort((a,b)=>String(a).localeCompare(String(b))); }
 function fillSelect(id, vals) { const el=document.getElementById(id); const first=el.querySelector('option')?.outerHTML || '<option value=""></option>'; el.innerHTML = first + vals.map(v=>`<option>${escapeHtml(v)}</option>`).join(''); }
 function barChart(el, rows, labelKey, valueKey, color='#2563eb', maxItems=20, opts={}) { const data = rows.slice(0,maxItems).filter(r=>Number(r[valueKey]) || r[valueKey]===0); const compact = Boolean(opts.compact); const w=compact ? 640 : 980, h=Math.max(compact ? 220 : 300, data.length*(compact ? 28 : 34)+34), left=compact ? 128 : 330, right=compact ? 58 : 92, top=14, rowH=compact ? 28 : 34; const max = Math.max(1, ...data.map(r=>Number(r[valueKey]))); const body = data.map((r,i)=>{ const y=top+i*rowH; const val=Number(r[valueKey]); const bw=(w-left-right)*(val/max); const label=String(r[labelKey] ?? '').slice(0, compact ? 18 : 38); return `<text class="bar-label" x="6" y="${y+22}">${escapeHtml(label)}</text><rect x="${left}" y="${y+6}" width="${Math.max(2,bw)}" height="20" rx="5" fill="${color}"></rect><text class="bar-value" x="${left+bw+8}" y="${y+22}">${rawFmt(val)}</text>`; }).join(''); document.getElementById(el).innerHTML = `<svg viewBox="0 0 ${w} ${h}" role="img">${body}</svg>`; }
@@ -1942,7 +1956,32 @@ function auctionTendencyRows(m) {
 function auctionTeamTendencyLine(m, teamId) {
 	const row = auctionTendencyRows(m).find(item => item.teamId === teamId);
 	if (!row || row.bids + row.nominations + row.wins < 2) return '';
-	return `<span class="tendency-chip">${row.bids} bids</span><span class="tendency-chip">${row.nominations} noms</span><span class="tendency-chip">${pctText(row.maxOver)} max over</span>`;
+	const chips = [
+		tipChip(`${row.bids} bids`, `${row.name} has placed ${row.bids} bids in observed auction activity.`),
+		tipChip(`${row.nominations} noms`, `${row.name} has nominated ${row.nominations} players.`),
+		tipChip(`${pctText(row.maxOver)} max over`, `${row.name}'s largest bid was ${pctText(row.maxOver)} over that player's model bid value.`)
+	];
+	return chips.join('');
+}
+function needChipDetail(needs) {
+	if (!needs) return '';
+	if (needs === 'Depth only') return 'This team has reached the model target of at least 3 QB, 3 RB, 3 WR, and 3 TE. Future bids are treated as upgrades, depth, or personal preference rather than required roster construction.';
+	return `Roster target gap. The model assumes most teams want at least 3 QB, 3 RB, 3 WR, and 3 TE in this superflex, TE-premium format; this badge shows the shortest positions.`;
+}
+function tendencyTellDetail(tell) {
+	const map = {
+		'nominates then watches':'This team often nominates players and then does not bid on them. Treat those nominations as possible decoys, price checks, or attempts to drain other budgets.',
+		'throws popular names':'This team frequently nominates players who attract bids from others. They may be trying to force the room to spend.',
+		'can push 20%+':'This team has shown it can bid at least 20% over model value. Do not assume your normal ceiling will hold against them.',
+		'top-end overbidder':'This team has at least one bid 30% or more over model value. They can get irrational or very aggressive on preferred players.',
+		'late bidder':'This team often waits until the clock is low before bidding. Keep a cushion if they are active on a player you want.',
+		'early pressure':'This team bids early in the timer. That can be a real interest signal, or an attempt to set a higher anchor and pressure the room.',
+		'chases Bid+ targets':'This team has bid often on players marked as premium targets by the model or analyst signals.',
+		'quick pass':'This team passes more than it bids. They are selective and may only engage on favorite players or clear values.',
+		'balanced/unclear':'There is activity, but no strong tendency has separated yet.',
+		'needs more data':'Not enough auction behavior has been observed yet.'
+	};
+	return map[tell] || 'Observed auction tendency based on nominations, bid timing, overbids, and wins.';
 }
 function slowTeamIntelHtml(m, team) {
 	const row = auctionTendencyRows(m).find(item => item.teamId === team.id);
@@ -1951,9 +1990,9 @@ function slowTeamIntelHtml(m, team) {
 	const opinion = selected && team.bot ? botPlayerOpinion(team, selected.player) : null;
 	const tells = (row?.tells || []).filter(tell => tell !== 'needs more data').slice(0, 2);
 	const chips = [];
-	if (needs) chips.push(`<span class="tendency-chip">Needs ${escapeHtml(needs)}</span>`);
-	if (opinion?.label) chips.push(`<span class="tendency-chip" title="Bot-specific opinion for the selected active auction">Opinion: ${escapeHtml(botOpinionText(opinion))}</span>`);
-	tells.forEach(tell => chips.push(`<span class="tendency-chip">Tell ${escapeHtml(tell)}</span>`));
+	if (needs) chips.push(tipChip(`Needs ${needs}`, needChipDetail(needs)));
+	if (opinion?.label) chips.push(tipChip(`Opinion: ${botOpinionText(opinion)}`, `Bot-specific opinion for the selected active auction. This can raise or lower their willingness to bid beyond their profile baseline.`));
+	tells.forEach(tell => chips.push(tipChip(`Tell ${tell}`, tendencyTellDetail(tell))));
 	return chips.length ? `<div class="tendency-line">${chips.join('')}</div>` : '';
 }
 function ensureTendencyPanel(panelId, title) {
@@ -1977,7 +2016,8 @@ function renderAuctionTendencies(panelId, m, title) {
 		table.innerHTML = `<tbody><tr><td class="mock-empty">Run auction activity to learn team tendencies.</td></tr></tbody>`;
 		return;
 	}
-	table.innerHTML = `<thead><tr><th>Team</th><th>Profile</th><th>Nom</th><th>Bids</th><th>Bid/Nom</th><th>Wins</th><th>Avg Over</th><th>Max Over</th><th>Late</th><th>No-follow Nom</th><th>Tells</th></tr></thead><tbody>${activeRows.map(row => `<tr><td>${escapeHtml(row.name)}</td><td>${escapeHtml(row.profile || '-')}</td><td>${row.nominations}</td><td>${row.bids}</td><td>${rawFmt(row.bidPerNom)}</td><td>${row.wins}</td><td>${row.avgOver === null ? '-' : pctText(row.avgOver)}</td><td>${row.maxOver === null ? '-' : pctText(row.maxOver)}</td><td>${pctText(row.lateRate)}</td><td>${pctText(row.noFollowRate)}</td><td><div class="tell-list">${row.tells.map(tell => `<span>${escapeHtml(tell)}</span>`).join('')}</div></td></tr>`).join('')}</tbody>`;
+	table.innerHTML = `<thead><tr><th>Team</th><th>Profile</th><th>Nom</th><th>Bids</th><th>Bid/Nom</th><th>Wins</th><th>Avg Over</th><th>Max Over</th><th>Late</th><th>No-follow Nom</th><th>Tells</th></tr></thead><tbody>${activeRows.map(row => `<tr><td>${escapeHtml(row.name)}</td><td>${escapeHtml(row.profile || '-')}</td><td>${row.nominations}</td><td>${row.bids}</td><td>${rawFmt(row.bidPerNom)}</td><td>${row.wins}</td><td>${row.avgOver === null ? '-' : pctText(row.avgOver)}</td><td>${row.maxOver === null ? '-' : pctText(row.maxOver)}</td><td>${pctText(row.lateRate)}</td><td>${pctText(row.noFollowRate)}</td><td><div class="tell-list">${row.tells.map(tell => tipChip(tell, tendencyTellDetail(tell))).join('')}</div></td></tr>`).join('')}</tbody>`;
+	attachTipHandlers(table);
 }
 function createMockTeam(id, profileKey='human') { const profile = MOCK_BOT_PROFILES[profileKey]; return {id, name:id === 0 ? 'You' : `Bot ${id}`, bot:id !== 0, profileKey, profile, budget:AUCTION_CONFIG.budget, roster:[]}; }
 function slowTimingForProfile(profileKey, id=0) {
@@ -2169,6 +2209,7 @@ function setMockTeamProfile(teamId, profileKey) {
 function renderMockTeams(m) {
 	const root = document.getElementById('mockTeams'); if (!root) return;
 	root.innerHTML = m.teams.map(team => `<div class="team-tile ${team.id === 0 ? 'human' : ''} ${m.selectedTeamId === team.id ? 'active' : ''}" data-team-id="${team.id}" role="button" tabindex="0"><strong>${escapeHtml(team.name)}</strong><span class="small">$${team.budget} left - max $${mockTeamMaxBid(team)} - ${team.roster.length}/${AUCTION_CONFIG.rosterSpots}</span>${draftGradeChip(team, m.teams)}<div class="tendency-line">${auctionTeamTendencyLine(m, team.id)}</div>${team.bot ? `<select class="bot-profile-select" data-profile-team-id="${team.id}">${botProfileOptions(team.profileKey)}</select>` : '<span class="personality">Human</span>'}</div>`).join('');
+	attachTipHandlers(root);
 	root.querySelectorAll('[data-team-id]').forEach(tile => tile.addEventListener('click', e => { if (e.target.closest('[data-profile-team-id]')) return; m.selectedTeamId = Number(tile.dataset.teamId); renderMockAuction(); }));
 	root.querySelectorAll('[data-profile-team-id]').forEach(select => select.addEventListener('change', e => { setMockTeamProfile(select.dataset.profileTeamId, select.value); renderMockAuction(); }));
 }
@@ -2188,7 +2229,7 @@ function parPositionTotals(players=[], key='buy_price') {
 		return totals;
 	}, {});
 }
-function draftTeamScore(team) {
+function draftTeamComponents(team) {
 	const roster = team?.roster || [];
 	if (roster.length < AUCTION_CONFIG.rosterSpots) return null;
 	const slots = assignRosterSlots(roster), counts = rosterCounts(roster);
@@ -2198,7 +2239,12 @@ function draftTeamScore(team) {
 	const tierScore = roster.reduce((sum, player) => { const tier = optimizerTierIndex(player); return sum + (tier <= 1 ? 8 : tier <= 2 ? 5 : tier <= 3 ? 3 : tier <= 4 ? 1 : 0); }, 0);
 	const balance = ['QB','RB','WR','TE'].reduce((sum, pos) => sum + Math.min(3, counts[pos] || 0) * 3, 0);
 	const leftoverPenalty = Math.max(0, n(team.budget) - 8) * 0.35;
-	return starterPoints * 0.12 + totalPoints * 0.035 + valueSurplus * 0.3 + tierScore + balance - leftoverPenalty;
+	const score = starterPoints * 0.12 + totalPoints * 0.035 + valueSurplus * 0.3 + tierScore + balance - leftoverPenalty;
+	return {score, starterPoints, totalPoints, valueSurplus, tierScore, balance, leftoverPenalty, counts};
+}
+function draftTeamScore(team) {
+	const components = draftTeamComponents(team);
+	return components ? components.score : null;
 }
 function letterForDraftPercentile(percentile) {
 	if (percentile >= 0.92) return 'A+';
@@ -2214,21 +2260,50 @@ function letterForDraftPercentile(percentile) {
 	return 'F';
 }
 function draftGradeForTeam(team, teams=[]) {
-	const score = draftTeamScore(team);
-	if (score === null) return null;
+	const components = draftTeamComponents(team);
+	const score = components?.score;
+	if (!components || score === null || score === undefined) return null;
 	const complete = (teams || []).filter(t => (t.roster || []).length >= AUCTION_CONFIG.rosterSpots);
-	const ranked = complete.map(t => ({team:t, score:draftTeamScore(t)})).filter(row => row.score !== null).sort((a,b)=>b.score-a.score);
+	const ranked = complete.map(t => ({team:t, components:draftTeamComponents(t)})).filter(row => row.components).map(row => ({...row, score:row.components.score})).sort((a,b)=>b.score-a.score);
 	const rank = Math.max(1, ranked.findIndex(row => row.team.id === team.id) + 1), total = Math.max(1, ranked.length);
 	const percentile = total <= 1 ? 0.58 : 1 - ((rank - 1) / (total - 1));
-	return {letter:letterForDraftPercentile(percentile), score:Math.round(score), rank, total};
+	return {letter:letterForDraftPercentile(percentile), score:Math.round(score), rank, total, components, ranked};
 }
 function draftGradeChip(team, teams) {
 	const grade = draftGradeForTeam(team, teams);
-	return grade ? `<div class="tendency-line"><span class="tendency-chip">Grade ${escapeHtml(grade.letter)}</span><span class="tendency-chip">#${grade.rank}/${grade.total}</span></div>` : '';
+	if (!grade) return '';
+	const detail = `Draft grade: ${grade.letter}, ranked #${grade.rank} of ${grade.total} completed teams. It weights starter points, full-roster points, bid value, top-tier players, position balance, and leftover budget.`;
+	return `<div class="tendency-line">${tipChip(`Grade ${grade.letter}`, detail)}${tipChip(`#${grade.rank}/${grade.total}`, detail)}</div>`;
 }
 function draftGradeMetric(team, teams) {
 	const grade = draftGradeForTeam(team, teams);
 	return grade ? renderMetric('Draft grade', `${grade.letter} (#${grade.rank}/${grade.total})`) : renderMetric('Draft grade', 'Pending');
+}
+function componentRank(ranked, team, getter, higherBetter=true) {
+	const rows = ranked.map(row => ({team:row.team, value:getter(row.components)})).sort((a,b)=>higherBetter ? b.value-a.value : a.value-b.value);
+	return Math.max(1, rows.findIndex(row => row.team.id === team.id) + 1);
+}
+function draftGradeExplanationHtml(team, teams=[]) {
+	const grade = draftGradeForTeam(team, teams);
+	if (!grade) return '<div class="grade-explain"><strong>Draft grade pending.</strong><span>Grades appear after this team fills its full 25-player roster, then rank completed teams against each other.</span></div>';
+	const ranked = grade.ranked || [];
+	const c = grade.components;
+	const starterRank = componentRank(ranked, team, item => item.starterPoints);
+	const totalRank = componentRank(ranked, team, item => item.totalPoints);
+	const valueRank = componentRank(ranked, team, item => item.valueSurplus);
+	const tierRank = componentRank(ranked, team, item => item.tierScore);
+	const balanceRank = componentRank(ranked, team, item => item.balance);
+	const cashRank = componentRank(ranked, team, item => item.leftoverPenalty, false);
+	const details = [
+		`starter fpts #${starterRank}`,
+		`roster fpts #${totalRank}`,
+		`value #${valueRank}`,
+		`tier capital #${tierRank}`,
+		`balance #${balanceRank}`,
+		`cash use #${cashRank}`
+	].join(' - ');
+	const drag = c.leftoverPenalty > 0.5 ? ` Leftover-budget penalty: $${Math.round(n(team.budget))} still unspent.` : '';
+	return `<div class="grade-explain"><strong>Why #${grade.rank}/${grade.total}: ${escapeHtml(grade.letter)} grade, score ${grade.score}.</strong><span>Ranks completed teams by weighted starter production, full roster production, value versus paid price, top-tier players, position balance, and cash used. ${escapeHtml(details)}.${escapeHtml(drag)}</span></div>`;
 }
 function botOpinionText(opinion) {
 	const label = opinion?.label || '';
@@ -2257,7 +2332,7 @@ function renderParSheet(root, team, commitments=[]) {
 function renderMockSelectedTeam(m) {
 	const team = m.teams.find(t => t.id === m.selectedTeamId) || m.teams[0], summary = document.getElementById('mockHumanTeam'), roster = document.getElementById('mockHumanRoster');
 	if (!summary || !roster) return;
-	summary.innerHTML = [renderMetric('Team', team.name), renderMetric('Budget', '$' + team.budget), renderMetric('Max bid', '$' + mockTeamMaxBid(team)), renderMetric('Players', `${team.roster.length}/${AUCTION_CONFIG.rosterSpots}`), draftGradeMetric(team, m.teams)].join('');
+	summary.innerHTML = [renderMetric('Team', team.name), renderMetric('Budget', '$' + team.budget), renderMetric('Max bid', '$' + mockTeamMaxBid(team)), renderMetric('Players', `${team.roster.length}/${AUCTION_CONFIG.rosterSpots}`), draftGradeMetric(team, m.teams)].join('') + draftGradeExplanationHtml(team, m.teams);
 	renderParSheet(ensureParSheetRoot('mockParSheet', summary), team, m.current && m.highBidder === team.id ? [{player:m.current, currentBid:m.currentBid}] : []);
 	roster.innerHTML = assignRosterSlots(team.roster).map(slot => renderRosterSlot(slot, 'paid')).join('');
 }
@@ -2497,6 +2572,7 @@ function renderLeagueTycoonTeams(m) {
 	const root = document.getElementById('ltTeams');
 	if (!root) return;
 	root.innerHTML = m.teams.map(team => `<div class="team-tile ${team.id === m.yourTeamId ? 'human' : ''} ${m.selectedTeamId === team.id ? 'active' : ''}" data-lt-team-id="${team.id}" role="button" tabindex="0"><strong>${escapeHtml(team.name)}</strong><span class="small">$${team.budget} left - max $${leagueTycoonTeamMaxBid(team)} - spent $${leagueTycoonSpent(team)} - ${team.roster.length}/${AUCTION_CONFIG.rosterSpots}</span>${draftGradeChip(team, m.teams)}</div>`).join('');
+	attachTipHandlers(root);
 	root.querySelectorAll('[data-lt-team-id]').forEach(tile => tile.addEventListener('click', () => { m.selectedTeamId = Number(tile.dataset.ltTeamId); renderLeagueTycoon(); }));
 }
 function renderLeagueTycoonSelectedTeam(m) {
@@ -2509,7 +2585,7 @@ function renderLeagueTycoonSelectedTeam(m) {
 		renderMetric('Max bid', '$' + leagueTycoonTeamMaxBid(team)),
 		renderMetric('Players', `${team.roster.length}/${AUCTION_CONFIG.rosterSpots}`),
 		draftGradeMetric(team, m.teams)
-	].join('');
+	].join('') + draftGradeExplanationHtml(team, m.teams);
 	renderParSheet(ensureParSheetRoot('ltParSheet', summary), team, []);
 	roster.innerHTML = assignRosterSlots(team.roster).map(slot => renderRosterSlot(slot, 'paid')).join('');
 }
@@ -2990,13 +3066,14 @@ function renderSlowLots(m) {
 function renderSlowTeams(m) {
 	const root = document.getElementById('slowTeams'); if (!root) return;
 	root.innerHTML = m.teams.map(team => `<div class="team-tile ${team.id === 0 ? 'human' : ''} ${m.selectedTeamId === team.id ? 'active' : ''}" data-slow-team-id="${team.id}" role="button" tabindex="0"><strong>${escapeHtml(team.name)}</strong><span class="small">$${team.budget} left - committed $${slowTeamCommitted(team)} - max $${slowTeamMaxBid(team)} - ${team.roster.length}/${AUCTION_CONFIG.rosterSpots}</span>${draftGradeChip(team, m.teams)}${slowTeamIntelHtml(m, team)}<div class="tendency-line">${auctionTeamTendencyLine(m, team.id)}</div>${team.bot ? `<select class="bot-profile-select" data-slow-profile-team-id="${team.id}">${botProfileOptions(team.profileKey)}</select>` : '<span class="personality">Human</span>'}</div>`).join('');
+	attachTipHandlers(root);
 	root.querySelectorAll('[data-slow-team-id]').forEach(tile => tile.addEventListener('click', e => { if (e.target.closest('[data-slow-profile-team-id]')) return; m.selectedTeamId = Number(tile.dataset.slowTeamId); renderSlowAuction(); }));
 	root.querySelectorAll('[data-slow-profile-team-id]').forEach(select => select.addEventListener('change', () => { setSlowTeamProfile(select.dataset.slowProfileTeamId, select.value); renderSlowAuction(); }));
 }
 function renderSlowSelectedTeam(m) {
 	const team = m.teams.find(t => t.id === m.selectedTeamId) || m.teams[0], summary = document.getElementById('slowHumanTeam'), roster = document.getElementById('slowHumanRoster');
 	if (!summary || !roster) return;
-	summary.innerHTML = [renderMetric('Team', team.name), renderMetric('Budget', '$' + team.budget), renderMetric('Committed', '$' + slowTeamCommitted(team)), renderMetric('Max bid', '$' + slowTeamMaxBid(team)), renderMetric('Players', `${team.roster.length}/${AUCTION_CONFIG.rosterSpots}`), draftGradeMetric(team, m.teams)].join('');
+	summary.innerHTML = [renderMetric('Team', team.name), renderMetric('Budget', '$' + team.budget), renderMetric('Committed', '$' + slowTeamCommitted(team)), renderMetric('Max bid', '$' + slowTeamMaxBid(team)), renderMetric('Players', `${team.roster.length}/${AUCTION_CONFIG.rosterSpots}`), draftGradeMetric(team, m.teams)].join('') + draftGradeExplanationHtml(team, m.teams);
 	renderParSheet(ensureParSheetRoot('slowParSheet', summary), team, slowTeamCommittedLots(team));
 	roster.innerHTML = assignRosterSlots(team.roster).map(slot => renderRosterSlot(slot, 'paid')).join('');
 }
