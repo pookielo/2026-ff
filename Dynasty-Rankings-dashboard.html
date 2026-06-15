@@ -233,6 +233,21 @@ button.tendency-chip:hover, button.tendency-chip:focus-visible { border-color:#9
 .par-row strong { font-size:14px; }
 .par-row input { width:100%; min-height:32px; padding:5px 7px; font-size:12px; }
 .par-reset { padding:6px 8px; font-size:12px; }
+.par-tier-row { min-width:600px; padding:8px 10px 10px 66px; border-top:1px solid #edf2f7; background:#fff; }
+.par-tier-row strong { display:block; margin-bottom:6px; color:var(--muted); font-size:11px; text-transform:uppercase; letter-spacing:0; }
+.par-tier-grid { display:grid; grid-template-columns:repeat(4, minmax(132px, 1fr)) auto; gap:8px; align-items:stretch; }
+.par-tier-cell { border:1px solid #e2e8f0; border-radius:8px; background:#f8fafc; padding:7px; }
+.par-tier-cell-head { margin-bottom:5px; color:var(--ink); font-size:12px; font-weight:850; }
+.par-tier-cell label { display:grid; grid-template-columns:18px minmax(44px, 1fr); gap:5px; align-items:center; color:var(--muted); font-size:11px; font-weight:850; }
+.par-tier-cell input { min-height:28px; padding:4px 6px; text-align:right; }
+.par-tier-cell span { display:block; margin-top:5px; color:var(--ink); font-size:12px; }
+.par-tier-cell em { display:block; margin-top:2px; color:var(--muted); font-size:11px; font-style:normal; }
+.par-tier-players { margin-top:6px; display:grid; gap:3px; }
+.par-tier-player { display:grid; grid-template-columns:minmax(0, 1fr) auto; gap:5px; align-items:center; padding:3px 5px; border-radius:6px; background:#fff; color:var(--ink); font-size:11px; }
+.par-tier-player span { margin:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.par-tier-player em { margin:0; white-space:nowrap; }
+.par-tier-empty { color:var(--muted); font-size:11px; }
+.par-tier-reset { align-self:center; padding:6px 8px; font-size:12px; white-space:nowrap; }
 .par-delta.over { color:#b91c1c; font-weight:850; }
 .par-delta.under { color:#047857; font-weight:850; }
 .par-delta.even { color:#475569; font-weight:850; }
@@ -762,7 +777,7 @@ const HARMON_RANKS = `1|Ja'Marr Chase|CIN|26.3|'21|BUY|Market Aligned||1
 	const [rank, player, team, age, draft, action, market, delta, market_rank] = line.split('|');
 	return {position:'WR', rank:Number(rank), player, team, age, draft, action, market, delta, market_rank, commentary:HARMON_COMMENTS[rank] || '', tier:action, tier_color:HARMON_ACTION_COLORS[action] || HARMON_MARKET_COLORS[market] || '#ffffff'};
 });
-const state = { sorts: new Map(), cheatTierColor: '', optimizer:null, mock:null, slow:null, leagueTycoon:null, parTargets:{}, parCounts:{}, playerQueues:{want:[], avoid:[]}, mockPlayerPage:1, slowPlayerPage:1 };
+const state = { sorts: new Map(), cheatTierColor: '', optimizer:null, mock:null, slow:null, leagueTycoon:null, parTargets:{}, parCounts:{}, parTierTargets:{}, parTierDollars:{}, parTierCounts:{}, playerQueues:{want:[], avoid:[]}, mockPlayerPage:1, slowPlayerPage:1 };
 let mockClockId = null, slowClockId = null;
 const DASHBOARD_STORAGE_KEY = 'rspDynastyDashboardState:v1';
 const DASHBOARD_STORAGE_VERSION = 1;
@@ -1031,6 +1046,9 @@ function dashboardSavePayload() {
 		cheatTierColor:state.cheatTierColor || '',
 		parTargets:{...(state.parTargets || {})},
 		parCounts:{...(state.parCounts || {})},
+		parTierTargets:{...(state.parTierTargets || {})},
+		parTierDollars:{...(state.parTierDollars || {})},
+		parTierCounts:{...(state.parTierCounts || {})},
 		playerQueues:{want:[...ensurePlayerQueues().want], avoid:[...ensurePlayerQueues().avoid]},
 		mockPlayerPage:state.mockPlayerPage || 1,
 		slowPlayerPage:state.slowPlayerPage || 1,
@@ -1064,6 +1082,9 @@ function restoreDashboardState() {
 	state.cheatTierColor = saved.cheatTierColor || '';
 	state.parTargets = saved.parTargets && typeof saved.parTargets === 'object' ? saved.parTargets : {};
 	state.parCounts = saved.parCounts && typeof saved.parCounts === 'object' ? saved.parCounts : {};
+	state.parTierTargets = saved.parTierTargets && typeof saved.parTierTargets === 'object' ? saved.parTierTargets : {};
+	state.parTierDollars = saved.parTierDollars && typeof saved.parTierDollars === 'object' ? saved.parTierDollars : {};
+	state.parTierCounts = saved.parTierCounts && typeof saved.parTierCounts === 'object' ? saved.parTierCounts : {};
 	state.playerQueues = {
 		want:Array.isArray(saved.playerQueues?.want) ? saved.playerQueues.want.map(String).filter(Boolean) : [],
 		avoid:Array.isArray(saved.playerQueues?.avoid) ? saved.playerQueues.avoid.map(String).filter(Boolean) : []
@@ -2313,18 +2334,134 @@ function botOpinionText(opinion) {
 	return map[label] || label;
 }
 const PAR_POSITIONS = ['QB','RB','WR','TE'];
+const PAR_FILL_ORDER = ['WR','RB','TE','QB'];
+const PAR_TIER_BUCKETS = [
+	{key:'T1', label:'Tier 1'},
+	{key:'T2', label:'Tier 2'},
+	{key:'T3', label:'Tier 3'},
+	{key:'Depth', label:'Depth'}
+];
 function parClampCount(value) {
 	const count = Math.round(Number(value));
 	return Number.isFinite(count) ? Math.max(0, Math.min(AUCTION_CONFIG.rosterSpots, count)) : 0;
 }
+function parClampDollar(value, max=AUCTION_CONFIG.budget) {
+	const dollars = Math.round(Number(value));
+	return Number.isFinite(dollars) ? Math.max(0, Math.min(max, dollars)) : 0;
+}
 function parHasCountOverride(pos) {
 	return Object.prototype.hasOwnProperty.call(state.parCounts || {}, pos);
 }
-function parTargetCount(pos, suggestedCount) {
-	return parHasCountOverride(pos) ? parClampCount(state.parCounts[pos]) : parClampCount(suggestedCount);
+function parNormalizeCounts(counts={}, lockedPos='') {
+	const output = Object.fromEntries(PAR_POSITIONS.map(pos => [pos, parClampCount(counts[pos])]));
+	let diff = AUCTION_CONFIG.rosterSpots - PAR_POSITIONS.reduce((sum, pos) => sum + output[pos], 0);
+	const adjustable = PAR_POSITIONS.filter(pos => pos !== lockedPos);
+	const addOrder = PAR_FILL_ORDER.filter(pos => adjustable.includes(pos));
+	while (diff > 0 && addOrder.length) {
+		for (const pos of addOrder) {
+			if (diff <= 0) break;
+			output[pos] += 1;
+			diff -= 1;
+		}
+	}
+	while (diff < 0) {
+		const reduceOrder = adjustable.filter(pos => output[pos] > 0).sort((a,b)=>output[b]-output[a] || PAR_FILL_ORDER.indexOf(a)-PAR_FILL_ORDER.indexOf(b));
+		if (!reduceOrder.length) break;
+		for (const pos of reduceOrder) {
+			if (diff >= 0) break;
+			if (output[pos] > 0) {
+				output[pos] -= 1;
+				diff += 1;
+			}
+		}
+	}
+	return output;
+}
+function parTargetCounts(suggestedCounts={}) {
+	const counts = Object.fromEntries(PAR_POSITIONS.map(pos => [pos, parHasCountOverride(pos) ? state.parCounts[pos] : suggestedCounts[pos]]));
+	return parNormalizeCounts(counts);
+}
+function parNormalizeDollars(values={}, lockedPos='') {
+	const output = Object.fromEntries(PAR_POSITIONS.map(pos => [pos, parClampDollar(values[pos])]));
+	let diff = AUCTION_CONFIG.budget - PAR_POSITIONS.reduce((sum, pos) => sum + output[pos], 0);
+	const adjustable = PAR_POSITIONS.filter(pos => pos !== lockedPos);
+	const addOrder = PAR_FILL_ORDER.filter(pos => adjustable.includes(pos));
+	while (diff > 0) {
+		if (!addOrder.length) break;
+		for (const pos of addOrder) {
+			if (diff <= 0) break;
+			output[pos] += 1;
+			diff -= 1;
+		}
+	}
+	while (diff < 0) {
+		const reduceOrder = adjustable.filter(pos => output[pos] > 0).sort((a,b)=>output[b]-output[a] || PAR_FILL_ORDER.indexOf(a)-PAR_FILL_ORDER.indexOf(b));
+		if (!reduceOrder.length) break;
+		for (const pos of reduceOrder) {
+			if (diff >= 0) break;
+			if (output[pos] > 0) {
+				output[pos] -= 1;
+				diff += 1;
+			}
+		}
+	}
+	return output;
+}
+function parSuggestedDollars(targetCounts={}, idealPlayers=[]) {
+	const raw = Object.fromEntries(PAR_POSITIONS.map(pos => [pos, parSuggestedTotal(pos, targetCounts[pos] || 0, idealPlayers)]));
+	return parNormalizeDollars(raw);
+}
+function parTargetDollars(suggestedDollars={}) {
+	const dollars = Object.fromEntries(PAR_POSITIONS.map(pos => [pos, Object.prototype.hasOwnProperty.call(state.parTargets || {}, pos) ? state.parTargets[pos] : suggestedDollars[pos]]));
+	return parNormalizeDollars(dollars);
+}
+function parNormalizeTierDollars(values={}, total=0, lockedKey='') {
+	const target = parClampDollar(total);
+	const output = Object.fromEntries(PAR_TIER_BUCKETS.map(bucket => [bucket.key, parClampDollar(values[bucket.key], target)]));
+	let diff = target - PAR_TIER_BUCKETS.reduce((sum, bucket) => sum + output[bucket.key], 0);
+	const adjustable = PAR_TIER_BUCKETS.map(bucket => bucket.key).filter(key => key !== lockedKey);
+	while (diff > 0) {
+		if (!adjustable.length) break;
+		const key = adjustable.slice().sort((a,b)=>output[b]-output[a] || PAR_TIER_BUCKETS.findIndex(bucket => bucket.key === a)-PAR_TIER_BUCKETS.findIndex(bucket => bucket.key === b))[0] || adjustable[0];
+		output[key] += 1;
+		diff -= 1;
+	}
+	while (diff < 0) {
+		const key = adjustable.filter(item => output[item] > 0).sort((a,b)=>output[b]-output[a])[0];
+		if (!key) break;
+		output[key] -= 1;
+		diff += 1;
+	}
+	return output;
+}
+function parNormalizeTierCounts(values={}, total=0, lockedKey='') {
+	const target = parClampCount(total);
+	const output = Object.fromEntries(PAR_TIER_BUCKETS.map(bucket => [bucket.key, Math.min(target, parClampCount(values[bucket.key]))]));
+	let diff = target - PAR_TIER_BUCKETS.reduce((sum, bucket) => sum + output[bucket.key], 0);
+	const adjustable = PAR_TIER_BUCKETS.map(bucket => bucket.key).filter(key => key !== lockedKey);
+	while (diff > 0) {
+		if (!adjustable.length) break;
+		const key = adjustable.slice().sort((a,b)=>output[b]-output[a] || PAR_TIER_BUCKETS.findIndex(bucket => bucket.key === a)-PAR_TIER_BUCKETS.findIndex(bucket => bucket.key === b))[0] || adjustable[0];
+		output[key] += 1;
+		diff -= 1;
+	}
+	while (diff < 0) {
+		const key = adjustable.filter(item => output[item] > 0).sort((a,b)=>output[b]-output[a])[0];
+		if (!key) break;
+		output[key] -= 1;
+		diff += 1;
+	}
+	return output;
 }
 function parPlayerKey(player) {
 	return player?.id || rankKey(player || {});
+}
+function parTierBucketKey(player) {
+	const tier = optimizerTierIndex(player);
+	if (tier <= 1) return 'T1';
+	if (tier <= 2) return 'T2';
+	if (tier <= 3) return 'T3';
+	return 'Depth';
 }
 function parSuggestedPlayers(pos, targetCount, idealPlayers=[]) {
 	const picked = [];
@@ -2353,29 +2490,118 @@ function parSuggestedPlayers(pos, targetCount, idealPlayers=[]) {
 function parSuggestedTotal(pos, targetCount, idealPlayers=[]) {
 	return Math.round(parSuggestedPlayers(pos, targetCount, idealPlayers).reduce((sum, player) => sum + n(player.par_price ?? player.buy_price ?? player.auction_value), 0));
 }
+function parTierRecommendation(pos, target, targetCount, idealPlayers=[]) {
+	const dollars = Object.fromEntries(PAR_TIER_BUCKETS.map(bucket => [bucket.key, 0]));
+	const counts = Object.fromEntries(PAR_TIER_BUCKETS.map(bucket => [bucket.key, 0]));
+	parSuggestedPlayers(pos, targetCount, idealPlayers).forEach(player => {
+		const bucket = parTierBucketKey(player);
+		dollars[bucket] += n(player.par_price ?? player.buy_price ?? player.auction_value);
+		counts[bucket] += 1;
+	});
+	return {
+		dollars:parNormalizeTierDollars(dollars, target),
+		counts:parNormalizeTierCounts(counts, targetCount)
+	};
+}
+function parTierDollars(pos, recommendation, target) {
+	const override = state.parTierDollars?.[pos];
+	return override && typeof override === 'object' ? parNormalizeTierDollars(override, target) : recommendation;
+}
+function parTierCounts(pos, recommendation, targetCount) {
+	const override = state.parTierCounts?.[pos];
+	return override && typeof override === 'object' ? parNormalizeTierCounts(override, targetCount) : recommendation;
+}
+function parActualBucketPlayers(pos, team, commitments=[]) {
+	const buckets = Object.fromEntries(PAR_TIER_BUCKETS.map(bucket => [bucket.key, []]));
+	const add = (player, status, amount) => {
+		if (!player || player.position !== pos) return;
+		buckets[parTierBucketKey(player)].push({...player, par_status:status, par_amount:Math.round(n(amount ?? player.paid ?? player.auction_value))});
+	};
+	(team?.roster || []).forEach(player => add(player, 'Drafted', player.paid));
+	commitments.forEach(item => add(item.player, 'Live', item.currentBid));
+	return buckets;
+}
+function parTierPlayersHtml(players=[]) {
+	if (!players.length) return '<span class="par-tier-empty">No players</span>';
+	return players
+		.slice()
+		.sort((a,b)=>n(b.par_amount)-n(a.par_amount) || String(a.player).localeCompare(String(b.player)))
+		.map(player => `<div class="par-tier-player"><span>${escapeHtml(player.player)}</span><em>$${Math.round(n(player.par_amount))}${player.par_status === 'Live' ? ' live' : ''}</em></div>`)
+		.join('');
+}
+function parTierPriceRange(pos, bucketKey) {
+	const prices = auctionPool()
+		.filter(player => player.position === pos && parTierBucketKey(player) === bucketKey)
+		.map(player => Math.round(n(player.auction_value)))
+		.filter(value => value > 0)
+		.sort((a,b)=>a-b);
+	if (!prices.length) return 'Range: none';
+	const min = prices[0], max = prices[prices.length - 1];
+	return min === max ? `Range: $${min}` : `Range: $${min}-$${max}`;
+}
+function renderParTierRow(pos, target, targetCount, idealPlayers=[], team=null, commitments=[]) {
+	const rec = parTierRecommendation(pos, target, targetCount, idealPlayers);
+	const dollars = parTierDollars(pos, rec.dollars, target);
+	const counts = parTierCounts(pos, rec.counts, targetCount);
+	const actualPlayers = parActualBucketPlayers(pos, team, commitments);
+	const overridden = Boolean(state.parTierDollars?.[pos] || state.parTierCounts?.[pos]);
+	const cells = PAR_TIER_BUCKETS.map(bucket => {
+		const bucketPlayers = actualPlayers[bucket.key] || [], spent = bucketPlayers.reduce((sum, player) => sum + n(player.par_amount), 0), targetDollars = dollars[bucket.key] || 0, targetPlayers = counts[bucket.key] || 0, recDollars = rec.dollars[bucket.key] || 0, recPlayers = rec.counts[bucket.key] || 0;
+		return `<div class="par-tier-cell"><div class="par-tier-cell-head">${escapeHtml(bucket.label)}</div><label>$<input type="number" min="0" max="${target}" step="1" value="${targetDollars}" data-par-tier-dollar-pos="${pos}" data-par-tier-dollar="${bucket.key}" title="${escapeHtml(pos)} ${escapeHtml(bucket.label)} dollar target"></label><label>#<input type="number" min="0" max="${targetCount}" step="1" value="${targetPlayers}" data-par-tier-count-pos="${pos}" data-par-tier-count="${bucket.key}" title="${escapeHtml(pos)} ${escapeHtml(bucket.label)} player target"></label><span>Spent $${Math.round(spent)} / ${bucketPlayers.length} player${bucketPlayers.length === 1 ? '' : 's'}</span><em>Rec $${recDollars} / ${recPlayers} player${recPlayers === 1 ? '' : 's'}</em><em>${escapeHtml(parTierPriceRange(pos, bucket.key))}</em><div class="par-tier-players">${parTierPlayersHtml(bucketPlayers)}</div></div>`;
+	}).join('');
+	return `<div class="par-tier-row"><strong>${escapeHtml(pos)} tier plan ${overridden ? '(custom)' : '(recommended)'}</strong><div class="par-tier-grid">${cells}<button type="button" class="par-tier-reset" data-par-tier-reset="${pos}" ${overridden ? '' : 'disabled'}>Use rec</button></div></div>`;
+}
 function renderParSheet(root, team, commitments=[]) {
 	if (!root || !team) return;
-	const ideal = buildOptimizedTeam(), idealTotals = parPositionTotals(ideal.players, 'buy_price'), spentTotals = parPositionTotals(team.roster || [], 'paid');
+	const ideal = buildOptimizedTeam(), spentTotals = parPositionTotals(team.roster || [], 'paid');
 	const idealCounts = rosterCounts(ideal.players);
 	const committedTotals = parPositionTotals(commitments.map(item => ({...item.player, paid:item.currentBid})), 'paid');
+	const targetCounts = parTargetCounts(idealCounts);
+	const suggestedDollars = parSuggestedDollars(targetCounts, ideal.players);
+	const targetDollars = parTargetDollars(suggestedDollars);
+	const totalTargetCount = PAR_POSITIONS.reduce((sum, pos) => sum + targetCounts[pos], 0);
+	const totalTargetSpend = PAR_POSITIONS.reduce((sum, pos) => sum + targetDollars[pos], 0);
 	const rows = PAR_POSITIONS.map(pos => {
-		const suggestedCount = idealCounts[pos] || 0, targetCount = parTargetCount(pos, suggestedCount), idealValue = parSuggestedTotal(pos, targetCount, ideal.players), hasOverride = Object.prototype.hasOwnProperty.call(state.parTargets || {}, pos), target = hasOverride ? Math.max(0, Math.round(n(state.parTargets[pos]))) : idealValue, spent = Math.round(spentTotals[pos] || 0), committed = Math.round(committedTotals[pos] || 0), actual = spent + committed, delta = actual - target;
+		const targetCount = targetCounts[pos] || 0, idealValue = suggestedDollars[pos] || 0, target = targetDollars[pos] || 0, spent = Math.round(spentTotals[pos] || 0), committed = Math.round(committedTotals[pos] || 0), actual = spent + committed, delta = actual - target;
 		const deltaClass = delta > 0 ? 'over' : delta < 0 ? 'under' : 'even';
 		const deltaText = delta > 0 ? `+$${delta}` : delta < 0 ? `-$${Math.abs(delta)}` : '$0';
-		return `<div class="par-row"><strong>${pos}</strong><input type="number" min="0" max="${AUCTION_CONFIG.rosterSpots}" step="1" value="${targetCount}" data-par-count="${pos}" title="Target ${pos} player count"><input type="number" min="0" max="${AUCTION_CONFIG.budget}" step="1" value="${target}" data-par-input="${pos}" title="Total planned ${pos} spend"><span>$${idealValue}</span><span>$${spent}</span><span>$${committed}</span><span class="par-delta ${deltaClass}">${deltaText}</span></div>`;
+		return `<div class="par-row"><strong>${pos}</strong><input type="number" min="0" max="${AUCTION_CONFIG.rosterSpots}" step="1" value="${targetCount}" data-par-count="${pos}" title="Target ${pos} player count"><input type="number" min="0" max="${AUCTION_CONFIG.budget}" step="1" value="${target}" data-par-input="${pos}" title="Total planned ${pos} spend"><span>$${idealValue}</span><span>$${spent}</span><span>$${committed}</span><span class="par-delta ${deltaClass}">${deltaText}</span></div>${renderParTierRow(pos, target, targetCount, ideal.players, team, commitments)}`;
 	}).join('');
-	root.innerHTML = `<div class="par-sheet-head"><div><strong>Par Sheet</strong><span>Set target player counts and planned spend by position. Suggested spend follows the target count unless you override the dollar target.</span></div><button type="button" class="par-reset" data-par-reset>Reset</button></div><div class="par-table"><div class="par-row header"><span>Pos</span><span>Target #</span><span>Target $</span><span>Suggest</span><span>Spent</span><span>Live</span><span>+/-</span></div>${rows}</div>`;
+	root.innerHTML = `<div class="par-sheet-head"><div><strong>Par Sheet</strong><span>Set target player counts and spend by position and tier. Counts total ${totalTargetCount}/${AUCTION_CONFIG.rosterSpots}; target spend totals $${totalTargetSpend}/$${AUCTION_CONFIG.budget}.</span></div><button type="button" class="par-reset" data-par-reset>Reset</button></div><div class="par-table"><div class="par-row header"><span>Pos</span><span>Target #</span><span>Target $</span><span>Suggest</span><span>Spent</span><span>Live</span><span>+/-</span></div>${rows}</div>`;
 	root.querySelectorAll('[data-par-count]').forEach(input => input.addEventListener('change', () => {
 		const pos = input.dataset.parCount, value = parClampCount(input.value);
-		state.parCounts[pos] = value;
+		const currentCounts = Object.fromEntries(PAR_POSITIONS.map(p => [p, p === pos ? value : Number(root.querySelector(`[data-par-count="${p}"]`)?.value)]));
+		state.parCounts = parNormalizeCounts(currentCounts, pos);
 		renderMockAuction(); renderSlowAuction(); renderLeagueTycoon(); scheduleAutoSave();
 	}));
 	root.querySelectorAll('[data-par-input]').forEach(input => input.addEventListener('change', () => {
-		const pos = input.dataset.parInput, value = Math.max(0, Math.min(AUCTION_CONFIG.budget, Math.round(Number(input.value))));
-		if (Number.isFinite(value)) state.parTargets[pos] = value;
+		const pos = input.dataset.parInput, value = parClampDollar(input.value);
+		const currentDollars = Object.fromEntries(PAR_POSITIONS.map(p => [p, p === pos ? value : Number(root.querySelector(`[data-par-input="${p}"]`)?.value)]));
+		state.parTargets = parNormalizeDollars(currentDollars, pos);
 		renderMockAuction(); renderSlowAuction(); renderLeagueTycoon(); scheduleAutoSave();
 	}));
-	root.querySelector('[data-par-reset]')?.addEventListener('click', () => { state.parTargets = {}; state.parCounts = {}; renderMockAuction(); renderSlowAuction(); renderLeagueTycoon(); scheduleAutoSave(); });
+	root.querySelectorAll('[data-par-tier-dollar]').forEach(input => input.addEventListener('change', () => {
+		const pos = input.dataset.parTierDollarPos, bucket = input.dataset.parTierDollar, target = Number(root.querySelector(`[data-par-input="${pos}"]`)?.value) || 0;
+		const current = Object.fromEntries(PAR_TIER_BUCKETS.map(item => [item.key, Number(root.querySelector(`[data-par-tier-dollar-pos="${pos}"][data-par-tier-dollar="${item.key}"]`)?.value)]));
+		current[bucket] = parClampDollar(input.value, target);
+		state.parTierDollars[pos] = parNormalizeTierDollars(current, target, bucket);
+		renderMockAuction(); renderSlowAuction(); renderLeagueTycoon(); scheduleAutoSave();
+	}));
+	root.querySelectorAll('[data-par-tier-count]').forEach(input => input.addEventListener('change', () => {
+		const pos = input.dataset.parTierCountPos, bucket = input.dataset.parTierCount, target = Number(root.querySelector(`[data-par-count="${pos}"]`)?.value) || 0;
+		const current = Object.fromEntries(PAR_TIER_BUCKETS.map(item => [item.key, Number(root.querySelector(`[data-par-tier-count-pos="${pos}"][data-par-tier-count="${item.key}"]`)?.value)]));
+		current[bucket] = parClampCount(input.value);
+		state.parTierCounts[pos] = parNormalizeTierCounts(current, target, bucket);
+		renderMockAuction(); renderSlowAuction(); renderLeagueTycoon(); scheduleAutoSave();
+	}));
+	root.querySelectorAll('[data-par-tier-reset]').forEach(btn => btn.addEventListener('click', () => {
+		const pos = btn.dataset.parTierReset;
+		if (state.parTierTargets) delete state.parTierTargets[pos];
+		if (state.parTierDollars) delete state.parTierDollars[pos];
+		if (state.parTierCounts) delete state.parTierCounts[pos];
+		renderMockAuction(); renderSlowAuction(); renderLeagueTycoon(); scheduleAutoSave();
+	}));
+	root.querySelector('[data-par-reset]')?.addEventListener('click', () => { state.parTargets = {}; state.parCounts = {}; state.parTierTargets = {}; state.parTierDollars = {}; state.parTierCounts = {}; renderMockAuction(); renderSlowAuction(); renderLeagueTycoon(); scheduleAutoSave(); });
 }
 function renderMockSelectedTeam(m) {
 	const team = m.teams.find(t => t.id === m.selectedTeamId) || m.teams[0], summary = document.getElementById('mockHumanTeam'), roster = document.getElementById('mockHumanRoster');
