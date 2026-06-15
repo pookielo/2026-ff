@@ -42,10 +42,11 @@ th.no-sort::after { content:''; }
 tbody tr:hover td { background:#f8fafc; }
 tbody tr.colored-row td { background:var(--row-bg); }
 tbody tr.colored-row:hover td { filter:brightness(.97); }
+#cheatsTable { --cheat-rank-width:72px; --cheat-player-width:160px; }
 #cheatsTable .sticky-cheat { position:sticky; z-index:4; background:white; }
 #cheatsTable th.sticky-cheat { background:#eef2f7; z-index:6; }
-#cheatsTable .sticky-cheat-rank { left:var(--cheat-rank-left, 0px); width:112px; min-width:112px; max-width:112px; }
-#cheatsTable .sticky-cheat-player { left:var(--cheat-player-left, 0px); width:205px; min-width:205px; max-width:205px; box-shadow:10px 0 12px -12px rgba(15,23,42,.55); }
+#cheatsTable .sticky-cheat-rank { left:var(--cheat-rank-left, 0px); width:var(--cheat-rank-width); min-width:var(--cheat-rank-width); max-width:var(--cheat-rank-width); }
+#cheatsTable .sticky-cheat-player { left:var(--cheat-player-left, 0px); width:var(--cheat-player-width); min-width:var(--cheat-player-width); max-width:var(--cheat-player-width); overflow-wrap:anywhere; box-shadow:10px 0 12px -12px rgba(15,23,42,.55); }
 #cheatsTable tbody tr.colored-row td.sticky-cheat { background:var(--row-bg); }
 #cheatsTable tbody tr:hover td.sticky-cheat { background:#f8fafc; }
 #cheatsTable tbody tr.colored-row:hover td.sticky-cheat { background:var(--row-bg); filter:brightness(.97); }
@@ -136,6 +137,7 @@ svg { width:100%; max-width:100%; min-width:0; height:auto; display:block; }
 .roster-slot .player-name { font-weight:800; }
 .result-log { display:grid; gap:7px; max-height:300px; overflow:auto; }
 .result-item { border-bottom:1px solid #e7ebf2; padding:7px 0; }
+.result-item strong { font-weight:500; }
 .mock-player-list { max-height:560px; }
 #mockPlayerTable { min-width:960px; }
 #mockPlayerTable th:nth-child(2), #mockPlayerTable td:nth-child(2),
@@ -158,6 +160,7 @@ svg { width:100%; max-width:100%; min-width:0; height:auto; display:block; }
 .mock-roster-cell { background:white; padding:7px; cursor:pointer; }
 .mock-roster-cell.empty { color:#94a3b8; background:#f8fafc; font-size:12px; display:flex; align-items:center; }
 .mock-roster-cell strong { display:block; font-size:12px; line-height:1.2; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.mock-roster-cell strong.pos-name, td strong .pos-name { font-weight:500; }
 .mock-roster-cell span { display:block; color:var(--muted); font-size:11px; margin-top:2px; }
 .slow-draft-card { margin:14px 0; }
 .mock-side-panel { display:grid; gap:14px; min-width:0; }
@@ -205,9 +208,13 @@ svg { width:100%; max-width:100%; min-width:0; height:auto; display:block; }
 .slow-auction-layout { display:grid; grid-template-columns:minmax(740px, 1.45fr) minmax(330px, .7fr); gap:14px; align-items:start; }
 .slow-lot-grid { display:grid; grid-template-columns:repeat(auto-fill, minmax(220px, 1fr)); gap:8px; max-height:760px; overflow:auto; padding-right:2px; }
 .slow-topbar { position:sticky; top:0; z-index:24; display:grid; grid-template-columns:auto minmax(360px, 1fr); gap:12px; align-items:center; margin:0 0 10px; padding:10px 12px; border:1px solid var(--line); border-radius:8px; background:rgba(255,255,255,.96); box-shadow:0 8px 24px rgba(15,23,42,.08); backdrop-filter:blur(8px); }
-.slow-topbar h2 { margin:0; }
+.slow-topbar h2 { margin:0; font-size:18px; line-height:1.1; }
 .slow-top-metrics { grid-template-columns:repeat(4, minmax(116px, 1fr)); }
 .slow-top-metrics .metric { padding:8px 10px; }
+.slow-top-metrics, #slowSummary { gap:7px; }
+.slow-top-metrics .metric, #slowSummary .metric { padding:7px 8px; }
+.slow-top-metrics .metric span, #slowSummary .metric span { font-size:10px; }
+.slow-top-metrics .metric strong, #slowSummary .metric strong { font-size:16px; line-height:1.12; }
 #slowAuction > .card > h2, #slowAuction > .card > p.small { display:none; }
 .nomination-order { display:flex; flex-wrap:wrap; gap:6px; margin:0 0 12px; }
 .nomination-chip { border:1px solid var(--line); border-radius:999px; background:#f8fafc; color:#475569; padding:5px 8px; font-size:12px; font-weight:750; }
@@ -245,25 +252,47 @@ svg { width:100%; max-width:100%; min-width:0; height:auto; display:block; }
 .pool-pager-actions { display:flex; gap:6px; align-items:center; }
 .pool-pager button { padding:6px 9px; font-size:12px; min-height:32px; }
 .pool-pager strong { color:var(--ink); }
+.pos-name { font-weight:500; }
+.pos-QB { color:#9f1239; }
+.pos-RB { color:#047857; }
+.pos-WR { color:#1d4ed8; }
+.pos-TE { color:#6d28d9; }
+.market-pressure { border:1px solid rgba(148,163,184,.45); border-radius:8px; background:#f8fafc; margin:10px 0; padding:8px; }
+.market-pressure h4 { margin:0 0 7px; color:#475569; font-size:11px; font-weight:850; text-transform:uppercase; }
+.pressure-grid { display:grid; grid-template-columns:repeat(auto-fit, minmax(150px, 1fr)); gap:6px; }
+.pressure-item { border:1px solid #dbe4f0; border-radius:7px; background:white; padding:7px; min-width:0; }
+.pressure-item strong { display:flex; align-items:center; justify-content:space-between; gap:8px; color:var(--ink); font-size:13px; }
+.pressure-item span { display:block; color:var(--muted); font-size:11px; margin-top:3px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.pressure-item em { color:#0f172a; font-style:normal; font-weight:850; }
+.slow-lot .market-pressure { margin:0; padding:6px; }
+.slow-lot .market-pressure h4 { margin-bottom:5px; }
+.slow-lot .pressure-grid { grid-template-columns:1fr; }
+.slow-lot .pressure-item { padding:6px; }
 #slowPlayerTable { min-width:920px; }
 .team-tile { cursor:pointer; }
 .team-tile.active { border-color:var(--blue); box-shadow:0 0 0 2px rgba(37,99,235,.18); }
+#teamY1Table, #teamY2Table { min-width:1580px; }
+#teamY1Table th:nth-child(-n+2), #teamY1Table td:nth-child(-n+2),
+#teamY2Table th:nth-child(-n+2), #teamY2Table td:nth-child(-n+2) { position:sticky; z-index:3; }
+#teamY1Table th:nth-child(-n+2), #teamY2Table th:nth-child(-n+2) { background:#eef2f7; z-index:5; }
+#teamY1Table td:nth-child(-n+2), #teamY2Table td:nth-child(-n+2) { background:white; }
+#teamY1Table tbody tr:hover td:nth-child(-n+2), #teamY2Table tbody tr:hover td:nth-child(-n+2) { background:#f8fafc; }
+#teamY1Table th:nth-child(1), #teamY1Table td:nth-child(1),
+#teamY2Table th:nth-child(1), #teamY2Table td:nth-child(1) { left:0; width:56px; min-width:56px; max-width:56px; }
+#teamY1Table th:nth-child(2), #teamY1Table td:nth-child(2),
+#teamY2Table th:nth-child(2), #teamY2Table td:nth-child(2) { left:56px; width:168px; min-width:168px; max-width:168px; box-shadow:10px 0 12px -12px rgba(15,23,42,.55); }
 @media (min-width: 901px) {
-	#teamY1Table, #teamY2Table { min-width:1580px; }
-	#teamY1Table th:nth-child(-n+2), #teamY1Table td:nth-child(-n+2),
-	#teamY2Table th:nth-child(-n+2), #teamY2Table td:nth-child(-n+2) { position:sticky; z-index:3; }
-	#teamY1Table th:nth-child(-n+2), #teamY2Table th:nth-child(-n+2) { background:#eef2f7; z-index:5; }
-	#teamY1Table td:nth-child(-n+2), #teamY2Table td:nth-child(-n+2) { background:white; }
-	#teamY1Table tbody tr:hover td:nth-child(-n+2), #teamY2Table tbody tr:hover td:nth-child(-n+2) { background:#f8fafc; }
 	#teamY1Table th:nth-child(1), #teamY1Table td:nth-child(1),
 	#teamY2Table th:nth-child(1), #teamY2Table td:nth-child(1) { left:0; width:62px; min-width:62px; max-width:62px; }
 	#teamY1Table th:nth-child(2), #teamY1Table td:nth-child(2),
 	#teamY2Table th:nth-child(2), #teamY2Table td:nth-child(2) { left:62px; width:220px; min-width:220px; max-width:220px; box-shadow:10px 0 12px -12px rgba(15,23,42,.55); }
 }
 @media (max-width: 1200px) { .mock-grid, .mock-draft-layout, .slow-auction-layout, .lt-two-col { grid-template-columns:1fr; } .mock-board { grid-template-columns:repeat(3, minmax(120px, 1fr)); } .slow-topbar { grid-template-columns:1fr; } .strategy-panel, .tier-drop-grid { grid-template-columns:repeat(2, minmax(180px, 1fr)); } }
-@media (max-width: 900px) { main { padding:8px 10px 28px; } .tabs { position:sticky; top:0; z-index:30; background:rgba(245,247,251,.96); backdrop-filter:blur(8px); margin:0 -2px 10px; padding:8px 0 6px; } .grid { grid-template-columns:1fr; } .card { padding:12px; } input[type=search] { min-width:100%; max-width:none; } .tabs, .subtabs { flex-wrap:nowrap; overflow-x:auto; padding-bottom:4px; -webkit-overflow-scrolling:touch; } .tab, .subtab { white-space:nowrap; font-size:13px; padding:8px 10px; } .toolbar { gap:8px; } table { font-size:12px; min-width:880px; } th, td { padding:7px; } svg { min-width:0; } .table-wrap { max-height:none; -webkit-overflow-scrolling:touch; } .current-auction { padding:12px; } .winning-bid { align-items:flex-start; flex-direction:column; } .winning-bid em { text-align:left; } .strategy-panel { grid-template-columns:1fr 1fr; } #mockAuction > .card > .toolbar, #slowAuction > .card > .toolbar { position:sticky; bottom:0; z-index:25; background:rgba(255,255,255,.97); border:1px solid var(--line); border-radius:8px; padding:8px; box-shadow:0 -8px 24px rgba(15,23,42,.08); } .auction-settings-wrap[open]::before { content:''; position:fixed; inset:0; z-index:34; background:rgba(15,23,42,.34); } .auction-settings-menu { position:fixed; left:max(10px, env(safe-area-inset-left)); right:max(10px, env(safe-area-inset-right)); top:max(10px, env(safe-area-inset-top)); bottom:max(10px, env(safe-area-inset-bottom)); width:auto; max-height:none; z-index:35; align-content:flex-start; align-items:flex-start; overflow:auto; } .slow-lot-grid { max-height:none; } }
-@media (max-width: 520px) { input, select, button { font-size:13px; min-height:36px; } .toolbar { gap:7px; } .toolbar select, .toolbar button, .age-range-filter, .inline-control { flex:1 1 140px; } .inline-control input, .inline-control select { width:100%; min-width:0; } .range-row input[type=range] { width:74px; } .card h2 { font-size:18px; } .scoring-settings { gap:7px; padding:9px; } .scoring-settings strong { flex-basis:100%; padding-bottom:0; } .scoring-settings input { width:74px; font-size:12px; min-height:34px; } table { font-size:11px; min-width:760px; } th, td { padding:6px; } #cheatsTable { min-width:860px; } #mockPlayerTable, #slowPlayerTable, #ltPlayerTable { min-width:760px; } #teamY1Table, #teamY2Table { min-width:1260px; } .metric-grid, .mock-board, .current-auction .metric-grid, .strategy-panel, .tier-drop-grid { grid-template-columns:1fr 1fr; } .metric, .strategy-card { padding:8px; } .metric strong, .strategy-card strong { font-size:17px; } .current-auction h3 { font-size:22px; } .current-auction .metric { padding:9px; } .current-auction .metric strong { font-size:18px; } .mock-board-grid { grid-template-columns:72px repeat(12, minmax(132px, 1fr)); min-width:1656px; } .mock-slot-head, .mock-team-head, .mock-slot-label, .mock-roster-cell { min-height:46px; } .slow-lot-grid { grid-template-columns:repeat(auto-fill, minmax(168px, 1fr)); } .slow-lot { min-height:0; } .slow-lot-controls { grid-template-columns:1fr 1fr; } .tier-drop-row summary { grid-template-columns:1fr; } .tier-drop-score { text-align:left; } .tier-player-list { padding-left:10px; } }
+@media (max-width: 900px) { main { padding:8px 10px 28px; } .tabs { position:sticky; top:0; z-index:30; background:rgba(245,247,251,.96); backdrop-filter:blur(8px); margin:0 -2px 10px; padding:8px 0 6px; } .grid { grid-template-columns:1fr; } .card { padding:12px; } input[type=search] { min-width:100%; max-width:none; } .tabs, .subtabs { flex-wrap:nowrap; overflow-x:auto; padding-bottom:4px; -webkit-overflow-scrolling:touch; } .tab, .subtab { white-space:nowrap; font-size:13px; padding:8px 10px; } .toolbar { gap:8px; } table { font-size:12px; min-width:880px; } th, td { padding:7px; } svg { min-width:0; } .table-wrap { max-height:none; -webkit-overflow-scrolling:touch; } .current-auction { padding:12px; } .winning-bid { align-items:flex-start; flex-direction:column; } .winning-bid em { text-align:left; } .strategy-panel { grid-template-columns:1fr 1fr; } #mockAuction > .card > .toolbar, #slowAuction > .card > .toolbar { background:rgba(255,255,255,.97); border:1px solid var(--line); border-radius:8px; padding:8px; } .auction-settings-wrap { flex:1 1 100%; } .auction-settings-menu { position:static; width:100%; max-height:none; margin-top:8px; box-shadow:none; align-content:flex-start; align-items:flex-start; overflow:visible; } .auction-settings-menu-head { position:static; top:auto; } .slow-lot-grid { max-height:none; } }
+@media (max-width: 520px) { input, select, button { font-size:13px; min-height:36px; } .toolbar { gap:7px; } .toolbar select, .toolbar button, .age-range-filter, .inline-control { flex:1 1 140px; } .inline-control input, .inline-control select { width:100%; min-width:0; } .range-row input[type=range] { width:74px; } .card h2 { font-size:18px; } .scoring-settings { gap:7px; padding:9px; } .scoring-settings strong { flex-basis:100%; padding-bottom:0; } .scoring-settings input { width:74px; font-size:12px; min-height:34px; } table { font-size:11px; min-width:760px; } th, td { padding:6px; } #cheatsTable { min-width:860px; } #mockPlayerTable, #slowPlayerTable, #ltPlayerTable { min-width:760px; } #teamY1Table, #teamY2Table { min-width:1260px; } #teamY1Table th:nth-child(1), #teamY1Table td:nth-child(1), #teamY2Table th:nth-child(1), #teamY2Table td:nth-child(1) { width:48px; min-width:48px; max-width:48px; } #teamY1Table th:nth-child(2), #teamY1Table td:nth-child(2), #teamY2Table th:nth-child(2), #teamY2Table td:nth-child(2) { left:48px; width:122px; min-width:122px; max-width:122px; } .metric-grid, .mock-board, .current-auction .metric-grid, .strategy-panel, .tier-drop-grid { grid-template-columns:1fr 1fr; } .metric, .strategy-card { padding:8px; } .metric strong, .strategy-card strong { font-size:17px; } .current-auction h3 { font-size:22px; } .current-auction .metric { padding:9px; } .current-auction .metric strong { font-size:18px; } .mock-board-grid { grid-template-columns:72px repeat(12, minmax(132px, 1fr)); min-width:1656px; } .mock-slot-head, .mock-team-head, .mock-slot-label, .mock-roster-cell { min-height:46px; } .slow-lot-grid { grid-template-columns:repeat(auto-fill, minmax(168px, 1fr)); } .slow-lot { min-height:0; } .slow-lot-controls { grid-template-columns:1fr 1fr; } .tier-drop-row summary { grid-template-columns:1fr; } .tier-drop-score { text-align:left; } .tier-player-list { padding-left:10px; } }
 @media (max-width: 430px) and (orientation: portrait) { table { font-size:10.5px; } th, td { padding:5px; } #cheatsTable { min-width:820px; } }
+@media (max-width: 520px) { #cheatsTable { --cheat-rank-width:52px; --cheat-player-width:136px; min-width:780px; } }
+@media (max-width: 430px) and (orientation: portrait) { #cheatsTable { --cheat-player-width:130px; min-width:760px; } }
 </style>
 </head>
 <body>
@@ -736,12 +765,33 @@ function cheatStickyInfo(id, cols) {
 	const rankFirst = rankIndex >= 0 && rankIndex < playerIndex;
 	return {
 		rankKey,
-		playerLeft:rankFirst ? '112px' : '0px',
-		rankLeft:rankFirst ? '0px' : '205px'
+		playerLeft:rankFirst ? 'var(--cheat-rank-width)' : '0px',
+		rankLeft:rankFirst ? '0px' : 'var(--cheat-player-width)'
 	};
 }
 function stickyCellClass(key, sticky) { if (!sticky) return ''; if (key === sticky.rankKey) return ' class="sticky-cheat sticky-cheat-rank"'; if (key === 'player') return ' class="sticky-cheat sticky-cheat-player"'; return ''; }
 function renderTable(id, rows, cols) { const table = document.getElementById(id); const showRank = id === 'teamY1Table' || id === 'teamY2Table'; const sort = state.sorts.get(id) || defaultSortFor(id, cols); const sorted = [...rows].sort((a,b)=>cmp(a,b,sort.key,sort.dir)); const sticky = cheatStickyInfo(id, cols); if (sticky) { table.style.setProperty('--cheat-player-left', sticky.playerLeft); table.style.setProperty('--cheat-rank-left', sticky.rankLeft); } else { table.style.removeProperty('--cheat-player-left'); table.style.removeProperty('--cheat-rank-left'); } const rankHead = showRank ? '<th class="no-sort">Rank</th>' : ''; const heads = cols.map(([key,label])=>{ const tip = COLUMN_HELP[key] ? ` title="${escapeHtml(COLUMN_HELP[key])}"` : ''; return `<th data-key="${key}"${stickyCellClass(key, sticky)}${tip}>${label}</th>`; }).join(''); table.innerHTML = `<thead><tr>${rankHead}${heads}</tr></thead><tbody>${sorted.map((r,i)=>`<tr class="${r.tier_color ? 'colored-row' : ''}" style="${r.tier_color ? '--row-bg:'+r.tier_color : ''}">${showRank ? `<td>${i + 1}</td>` : ''}${cols.map(([key,label,type])=>`<td${stickyCellClass(key, sticky)}>${renderCell(r,key,type)}</td>`).join('')}</tr>`).join('')}</tbody>`; table.querySelectorAll('th[data-key]').forEach(th=>th.addEventListener('click',()=>{ const key=th.dataset.key; const cur=state.sorts.get(id) || defaultSortFor(id, cols); const dir=cur && cur.key===key ? -cur.dir : 1; state.sorts.set(id, {key,dir}); renderCurrentTables(); })); table.querySelectorAll('.note-pill, .bid-pill').forEach(btn=>btn.addEventListener('click',()=>showNote(btn.dataset.tip))); }
+function auctionSortFor(tableId, defaultKey='pool_rank') { return state.sorts.get(tableId) || {key:defaultKey, dir:1}; }
+function auctionSortRows(tableId, rows, defaultKey='pool_rank') {
+	const sort = auctionSortFor(tableId, defaultKey);
+	return [...rows].sort((a,b)=>cmp(a,b,sort.key,sort.dir) || cmp(a,b,'pool_rank',1));
+}
+function auctionHead(tableId, key, label, defaultKey='pool_rank') {
+	const sort = auctionSortFor(tableId, defaultKey);
+	const marker = sort.key === key ? (sort.dir === 1 ? ' ^' : ' v') : '';
+	return `<th data-key="${escapeHtml(key)}">${escapeHtml(label + marker)}</th>`;
+}
+function attachAuctionSortHandlers(table, tableId, renderFn, resetPageFn=null) {
+	table.querySelectorAll('th[data-key]').forEach(th => th.addEventListener('click', () => {
+		const key = th.dataset.key, cur = auctionSortFor(tableId);
+		state.sorts.set(tableId, {key, dir:cur.key === key ? -cur.dir : 1});
+		if (resetPageFn) resetPageFn();
+		renderFn();
+	}));
+}
+function poolSortRow(row) {
+	return {...row, price_5:Math.ceil(n(row.auction_value) * 1.05), price_10:Math.ceil(n(row.auction_value) * 1.1), signal_sort:bidSignalSortValue(row.bid_signals)};
+}
 function renderSaveStatus(text) { const el = document.getElementById('saveStatus'); if (el) el.textContent = text; }
 function readControlState() {
 	const controls = {};
@@ -788,7 +838,10 @@ function serializeSlowState(m) {
 function hydrateSlowState(m) {
 	if (!m) return null;
 	const teams = (m.teams || []).map(team => assignSlowTiming({...team, profile:MOCK_BOT_PROFILES[team.profileKey] || MOCK_BOT_PROFILES.balanced}));
-	return {...m, teams, drafted:new Set(m.drafted || []), clockRunning:false};
+	const hasSavedOrder = Array.isArray(m.nominationOrder) && m.nominationOrder.length === teams.length;
+	const hasStarted = Boolean((m.lots || []).length || (m.results || []).length || (m.drafted || []).length);
+	const nominationOrder = hasSavedOrder ? m.nominationOrder : (hasStarted ? teams.map(team => team.id) : shuffle(teams.map(team => team.id)));
+	return {...m, teams, nominationOrder, drafted:new Set(m.drafted || []), clockRunning:false};
 }
 function serializeLeagueTycoonState(m) {
 	if (!m) return null;
@@ -957,6 +1010,8 @@ function auctionPool() {
 	return rows;
 }
 function displayPlayer(row) { return `${row.player} (${row.position}${row.team ? ' ' + row.team : ''})`; }
+function positionClass(pos) { return ['QB','RB','WR','TE'].includes(pos) ? `pos-name pos-${pos}` : 'pos-name'; }
+function playerNameSpan(row) { return `<span class="${positionClass(row?.position)}">${escapeHtml(row?.player || '')}</span>`; }
 function adjustedAuctionPrice(row, premium) { return Math.max(1, Math.ceil(n(row.auction_value) * (1 + premium))); }
 function readOptimizerPremium() { const value = Number(document.getElementById('optimizerPremium')?.value ?? 0.05); return Number.isFinite(value) ? value : 0.05; }
 function readOptimizerBudget() { const value = Number(document.getElementById('optimizerBudget')?.value ?? AUCTION_CONFIG.budget); return Math.max(AUCTION_CONFIG.rosterSpots, Math.min(AUCTION_CONFIG.budget, Number.isFinite(value) ? value : AUCTION_CONFIG.budget)); }
@@ -1366,6 +1421,47 @@ function slowLotGuidanceHtml(strategy, player) {
 	const gap = strategy.gap >= 0 ? `$${strategy.gap} room` : `$${Math.abs(strategy.gap)} over`;
 	return `<div class="slow-lot-guidance"><div class="slow-guide-chip strategy-status ${strategy.status}"><span>Strategy</span><strong>${escapeHtml(strategy.label)}</strong><em>${escapeHtml(gap)}</em></div><div class="slow-guide-chip"><span>Rec max</span><strong>$${strategy.recommended}</strong><em>Next $${strategy.nextBid}</em></div><div class="slow-guide-chip"><span>Bid value</span><strong>$${Math.round(strategy.value)}</strong><em>${escapeHtml(player.auction_tier || '')}</em></div><div class="slow-guide-chip"><span>Roster need</span><strong>${escapeHtml(strategy.needLabel)}</strong><em>${rawFmt(n(player.auction_points))} fpts</em></div></div>`;
 }
+function teamNeedSummary(team) {
+	const counts = rosterCounts(team?.roster || []);
+	const needs = ['QB','RB','WR','TE'].map(pos => ({pos, count:counts[pos] || 0, target:OPTIMIZER_TARGETS[pos] || OPTIMIZER_MINIMUMS[pos] || 0}))
+		.filter(item => item.count < item.target)
+		.sort((a,b)=>(b.target - b.count) - (a.target - a.count))
+		.slice(0, 3)
+		.map(item => `${item.pos} ${item.count}/${item.target}`);
+	return needs.length ? needs.join(' - ') : 'Depth only';
+}
+function predictedTeamBid(team, player, allowed, currentBid=0) {
+	if (!team || !player || allowed < 1 || team.roster.length >= AUCTION_CONFIG.rosterSpots) return 0;
+	if (!team.bot) {
+		const strategy = auctionStrategy(player, team, currentBid, allowed);
+		return Math.min(allowed, Math.max(0, strategy?.recommended || 0));
+	}
+	const profile = team.profile || MOCK_BOT_PROFILES.balanced, base = Math.max(1, n(player.auction_value));
+	const midpoint = profile.min + ((profile.max - profile.min) * 0.58);
+	const signalBoost = player.bid_signal ? profile.signal : 1;
+	let max = Math.round(base * midpoint * mockPositionNeed(team, player.position) * mockPacingMultiplier(team) * signalBoost);
+	if (team.profileKey === 'conservative' && team.roster.length < 8) max = Math.min(max, Math.ceil(base * 0.96));
+	if (team.profileKey === 'aggressive' && player.auction_value >= 20) max = Math.max(max, Math.ceil(base * 1.18));
+	const aggressiveTopTarget = team.profileKey === 'aggressive' && (player.bid_signal || player.auction_value >= 35);
+	const cap = team.profileKey === 'aggressive' ? (aggressiveTopTarget ? 1.33 : 1.25) : profile.cap;
+	max = Math.min(max, Math.ceil(base * cap) + (player.bid_signal ? 2 : 0));
+	return Math.min(allowed, Math.max(0, max));
+}
+function marketPressureHtml(player, teams, options={}) {
+	if (!player || !teams?.length) return '';
+	const currentBid = Math.max(0, Math.round(n(options.currentBid)));
+	const maxBidForTeam = options.maxBidForTeam || (() => 0);
+	const rows = teams.filter(team => team && team.id !== 0 && team.roster.length < AUCTION_CONFIG.rosterSpots).map(team => {
+		const allowed = Math.max(0, Math.round(n(maxBidForTeam(team))));
+		const predicted = predictedTeamBid(team, player, allowed, currentBid);
+		return {team, allowed, predicted, need:positionNeedLabel(team, player.position), summary:teamNeedSummary(team)};
+	}).sort((a,b)=>b.predicted - a.predicted || b.allowed - a.allowed).slice(0, options.limit || 6);
+	if (!rows.length) return '';
+	return `<div class="market-pressure"><h4>Other team needs and predicted bids</h4><div class="pressure-grid">${rows.map(row => {
+		const status = row.predicted > currentBid ? `up to $${row.predicted}` : 'unlikely';
+		return `<div class="pressure-item"><strong>${escapeHtml(row.team.name)} <em>${escapeHtml(status)}</em></strong><span>${escapeHtml(row.need)}</span><span>${escapeHtml(row.summary)}</span><span>Max possible $${row.allowed}</span></div>`;
+	}).join('')}</div></div>`;
+}
 function ensureMockStrategyPanel() {
 	let root = document.getElementById('mockStrategy');
 	if (root) return root;
@@ -1406,7 +1502,7 @@ function renderRosterSlot(item, priceKey='buy_price') {
 	const p = item.player, price = p[priceKey] ?? p.paid ?? p.auction_value;
 	const tier = p.auction_tier ? ` - ${escapeHtml(p.auction_tier)}` : '';
 	const age = optimizerKnownAge(p), ageText = age !== null ? ` - Age ${rawFmt(age)}` : '';
-	return `<div class="roster-slot"><strong>${escapeHtml(item.slot)}</strong><div class="player-name">${escapeHtml(p.player)}</div><span class="small">${escapeHtml(p.position)}${p.team ? ' ' + escapeHtml(p.team) : ''} - $${Math.round(price)} - ${rawFmt(n(p.auction_points))} fpts${tier}${ageText}</span></div>`;
+	return `<div class="roster-slot"><strong>${escapeHtml(item.slot)}</strong><div class="player-name ${positionClass(p.position)}">${escapeHtml(p.player)}</div><span class="small">${escapeHtml(p.position)}${p.team ? ' ' + escapeHtml(p.team) : ''} - $${Math.round(price)} - ${rawFmt(n(p.auction_points))} fpts${tier}${ageText}</span></div>`;
 }
 function renderOptimizerByPosition(result) {
 	const order = ['QB','RB','WR','TE'];
@@ -1637,7 +1733,7 @@ function renderMockCurrent(m) {
 	if (!m.current) { root.innerHTML = '<div class="mock-empty">No player nominated. Pick from the pool or auto-run a nomination.</div>'; return; }
 	const high = m.teams[m.highBidder];
 	const overValue = n(m.current.auction_value) ? `${Math.round((m.currentBid / n(m.current.auction_value) - 1) * 100)}% vs bid value` : '';
-	root.innerHTML = `<h3>${escapeHtml(displayPlayer(m.current))}</h3><div class="small">Bid value $${Math.round(m.current.auction_value)} - ${escapeHtml(m.current.auction_tier)} - ${rawFmt(n(m.current.auction_points))} fpts</div><div class="winning-bid"><div><span>Winning bid</span><strong>$${m.currentBid}</strong></div><em>${escapeHtml(high ? high.name : '-')}<br>${escapeHtml(overValue)}</em></div><div class="metric-grid">${renderMetric('Current bid', '$' + m.currentBid)}${renderMetric('High bidder', high ? high.name : '-')}<div class="metric"><span>Bid signal</span><strong>${renderBidSignal(m.current) || '-'}</strong></div>${renderMetric('To 10% over', '$' + Math.ceil(n(m.current.auction_value) * 1.1))}</div>`;
+	root.innerHTML = `<h3 class="${positionClass(m.current.position)}">${escapeHtml(displayPlayer(m.current))}</h3><div class="small">Bid value $${Math.round(m.current.auction_value)} - ${escapeHtml(m.current.auction_tier)} - ${rawFmt(n(m.current.auction_points))} fpts</div><div class="winning-bid"><div><span>Winning bid</span><strong>$${m.currentBid}</strong></div><em>${escapeHtml(high ? high.name : '-')}<br>${escapeHtml(overValue)}</em></div><div class="metric-grid">${renderMetric('Current bid', '$' + m.currentBid)}${renderMetric('High bidder', high ? high.name : '-')}<div class="metric"><span>Bid signal</span><strong>${renderBidSignal(m.current) || '-'}</strong></div>${renderMetric('To 10% over', '$' + Math.ceil(n(m.current.auction_value) * 1.1))}</div>${marketPressureHtml(m.current, m.teams, {currentBid:m.currentBid, maxBidForTeam:team => mockTeamMaxBid(team), limit:6})}`;
 	root.querySelectorAll('.bid-pill').forEach(btn=>btn.addEventListener('click',()=>showNote(btn.dataset.tip)));
 }
 function renderMockTimer(m) {
@@ -1706,7 +1802,7 @@ function renderMockDraftBoard(m) {
 	const slotNames = assignRosterSlots([]).map(s => s.slot);
 	const teamSlots = m.teams.map(team => ({team, slots:assignRosterSlots(team.roster)}));
 	const heads = `<div class="mock-slot-head">Slot</div>${m.teams.map(team => `<button type="button" class="mock-team-head ${m.selectedTeamId === team.id ? 'active' : ''}" data-team-id="${team.id}"><strong>${escapeHtml(team.name)}</strong><div class="budget-line">$${team.budget} left - max $${mockTeamMaxBid(team)}</div></button>`).join('')}`;
-	const rows = slotNames.map((slot, idx) => `<div class="mock-slot-label">${escapeHtml(slot)}</div>${teamSlots.map(({team, slots}) => { const player = slots[idx]?.player; if (!player) return `<div class="mock-roster-cell empty" data-team-id="${team.id}">Open</div>`; return `<div class="mock-roster-cell" data-team-id="${team.id}"><strong>${escapeHtml(player.player)}</strong><span>${escapeHtml(player.position)}${player.team ? ' ' + escapeHtml(player.team) : ''} - $${Math.round(player.paid ?? player.auction_value)}</span></div>`; }).join('')}`).join('');
+	const rows = slotNames.map((slot, idx) => `<div class="mock-slot-label">${escapeHtml(slot)}</div>${teamSlots.map(({team, slots}) => { const player = slots[idx]?.player; if (!player) return `<div class="mock-roster-cell empty" data-team-id="${team.id}">Open</div>`; return `<div class="mock-roster-cell" data-team-id="${team.id}"><strong class="${positionClass(player.position)}">${escapeHtml(player.player)}</strong><span>${escapeHtml(player.position)}${player.team ? ' ' + escapeHtml(player.team) : ''} - $${Math.round(player.paid ?? player.auction_value)}</span></div>`; }).join('')}`).join('');
 	root.innerHTML = `<div class="mock-board-grid">${heads}${rows}</div>`;
 	root.querySelectorAll('[data-team-id]').forEach(el => el.addEventListener('click', () => { m.selectedTeamId = Number(el.dataset.teamId); renderMockAuction(); }));
 }
@@ -1727,7 +1823,7 @@ function renderSlowDraftBoard(m) {
 	const slotNames = assignRosterSlots([]).map(s => s.slot);
 	const teamSlots = m.teams.map(team => ({team, slots:assignRosterSlots(team.roster)}));
 	const heads = `<div class="mock-slot-head">Slot</div>${m.teams.map(team => `<button type="button" class="mock-team-head ${m.selectedTeamId === team.id ? 'active' : ''}" data-slow-board-team-id="${team.id}"><strong>${escapeHtml(team.name)}</strong><div class="budget-line">$${team.budget} left - committed $${slowTeamCommitted(team)} - max $${slowTeamMaxBid(team)} - ${team.roster.length}/${AUCTION_CONFIG.rosterSpots}</div></button>`).join('')}`;
-	const rows = slotNames.map((slot, idx) => `<div class="mock-slot-label">${escapeHtml(slot)}</div>${teamSlots.map(({team, slots}) => { const player = slots[idx]?.player; if (!player) return `<div class="mock-roster-cell empty" data-slow-board-team-id="${team.id}">Open</div>`; return `<div class="mock-roster-cell" data-slow-board-team-id="${team.id}"><strong>${escapeHtml(player.player)}</strong><span>${escapeHtml(player.position)}${player.team ? ' ' + escapeHtml(player.team) : ''} - $${Math.round(player.paid ?? player.auction_value)}</span></div>`; }).join('')}`).join('');
+	const rows = slotNames.map((slot, idx) => `<div class="mock-slot-label">${escapeHtml(slot)}</div>${teamSlots.map(({team, slots}) => { const player = slots[idx]?.player; if (!player) return `<div class="mock-roster-cell empty" data-slow-board-team-id="${team.id}">Open</div>`; return `<div class="mock-roster-cell" data-slow-board-team-id="${team.id}"><strong class="${positionClass(player.position)}">${escapeHtml(player.player)}</strong><span>${escapeHtml(player.position)}${player.team ? ' ' + escapeHtml(player.team) : ''} - $${Math.round(player.paid ?? player.auction_value)}</span></div>`; }).join('')}`).join('');
 	root.innerHTML = `<div class="mock-board-grid">${heads}${rows}</div>`;
 	root.querySelectorAll('[data-slow-board-team-id]').forEach(el => el.addEventListener('click', () => { m.selectedTeamId = Number(el.dataset.slowBoardTeamId); renderSlowAuction(); }));
 }
@@ -1747,7 +1843,8 @@ function ensureMockPlayerPager(table) {
 function renderMockPlayerTable(m) {
 	const table = document.getElementById('mockPlayerTable'); if (!table) return;
 	const q = norm(document.getElementById('mockPlayerSearch')?.value), pos = document.getElementById('mockPosFilter')?.value || '', showDrafted = Boolean(document.getElementById('mockShowDrafted')?.checked);
-	const allRows = auctionPool().filter(r => (showDrafted || !m.drafted.has(r.id)) && (!pos || r.position === pos) && (!q || norm(Object.values(r).join(' ')).includes(q)));
+	const activeId = m.current?.id;
+	const allRows = auctionSortRows('mockPlayerTable', auctionPool().filter(r => r.id !== activeId && (showDrafted || !m.drafted.has(r.id)) && (!pos || r.position === pos) && (!q || norm(Object.values(r).join(' ')).includes(q))).map(poolSortRow));
 	const pageCount = Math.max(1, Math.ceil(allRows.length / NOMINATION_POOL_PAGE_SIZE));
 	const page = Math.max(1, Math.min(pageCount, Math.round(Number(state.mockPlayerPage) || 1)));
 	state.mockPlayerPage = page;
@@ -1758,7 +1855,8 @@ function renderMockPlayerTable(m) {
 		pager.innerHTML = `<span><strong>${first}-${last}</strong> of ${allRows.length} players</span><div class="pool-pager-actions"><button type="button" data-mock-page="${page - 1}" ${page <= 1 ? 'disabled' : ''}>Prev</button><span>Page ${page}/${pageCount}</span><button type="button" data-mock-page="${page + 1}" ${page >= pageCount ? 'disabled' : ''}>Next</button></div>`;
 		pager.querySelectorAll('[data-mock-page]').forEach(btn => btn.addEventListener('click', () => { state.mockPlayerPage = Number(btn.dataset.mockPage); renderMockAuction(); }));
 	}
-	table.innerHTML = `<thead><tr><th>Rank</th><th>Player</th><th>Pos</th><th>Team</th><th>Price Tier</th><th>Bid</th><th>+5%</th><th>+10%</th><th>Signal</th><th class="no-sort">Action</th></tr></thead><tbody>${rows.map(r => { const drafted = m.drafted.has(r.id); return `<tr><td>${r.pool_rank}</td><td><strong>${escapeHtml(r.player)}</strong></td><td>${escapeHtml(r.position)}</td><td>${escapeHtml(r.team || '')}</td><td>${escapeHtml(r.auction_tier)}</td><td>$${Math.round(r.auction_value)}</td><td>$${Math.ceil(n(r.auction_value) * 1.05)}</td><td>$${Math.ceil(n(r.auction_value) * 1.1)}</td><td>${renderBidSignal(r)}</td><td class="mock-actions">${drafted ? '<span class="small">Drafted</span>' : `<button type="button" data-nominate="${escapeHtml(r.id)}" ${m.current ? 'disabled' : ''}>Nominate</button>`}</td></tr>`; }).join('')}</tbody>`;
+	table.innerHTML = `<thead><tr>${auctionHead('mockPlayerTable','pool_rank','Rank')}${auctionHead('mockPlayerTable','player','Player')}${auctionHead('mockPlayerTable','position','Pos')}${auctionHead('mockPlayerTable','team','Team')}${auctionHead('mockPlayerTable','auction_tier','Price Tier')}${auctionHead('mockPlayerTable','auction_value','Bid')}${auctionHead('mockPlayerTable','price_5','+5%')}${auctionHead('mockPlayerTable','price_10','+10%')}${auctionHead('mockPlayerTable','signal_sort','Signal')}<th class="no-sort">Action</th></tr></thead><tbody>${rows.map(r => { const drafted = m.drafted.has(r.id); return `<tr><td>${r.pool_rank}</td><td><strong>${playerNameSpan(r)}</strong></td><td>${escapeHtml(r.position)}</td><td>${escapeHtml(r.team || '')}</td><td>${escapeHtml(r.auction_tier)}</td><td>$${Math.round(r.auction_value)}</td><td>$${r.price_5}</td><td>$${r.price_10}</td><td>${renderBidSignal(r)}</td><td class="mock-actions">${drafted ? '<span class="small">Drafted</span>' : `<button type="button" data-nominate="${escapeHtml(r.id)}" ${m.current ? 'disabled' : ''}>Nominate</button>`}</td></tr>`; }).join('')}</tbody>`;
+	attachAuctionSortHandlers(table, 'mockPlayerTable', renderMockAuction, () => { state.mockPlayerPage = 1; });
 	table.querySelectorAll('[data-nominate]').forEach(btn => btn.addEventListener('click', () => { if (mockNominate(btn.dataset.nominate, 0)) startMockClock(); else renderMockAuction(); }));
 	table.querySelectorAll('.bid-pill').forEach(btn=>btn.addEventListener('click',()=>showNote(btn.dataset.tip)));
 }
@@ -1924,7 +2022,7 @@ function renderLeagueTycoonDraftBoard(m) {
 	const slotNames = assignRosterSlots([]).map(slot => slot.slot);
 	const teamSlots = m.teams.map(team => ({team, slots:assignRosterSlots(team.roster)}));
 	const heads = `<div class="mock-slot-head">Slot</div>${m.teams.map(team => `<button type="button" class="mock-team-head ${m.selectedTeamId === team.id ? 'active' : ''}" data-lt-team-id="${team.id}"><strong>${escapeHtml(team.name)}</strong><div class="budget-line">$${team.budget} left - max $${leagueTycoonTeamMaxBid(team)} - ${team.roster.length}/${AUCTION_CONFIG.rosterSpots}</div></button>`).join('')}`;
-	const rows = slotNames.map((slot, idx) => `<div class="mock-slot-label">${escapeHtml(slot)}</div>${teamSlots.map(({team, slots}) => { const player = slots[idx]?.player; if (!player) return `<div class="mock-roster-cell empty" data-lt-team-id="${team.id}">Open</div>`; return `<div class="mock-roster-cell" data-lt-team-id="${team.id}"><strong>${escapeHtml(player.player)}</strong><span>${escapeHtml(player.position)}${player.team ? ' ' + escapeHtml(player.team) : ''} - $${Math.round(player.paid ?? player.auction_value)}</span></div>`; }).join('')}`).join('');
+	const rows = slotNames.map((slot, idx) => `<div class="mock-slot-label">${escapeHtml(slot)}</div>${teamSlots.map(({team, slots}) => { const player = slots[idx]?.player; if (!player) return `<div class="mock-roster-cell empty" data-lt-team-id="${team.id}">Open</div>`; return `<div class="mock-roster-cell" data-lt-team-id="${team.id}"><strong class="${positionClass(player.position)}">${escapeHtml(player.player)}</strong><span>${escapeHtml(player.position)}${player.team ? ' ' + escapeHtml(player.team) : ''} - $${Math.round(player.paid ?? player.auction_value)}</span></div>`; }).join('')}`).join('');
 	root.innerHTML = `<div class="mock-board-grid">${heads}${rows}</div>`;
 	root.querySelectorAll('[data-lt-team-id]').forEach(el => el.addEventListener('click', () => { m.selectedTeamId = Number(el.dataset.ltTeamId); renderLeagueTycoon(); }));
 }
@@ -1959,7 +2057,7 @@ function renderLeagueTycoonLots(m) {
 	if (!lots.length) { root.innerHTML = '<div class="mock-empty">No active lots tracked. Add a LeagueTycoon player above for bid advice.</div>'; return; }
 	root.innerHTML = lots.map(lot => {
 		const strategy = auctionStrategy(lot.player, m.teams[m.yourTeamId] || m.teams[0], lot.currentBid, leagueTycoonTeamMaxBid(m.teams[m.yourTeamId] || m.teams[0]));
-		return `<div class="lt-lot-card ${m.selectedLotId === lot.id ? 'active' : ''}" data-lt-lot="${lot.id}" role="button" tabindex="0"><h3>${escapeHtml(lot.player.player)}</h3><div class="small">${escapeHtml(lot.player.position)}${lot.player.team ? ' ' + escapeHtml(lot.player.team) : ''} - ${escapeHtml(lot.player.auction_tier || '')}</div><div class="position-player-row"><span>Current $${lot.currentBid} / room $${Math.round(n(lot.player.auction_value))} / model $${Math.round(n(lot.player.auction_model_value || lot.player.auction_value))}</span><strong>${strategy ? '$' + strategy.recommended : '-'}</strong></div></div>`;
+		return `<div class="lt-lot-card ${m.selectedLotId === lot.id ? 'active' : ''}" data-lt-lot="${lot.id}" role="button" tabindex="0"><h3 class="${positionClass(lot.player.position)}">${escapeHtml(lot.player.player)}</h3><div class="small">${escapeHtml(lot.player.position)}${lot.player.team ? ' ' + escapeHtml(lot.player.team) : ''} - ${escapeHtml(lot.player.auction_tier || '')}</div><div class="position-player-row"><span>Current $${lot.currentBid} / room $${Math.round(n(lot.player.auction_value))} / model $${Math.round(n(lot.player.auction_model_value || lot.player.auction_value))}</span><strong>${strategy ? '$' + strategy.recommended : '-'}</strong></div></div>`;
 	}).join('');
 	root.querySelectorAll('[data-lt-lot]').forEach(card => card.addEventListener('click', () => { m.selectedLotId = Number(card.dataset.ltLot); renderLeagueTycoon(); }));
 }
@@ -1975,8 +2073,12 @@ function renderLeagueTycoonPlayerTable(m) {
 	const table = document.getElementById('ltPlayerTable');
 	if (!table) return;
 	const q = norm(document.getElementById('ltPlayerSearch')?.value), pos = document.getElementById('ltPosFilter')?.value || '', showDrafted = Boolean(document.getElementById('ltShowDrafted')?.checked), active = leagueTycoonActivePlayerIds(m), team = m.teams[m.yourTeamId] || m.teams[0];
-	const rows = auctionPool().filter(row => (showDrafted || (!m.drafted.has(row.id) && !active.has(row.id))) && (!pos || row.position === pos) && (!q || norm(Object.values(row).join(' ')).includes(q))).slice(0, 180);
-	table.innerHTML = `<thead><tr><th>Rank</th><th>Player</th><th>Pos</th><th>Team</th><th>Price Tier</th><th>Room</th><th>Model</th><th>+10%</th><th>Signal</th><th>Advice</th><th class="no-sort">Action</th></tr></thead><tbody>${rows.map(row => { const unavailable = m.drafted.has(row.id) || active.has(row.id), strategy = auctionStrategy(row, team, 0, leagueTycoonTeamMaxBid(team)); return `<tr><td>${row.pool_rank}</td><td><strong>${escapeHtml(row.player)}</strong></td><td>${escapeHtml(row.position)}</td><td>${escapeHtml(row.team || '')}</td><td>${escapeHtml(row.auction_tier)}</td><td>$${Math.round(row.auction_value)}</td><td>$${Math.round(n(row.auction_model_value || row.auction_value))}</td><td>$${Math.ceil(n(row.auction_value) * 1.1)}</td><td>${renderBidSignal(row)}</td><td>${strategy ? `${escapeHtml(strategy.label)} to $${strategy.recommended}` : '-'}</td><td class="mock-actions">${unavailable ? '<span class="small">Tracked</span>' : `<button type="button" data-lt-set-lot="${escapeHtml(row.id)}">Track lot</button>`}</td></tr>`; }).join('')}</tbody>`;
+	const rows = auctionSortRows('ltPlayerTable', auctionPool().filter(row => !active.has(row.id) && (showDrafted || !m.drafted.has(row.id)) && (!pos || row.position === pos) && (!q || norm(Object.values(row).join(' ')).includes(q))).map(row => {
+		const strategy = auctionStrategy(row, team, 0, leagueTycoonTeamMaxBid(team));
+		return {...poolSortRow(row), model_value:n(row.auction_model_value || row.auction_value), advice_sort:strategy?.recommended || 0, advice_label:strategy ? `${strategy.label} to $${strategy.recommended}` : '-'};
+	})).slice(0, 180);
+	table.innerHTML = `<thead><tr>${auctionHead('ltPlayerTable','pool_rank','Rank')}${auctionHead('ltPlayerTable','player','Player')}${auctionHead('ltPlayerTable','position','Pos')}${auctionHead('ltPlayerTable','team','Team')}${auctionHead('ltPlayerTable','auction_tier','Price Tier')}${auctionHead('ltPlayerTable','auction_value','Room')}${auctionHead('ltPlayerTable','model_value','Model')}${auctionHead('ltPlayerTable','price_10','+10%')}${auctionHead('ltPlayerTable','signal_sort','Signal')}${auctionHead('ltPlayerTable','advice_sort','Advice')}<th class="no-sort">Action</th></tr></thead><tbody>${rows.map(row => { const unavailable = m.drafted.has(row.id); return `<tr><td>${row.pool_rank}</td><td><strong>${playerNameSpan(row)}</strong></td><td>${escapeHtml(row.position)}</td><td>${escapeHtml(row.team || '')}</td><td>${escapeHtml(row.auction_tier)}</td><td>$${Math.round(row.auction_value)}</td><td>$${Math.round(row.model_value)}</td><td>$${row.price_10}</td><td>${renderBidSignal(row)}</td><td>${escapeHtml(row.advice_label)}</td><td class="mock-actions">${unavailable ? '<span class="small">Drafted</span>' : `<button type="button" data-lt-set-lot="${escapeHtml(row.id)}">Track lot</button>`}</td></tr>`; }).join('')}</tbody>`;
+	attachAuctionSortHandlers(table, 'ltPlayerTable', renderLeagueTycoon);
 	table.querySelectorAll('[data-lt-set-lot]').forEach(btn => btn.addEventListener('click', () => { const player = auctionPool().find(row => row.id === btn.dataset.ltSetLot); addLeagueTycoonLot(player, 1); }));
 	table.querySelectorAll('.bid-pill').forEach(btn => btn.addEventListener('click', () => showNote(btn.dataset.tip)));
 }
@@ -2028,12 +2130,24 @@ function slowClockDetail(seconds) {
 }
 function createSlowState() {
 	const bag = shuffle(['aggressive','balanced','balanced','balanced','conservative','conservative','value','value','aggressive','balanced','conservative']);
-	return {teams:[createMockTeam(0), ...bag.map((key, i) => assignSlowTiming(createMockTeam(i + 1, key)))], drafted:new Set(), lots:[], lotSeq:1, nominatorIndex:0, results:[], active:true, selectedTeamId:0, selectedLotId:null, nominationCooldown:slowNominationSeconds(), botBidCooldown:slowBotBidIntervalSeconds(), botNominationCooldown:slowBotNominationIntervalSeconds(), clockRunning:false};
+	const teams = [createMockTeam(0), ...bag.map((key, i) => assignSlowTiming(createMockTeam(i + 1, key)))];
+	return {teams, nominationOrder:shuffle(teams.map(team => team.id)), drafted:new Set(), lots:[], lotSeq:1, nominatorIndex:0, results:[], active:true, selectedTeamId:0, selectedLotId:null, nominationCooldown:slowNominationSeconds(), botBidCooldown:slowBotBidIntervalSeconds(), botNominationCooldown:slowBotNominationIntervalSeconds(), clockRunning:false};
 }
 function ensureSlowState() { if (!state.slow) state.slow = createSlowState(); return state.slow; }
 function stopSlowClock() { if (slowClockId) clearInterval(slowClockId); slowClockId = null; if (state.slow) state.slow.clockRunning = false; }
-function slowNextNominator(m=ensureSlowState()) { return m.teams[m.nominatorIndex % m.teams.length] || m.teams[0]; }
-function slowAdvanceNominator(m, teamId) { m.nominatorIndex = (Number(teamId) + 1) % m.teams.length; }
+function slowNominationOrder(m=ensureSlowState()) {
+	if (!Array.isArray(m.nominationOrder) || m.nominationOrder.length !== m.teams.length) m.nominationOrder = m.teams.map(team => team.id);
+	return m.nominationOrder;
+}
+function slowNominatorAt(m=ensureSlowState(), offset=0) {
+	const order = slowNominationOrder(m), id = order[(m.nominatorIndex + offset) % order.length];
+	return m.teams.find(team => team.id === id) || m.teams[0];
+}
+function slowNextNominator(m=ensureSlowState()) { return slowNominatorAt(m, 0); }
+function slowAdvanceNominator(m, teamId) {
+	const order = slowNominationOrder(m), index = order.indexOf(Number(teamId));
+	m.nominatorIndex = index >= 0 ? (index + 1) % order.length : (m.nominatorIndex + 1) % order.length;
+}
 function slowActivePlayerIds(m=ensureSlowState()) { return new Set(m.lots.map(lot => lot.player.id)); }
 function slowTeamCommittedLots(team, excludingLotId=null) { const m = ensureSlowState(); return m.lots.filter(lot => lot.id !== excludingLotId && lot.highBidder === team.id); }
 function slowTeamCommitted(team, excludingLotId=null) { return slowTeamCommittedLots(team, excludingLotId).reduce((sum, lot) => sum + lot.currentBid, 0); }
@@ -2135,7 +2249,7 @@ function slowFillNominations(maxAdds=Infinity) {
 	while (m.lots.length < limit && added < maxAdds) {
 		let nominated = false;
 		for (let i = 0; i < m.teams.length; i++) {
-			const team = m.teams[(m.nominatorIndex + i) % m.teams.length];
+			const team = slowNominatorAt(m, i);
 			const player = slowNominationChoice(team);
 			if (player && slowNominate(player.id, team.id)) {
 				added += 1;
@@ -2343,9 +2457,12 @@ function renderSlowSummary(m) {
 		renderMetric('Your max', selectedMax ? '$' + selectedMax : '-')
 	].join('');
 	const order = document.getElementById('slowNominationOrder');
-	if (order) order.innerHTML = m.teams.map(team => `<span class="nomination-chip ${team.id === next?.id ? 'active' : ''}">${escapeHtml(team.name)}</span>`).join('');
+	if (order) order.innerHTML = slowNominationOrder(m).map(teamId => {
+		const team = m.teams.find(item => item.id === teamId);
+		return team ? `<span class="nomination-chip ${team.id === next?.id ? 'active' : ''}">${escapeHtml(team.name)}</span>` : '';
+	}).join('');
 	const timer = document.getElementById('slowTimer'), toggle = document.getElementById('slowClockToggle');
-	if (timer) { timer.textContent = selected ? `Bid ${slowClockDetail(selected.timeRemaining)} / Nom ${nextNomination}` : `Nom ${nextNomination}`; timer.classList.toggle('running', Boolean(slowClockId)); }
+	if (timer) { timer.textContent = slowClockId ? 'Clock on' : 'Clock paused'; timer.classList.toggle('running', Boolean(slowClockId)); }
 	if (toggle) toggle.textContent = slowClockId ? 'Pause clock' : 'Start clock';
 	const input = document.getElementById('slowCustomBid'), lot = slowSelectedLot();
 	if (input && lot) input.value = slowProxyMax(lot, 0) || Math.min(slowTeamMaxBid(m.teams[0], lot.id), Math.max(1, lot.currentBid + 1));
@@ -2377,9 +2494,10 @@ function renderSlowLots(m) {
 		const humanMaxAllowed = slowTeamMaxBid(m.teams[0], lot.id);
 		const strategy = auctionStrategy(lot.player, m.teams[0], lot.currentBid, humanMaxAllowed, slowTeamCommitted(m.teams[0], lot.id));
 		const guidance = slowLotGuidanceHtml(strategy, lot.player);
+		const pressure = marketPressureHtml(lot.player, m.teams, {currentBid:lot.currentBid, maxBidForTeam:team => slowTeamMaxBid(team, lot.id), limit:3});
 		const valueAmount = Math.min(humanMaxAllowed, Math.max(lot.currentBid + 1, Math.round(n(lot.player.auction_value))));
 		const maxAmount = Math.min(humanMaxAllowed, Math.max(lot.currentBid + 1, humanMax || Math.ceil(n(lot.player.auction_value) * 1.1) || lot.currentBid + 1));
-		return `<div class="slow-lot ${m.selectedLotId === lot.id ? 'active' : ''} ${expiring ? 'expiring' : ''} ${humanBidState}" data-slow-lot="${lot.id}" role="button" tabindex="0"><div class="slow-lot-status"><strong>Bid ${escapeHtml(slowClockDetail(lot.timeRemaining))}</strong><span>${lot.bidCount} bids</span></div><h3>${escapeHtml(lot.player.player)}</h3><div class="slow-lot-meta"><span>${escapeHtml(lot.player.position)}${lot.player.team ? ' ' + escapeHtml(lot.player.team) : ''}</span><span>$${Math.round(n(lot.player.auction_value))} value</span></div><div class="slow-lot-meta"><span>Nom: ${escapeHtml(nominator ? nominator.name : '-')}</span><span>${escapeHtml(lot.player.auction_tier || '')}</span></div>${humanMax ? `<span class="proxy-pill">Your max $${humanMax}</span>` : ''}<div class="slow-lot-bid"><div><span>Winning bid</span><strong>$${lot.currentBid}</strong></div><em>${escapeHtml(high ? high.name : '-')}<br>${escapeHtml(lot.player.auction_tier || '')}</em></div>${guidance}<div class="slow-actions"><button type="button" data-slow-bid="${lot.id}" data-amount="${lot.currentBid + 1}">+$1</button><button type="button" data-slow-bid="${lot.id}" data-amount="${lot.currentBid + 5}">+$5</button></div><div class="slow-lot-controls"><label>Value<input type="number" min="${lot.currentBid + 1}" max="${humanMaxAllowed}" step="1" value="${valueAmount}" data-slow-value-input="${lot.id}"></label><button type="button" data-slow-bid-value="${lot.id}">Bid value</button><label>Max<input type="number" min="${lot.currentBid + 1}" max="${humanMaxAllowed}" step="1" value="${maxAmount}" data-slow-max-input="${lot.id}"></label><button type="button" data-slow-set-max="${lot.id}">Set max</button></div></div>`;
+		return `<div class="slow-lot ${m.selectedLotId === lot.id ? 'active' : ''} ${expiring ? 'expiring' : ''} ${humanBidState}" data-slow-lot="${lot.id}" role="button" tabindex="0"><div class="slow-lot-status"><strong>Bid ${escapeHtml(slowClockDetail(lot.timeRemaining))}</strong><span>${lot.bidCount} bids</span></div><h3 class="${positionClass(lot.player.position)}">${escapeHtml(lot.player.player)}</h3><div class="slow-lot-meta"><span>${escapeHtml(lot.player.position)}${lot.player.team ? ' ' + escapeHtml(lot.player.team) : ''}</span><span>$${Math.round(n(lot.player.auction_value))} value</span></div><div class="slow-lot-meta"><span>Nom: ${escapeHtml(nominator ? nominator.name : '-')}</span><span>${escapeHtml(lot.player.auction_tier || '')}</span></div>${humanMax ? `<span class="proxy-pill">Your max $${humanMax}</span>` : ''}<div class="slow-lot-bid"><div><span>Winning bid</span><strong>$${lot.currentBid}</strong></div><em>${escapeHtml(high ? high.name : '-')}<br>${escapeHtml(lot.player.auction_tier || '')}</em></div>${guidance}${pressure}<div class="slow-actions"><button type="button" data-slow-bid="${lot.id}" data-amount="${lot.currentBid + 1}">+$1</button><button type="button" data-slow-bid="${lot.id}" data-amount="${lot.currentBid + 5}">+$5</button></div><div class="slow-lot-controls"><label>Value<input type="number" min="${lot.currentBid + 1}" max="${humanMaxAllowed}" step="1" value="${valueAmount}" data-slow-value-input="${lot.id}"></label><button type="button" data-slow-bid-value="${lot.id}">Bid value</button><label>Max<input type="number" min="${lot.currentBid + 1}" max="${humanMaxAllowed}" step="1" value="${maxAmount}" data-slow-max-input="${lot.id}"></label><button type="button" data-slow-set-max="${lot.id}">Set max</button></div></div>`;
 	}).join('');
 	root.querySelectorAll('[data-slow-lot]').forEach(card => card.addEventListener('click', e => { if (e.target.closest('button')) return; m.selectedLotId = Number(card.dataset.slowLot); renderSlowAuction(); }));
 	root.querySelectorAll('[data-slow-bid]').forEach(btn => btn.addEventListener('click', e => { e.stopPropagation(); slowHumanBid(Number(btn.dataset.amount), btn.dataset.slowBid); renderSlowAuction(); }));
@@ -2417,7 +2535,7 @@ function ensureSlowPlayerPager(table) {
 function renderSlowPlayerTable(m) {
 	const table = document.getElementById('slowPlayerTable'); if (!table) return;
 	const q = norm(document.getElementById('slowPlayerSearch')?.value), pos = document.getElementById('slowPosFilter')?.value || '', showDrafted = Boolean(document.getElementById('slowShowDrafted')?.checked), active = slowActivePlayerIds(m);
-	const allRows = auctionPool().filter(r => (showDrafted || (!m.drafted.has(r.id) && !active.has(r.id))) && (!pos || r.position === pos) && (!q || norm(Object.values(r).join(' ')).includes(q)));
+	const allRows = auctionSortRows('slowPlayerTable', auctionPool().filter(r => !active.has(r.id) && (showDrafted || !m.drafted.has(r.id)) && (!pos || r.position === pos) && (!q || norm(Object.values(r).join(' ')).includes(q))).map(poolSortRow));
 	const pageCount = Math.max(1, Math.ceil(allRows.length / SLOW_POOL_PAGE_SIZE));
 	const page = Math.max(1, Math.min(pageCount, Math.round(Number(state.slowPlayerPage) || 1)));
 	state.slowPlayerPage = page;
@@ -2429,7 +2547,8 @@ function renderSlowPlayerTable(m) {
 		pager.querySelectorAll('[data-slow-page]').forEach(btn => btn.addEventListener('click', () => { state.slowPlayerPage = Number(btn.dataset.slowPage); renderSlowAuction(); }));
 	}
 	const full = m.lots.length >= slowLotLimit(), humanTurn = slowNextNominator(m)?.id === 0;
-	table.innerHTML = `<thead><tr><th>Rank</th><th>Player</th><th>Pos</th><th>Team</th><th>Price Tier</th><th>Bid</th><th>+5%</th><th>+10%</th><th>Signal</th><th class="no-sort">Action</th></tr></thead><tbody>${rows.map(r => { const unavailable = m.drafted.has(r.id) || active.has(r.id); return `<tr><td>${r.pool_rank}</td><td><strong>${escapeHtml(r.player)}</strong></td><td>${escapeHtml(r.position)}</td><td>${escapeHtml(r.team || '')}</td><td>${escapeHtml(r.auction_tier)}</td><td>$${Math.round(r.auction_value)}</td><td>$${Math.ceil(n(r.auction_value) * 1.05)}</td><td>$${Math.ceil(n(r.auction_value) * 1.1)}</td><td>${renderBidSignal(r)}</td><td class="mock-actions">${unavailable ? '<span class="small">Unavailable</span>' : `<button type="button" data-slow-nominate="${escapeHtml(r.id)}" ${full || !humanTurn ? 'disabled' : ''} title="${humanTurn ? 'Nominate this player' : 'Wait for your nomination turn'}">Nominate</button>`}</td></tr>`; }).join('')}</tbody>`;
+	table.innerHTML = `<thead><tr>${auctionHead('slowPlayerTable','pool_rank','Rank')}${auctionHead('slowPlayerTable','player','Player')}${auctionHead('slowPlayerTable','position','Pos')}${auctionHead('slowPlayerTable','team','Team')}${auctionHead('slowPlayerTable','auction_tier','Price Tier')}${auctionHead('slowPlayerTable','auction_value','Bid')}${auctionHead('slowPlayerTable','price_5','+5%')}${auctionHead('slowPlayerTable','price_10','+10%')}${auctionHead('slowPlayerTable','signal_sort','Signal')}<th class="no-sort">Action</th></tr></thead><tbody>${rows.map(r => { const unavailable = m.drafted.has(r.id) || active.has(r.id); return `<tr><td>${r.pool_rank}</td><td><strong>${playerNameSpan(r)}</strong></td><td>${escapeHtml(r.position)}</td><td>${escapeHtml(r.team || '')}</td><td>${escapeHtml(r.auction_tier)}</td><td>$${Math.round(r.auction_value)}</td><td>$${r.price_5}</td><td>$${r.price_10}</td><td>${renderBidSignal(r)}</td><td class="mock-actions">${unavailable ? '<span class="small">Unavailable</span>' : `<button type="button" data-slow-nominate="${escapeHtml(r.id)}" ${full || !humanTurn ? 'disabled' : ''} title="${humanTurn ? 'Nominate this player' : 'Wait for your nomination turn'}">Nominate</button>`}</td></tr>`; }).join('')}</tbody>`;
+	attachAuctionSortHandlers(table, 'slowPlayerTable', renderSlowAuction, () => { state.slowPlayerPage = 1; });
 	table.querySelectorAll('[data-slow-nominate]').forEach(btn => btn.addEventListener('click', () => { slowNominate(btn.dataset.slowNominate, 0); renderSlowAuction(); }));
 	table.querySelectorAll('.bid-pill').forEach(btn=>btn.addEventListener('click',()=>showNote(btn.dataset.tip)));
 }
@@ -2565,7 +2684,7 @@ function init() {
 	['mockNominationSeconds','mockResetSeconds'].forEach(id=>document.getElementById(id).addEventListener('input', applyMockTimerConfig));
 	['slowPlayerSearch','slowPosFilter','slowShowDrafted'].forEach(id=>['input','change'].forEach(eventName=>document.getElementById(id).addEventListener(eventName,()=>{ state.slowPlayerPage = 1; renderSlowAuction(); })));
 	['slowNominationCount','slowNominationMinutes','slowNominationUnit','slowBidMinutes','slowBidUnit','slowResetMinutes','slowResetUnit'].forEach(id=>['input','change'].forEach(eventName=>document.getElementById(id).addEventListener(eventName, applySlowTimerConfig)));
-	['ltPlayerSearch','ltPosFilter','ltShowDrafted'].forEach(id=>document.getElementById(id).addEventListener('input', renderLeagueTycoon));
+	['ltPlayerSearch','ltPosFilter','ltShowDrafted'].forEach(id=>['input','change'].forEach(eventName=>document.getElementById(id).addEventListener(eventName, renderLeagueTycoon)));
 	document.getElementById('runOptimizer').addEventListener('click', refreshOptimizer);
 	document.getElementById('startMock').addEventListener('click',()=>{ stopMockClock(); state.mock = createMockState(); renderMockAuction(); });
 	document.getElementById('mockClockToggle').addEventListener('click',()=>{ toggleMockClock(); });
