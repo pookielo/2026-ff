@@ -2102,17 +2102,17 @@ function auctionPracticeAdvice(strategy, player) {
 function auctionActionHtml(strategy, player) {
 	if (!strategy || !player) return '<div class="auction-action-grid"><div class="auction-action practice"><b>Do</b><span>Nominate a player to get an action.</span></div><div class="auction-action projected"><b>Watch</b><span>Projected bids appear once an auction is live.</span></div></div>';
 	const practice = auctionPracticeAdvice(strategy, player);
-	const gap = strategy.gap >= 0 ? `$${strategy.gap} room to rec max` : `$${Math.abs(strategy.gap)} over rec max`;
-	const watch = [`Rec max $${strategy.recommended}`, `next $${strategy.nextBid}`, gap, strategy.needLabel || '', strategy.pace.label].filter(Boolean).join(' · ');
+	const gap = strategy.gap >= 0 ? `$${strategy.gap} below rec max` : `$${Math.abs(strategy.gap)} over rec max`;
+	const watch = [`Bid value $${Math.round(strategy.value)}`, `rec max $${strategy.recommended}`, gap, strategy.needLabel || '', strategy.pace.label].filter(Boolean).join(' · ');
 	return `<div class="auction-action-grid"><div class="auction-action practice"><b>Do</b><span>${escapeHtml(practice.detail)}</span></div><div class="auction-action projected"><b>Watch</b><span>${escapeHtml(watch)}</span></div></div>`;
 }
 function strategyHtml(strategy, player) {
 	if (!strategy) return '<div class="strategy-card"><span>Strategy</span><strong>No active auction</strong><em>Nominate a player to see bid guidance.</em></div>';
-	const gap = strategy.gap >= 0 ? `$${strategy.gap} room` : `$${Math.abs(strategy.gap)} over`;
+	const gap = strategy.gap >= 0 ? `$${strategy.gap} below rec max` : `$${Math.abs(strategy.gap)} over rec max`;
 	const cards = [
 		auctionActionHtml(strategy, player),
 		`<div class="strategy-card strategy-status ${strategy.status}"><span>Strategy</span><strong>${escapeHtml(strategy.label)}</strong><em>${escapeHtml(displayPlayer(player))}</em></div>`,
-		`<div class="strategy-card"><span>Recommended max</span><strong>$${strategy.recommended}</strong><em>Next $${strategy.nextBid} - ${gap}</em></div>`,
+		`<div class="strategy-card"><span>Recommended max</span><strong>$${strategy.recommended}</strong><em>${gap}</em></div>`,
 		`<div class="strategy-card"><span>Bid value</span><strong>$${Math.round(strategy.value)}</strong><em>${escapeHtml(player.auction_tier || '')}</em></div>`,
 		`<div class="strategy-card"><span>Budget pace</span><strong>${escapeHtml(strategy.pace.label)}</strong><em>${escapeHtml(strategy.pace.detail)}</em></div>`,
 		`<div class="strategy-card"><span>Build fit</span><strong>${escapeHtml(strategy.fit.label)}</strong><em>${escapeHtml(strategy.fit.detail)}</em></div>`
@@ -2122,10 +2122,10 @@ function strategyHtml(strategy, player) {
 }
 function slowLotGuidanceHtml(strategy, player) {
 	if (!strategy || !player) return '';
-	const gap = strategy.gap >= 0 ? `$${strategy.gap} room` : `$${Math.abs(strategy.gap)} over`;
 	const need = strategy.needLabel ? `<div class="slow-guide-chip"><span>Roster need</span><strong>${escapeHtml(strategy.needLabel)}</strong><em>${rawFmt(n(player.auction_points))} fpts</em></div>` : '';
 	const practice = auctionPracticeAdvice(strategy, player);
-	return `<div class="slow-lot-guidance"><div class="auction-action practice"><b>Do</b><span>${escapeHtml(practice.detail)}</span></div><div class="auction-action projected"><b>Watch</b><span>Rec max $${strategy.recommended} · next $${strategy.nextBid} · ${escapeHtml(gap)}</span></div><div class="slow-guide-chip"><span>Bid value</span><strong>$${Math.round(strategy.value)}</strong><em>${escapeHtml(player.auction_tier || '')}</em></div>${need}</div>`;
+	const watchGap = strategy.gap >= 0 ? `$${strategy.gap} below rec max` : `$${Math.abs(strategy.gap)} over rec max`;
+	return `<div class="slow-lot-guidance"><div class="auction-action practice"><b>Do</b><span>${escapeHtml(practice.detail)}</span></div><div class="auction-action projected"><b>Watch</b><span>Bid value $${Math.round(strategy.value)} · rec max $${strategy.recommended} · ${escapeHtml(watchGap)}</span></div><div class="slow-guide-chip"><span>Bid value</span><strong>$${Math.round(strategy.value)}</strong><em>${escapeHtml(player.auction_tier || '')}</em></div>${need}</div>`;
 }
 function teamNeedSummary(team) {
 	const roster = team?.roster || [];
