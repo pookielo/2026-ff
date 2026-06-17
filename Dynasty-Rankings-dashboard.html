@@ -168,6 +168,18 @@ svg { width:100%; max-width:100%; min-width:0; height:auto; display:block; }
 .result-log { display:grid; gap:7px; max-height:300px; overflow:auto; }
 .result-item { border-bottom:1px solid #e7ebf2; padding:7px 0; }
 .result-item strong { font-weight:500; }
+.result-rich { display:grid; grid-template-columns:minmax(0, 1fr) auto; gap:5px 10px; align-items:start; }
+.result-main { min-width:0; display:grid; gap:2px; }
+.result-main strong { overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.result-main span, .result-stats { color:var(--muted); font-size:12px; }
+.result-price { display:grid; justify-items:end; gap:2px; white-space:nowrap; }
+.result-price strong { color:var(--ink); font-size:16px; font-weight:850; }
+.result-price span { border:1px solid var(--line); border-radius:999px; padding:1px 7px; font-size:11px; font-weight:850; }
+.result-price .over { border-color:#fecaca; color:#fecaca; background:rgba(255,107,107,.14); }
+.result-price .under { border-color:#86efac; color:#bbf7d0; background:rgba(39,184,158,.14); }
+.result-price .even, .result-price .neutral { border-color:var(--line); color:var(--muted); background:var(--panel-2); }
+.result-stats { grid-column:1/-1; display:flex; flex-wrap:wrap; gap:5px; }
+.result-stats span { border:1px solid var(--line); border-radius:999px; background:var(--panel-2); color:var(--muted); padding:2px 7px; font-size:11px; font-weight:750; }
 .tendency-table { width:100%; min-width:860px; font-size:12px; }
 .tendency-table th, .tendency-table td { padding:7px 8px; }
 .tendency-table th { cursor:default; }
@@ -300,6 +312,14 @@ button.tendency-chip:hover, button.tendency-chip:focus-visible { border-color:#9
 .slow-actions { display:flex; flex-wrap:wrap; gap:6px; margin-top:auto; }
 .slow-actions button { padding:6px 8px; font-size:12px; }
 .slow-lot-guidance { display:grid; grid-template-columns:repeat(2, minmax(0, 1fr)); gap:5px; }
+.auction-action-grid { grid-column:1/-1; display:grid; grid-template-columns:repeat(2, minmax(0, 1fr)); gap:8px; }
+.auction-action { border:1px solid var(--line); border-radius:8px; background:var(--panel-2); color:var(--muted); padding:8px; min-width:0; }
+.auction-action b { display:block; margin-bottom:3px; color:var(--ink); font-size:11px; font-weight:900; letter-spacing:0; text-transform:uppercase; }
+.auction-action span { display:block; color:var(--muted); font-size:12px; line-height:1.28; }
+.auction-action.practice { border-color:rgba(94,209,197,.62); background:rgba(39,184,158,.13); }
+.auction-action.practice b { color:#b9fff3; }
+.auction-action.projected { border-color:rgba(74,140,255,.58); background:rgba(74,140,255,.12); }
+.auction-action.projected b { color:#dce8ff; }
 .slow-guide-chip { border:1px solid #dbe4f0; border-radius:7px; background:white; padding:6px; min-width:0; }
 .slow-guide-chip.strategy-status.target { border-color:#86efac; background:#ecfdf5; }
 .slow-guide-chip.strategy-status.fair { border-color:#bfdbfe; background:#eff6ff; }
@@ -325,6 +345,8 @@ button.tendency-chip:hover, button.tendency-chip:focus-visible { border-color:#9
 .market-pressure h4 { margin:0 0 7px; color:#475569; font-size:11px; font-weight:850; text-transform:uppercase; }
 .pressure-grid { display:grid; grid-template-columns:repeat(auto-fit, minmax(150px, 1fr)); gap:6px; }
 .pressure-item { border:1px solid #dbe4f0; border-radius:7px; background:white; padding:7px; min-width:0; }
+.pressure-item.can-bid { border-color:rgba(240,163,58,.68); background:rgba(240,163,58,.12); }
+.pressure-item.unlikely { opacity:.78; }
 .pressure-item strong { display:flex; align-items:center; justify-content:space-between; gap:8px; color:var(--ink); font-size:13px; }
 .pressure-item span { display:block; color:var(--muted); font-size:11px; margin-top:3px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
 .pressure-item em { color:#0f172a; font-style:normal; font-weight:850; }
@@ -357,6 +379,7 @@ button.tendency-chip:hover, button.tendency-chip:focus-visible { border-color:#9
 @media (max-width: 900px) { main { padding:8px 10px 28px; } .tabs { position:sticky; top:0; z-index:30; background:rgba(245,247,251,.96); backdrop-filter:blur(8px); margin:0 -2px 10px; padding:8px 0 6px; } .grid { grid-template-columns:1fr; } .card { padding:12px; } input[type=search] { min-width:100%; max-width:none; } .tabs, .subtabs { flex-wrap:nowrap; overflow-x:auto; padding-bottom:4px; -webkit-overflow-scrolling:touch; } .tab, .subtab { white-space:nowrap; font-size:13px; padding:8px 10px; } .toolbar { gap:8px; } table { font-size:12px; min-width:880px; } th, td { padding:7px; } svg { min-width:0; } .table-wrap { max-height:none; -webkit-overflow-scrolling:touch; } .current-auction { padding:12px; } .winning-bid { align-items:flex-start; flex-direction:column; } .winning-bid em { text-align:left; } .strategy-panel { grid-template-columns:1fr 1fr; } #mockAuction > .card > .toolbar, #slowAuction > .card > .toolbar { background:rgba(255,255,255,.97); border:1px solid var(--line); border-radius:8px; padding:8px; } .auction-settings-wrap { flex:1 1 100%; } .auction-settings-menu { position:static; width:100%; max-height:none; margin-top:8px; box-shadow:none; align-content:flex-start; align-items:flex-start; overflow:visible; } .auction-settings-menu-head { position:static; top:auto; } .slow-lot-grid { max-height:none; } }
 @media (max-width: 520px) { input, select, button { font-size:13px; min-height:36px; } .toolbar { gap:7px; } .toolbar select, .toolbar button, .age-range-filter, .inline-control { flex:1 1 140px; } .inline-control input, .inline-control select { width:100%; min-width:0; } .range-row input[type=range] { width:74px; } .card h2 { font-size:18px; } .scoring-settings { gap:7px; padding:9px; } .scoring-settings strong { flex-basis:100%; padding-bottom:0; } .scoring-settings input { width:74px; font-size:12px; min-height:34px; } table { font-size:11px; min-width:760px; } th, td { padding:6px; } #cheatsTable { min-width:860px; } #mockPlayerTable, #slowPlayerTable, #ltPlayerTable { min-width:760px; } #teamY1Table, #teamY2Table { min-width:1260px; } #teamY1Table th:nth-child(1), #teamY1Table td:nth-child(1), #teamY2Table th:nth-child(1), #teamY2Table td:nth-child(1) { width:48px; min-width:48px; max-width:48px; } #teamY1Table th:nth-child(2), #teamY1Table td:nth-child(2), #teamY2Table th:nth-child(2), #teamY2Table td:nth-child(2) { left:48px; width:122px; min-width:122px; max-width:122px; } .metric-grid, .mock-board, .current-auction .metric-grid, .strategy-panel, .tier-drop-grid { grid-template-columns:1fr 1fr; } .metric, .strategy-card { padding:8px; } .metric strong, .strategy-card strong { font-size:17px; } .current-auction h3 { font-size:22px; } .current-auction .metric { padding:9px; } .current-auction .metric strong { font-size:18px; } .mock-board-grid { grid-template-columns:72px repeat(12, minmax(132px, 1fr)); min-width:1656px; } .mock-slot-head, .mock-team-head, .mock-slot-label, .mock-roster-cell { min-height:46px; } .slow-lot-grid { grid-template-columns:repeat(auto-fill, minmax(168px, 1fr)); } .slow-lot { min-height:0; } .slow-lot-controls { grid-template-columns:1fr 1fr; } .tier-drop-row summary { grid-template-columns:1fr; } .tier-drop-score { text-align:left; } .tier-player-list { padding-left:10px; } }
 @media (max-width: 520px) { .initial-bid-control { grid-template-columns:1fr; min-width:118px; } #slowTendencies { min-width:700px; font-size:10.5px; } #slowTendencies th, #slowTendencies td { padding:5px 6px; } #slowTendencies th:first-child, #slowTendencies td:first-child { width:76px; min-width:76px; max-width:76px; } #slowTendencies td:last-child { min-width:150px; } }
+@media (max-width: 520px) { .auction-action-grid, .slow-lot-guidance { grid-template-columns:1fr; } .result-rich { grid-template-columns:1fr; } .result-price { justify-items:start; } }
 @media (max-width: 520px) { .queue-summary { grid-template-columns:1fr; } .queue-controls { flex-direction:column; align-items:flex-start; } .queue-btn { min-width:52px; } }
 @media (max-width: 520px) { #playersTable th:nth-child(1), #playersTable td:nth-child(1) { width:132px; min-width:132px; max-width:132px; } }
 @media (max-width: 430px) and (orientation: portrait) { table { font-size:10.5px; } th, td { padding:5px; } #cheatsTable { min-width:820px; } }
@@ -686,6 +709,10 @@ th::after { color:#7f8ca5; }
 .pressure-item em,
 .grade-explain strong {
 	color:var(--ink);
+}
+.pressure-item.can-bid strong,
+.pressure-item.can-bid em {
+	color:#ffe1a8;
 }
 #teamY1Table th:nth-child(-n+2),
 #teamY2Table th:nth-child(-n+2),
@@ -2063,24 +2090,32 @@ function auctionStrategy(player, team, currentBid=0, maxBid=0, committed=0) {
 function auctionPracticeAdvice(strategy, player) {
 	if (!strategy || !player) return {label:'Room adjustment', detail:'Treat values as anchors, then move with the room.'};
 	const tier = optimizerTierIndex(player);
-	if (playerQueueType(player) === 'avoid') return {label:'Stay disciplined', detail:'Avoid queue overrides any discount unless you manually change it.'};
-	if (tier <= 2 && strategy.status !== 'pass') return {label:'Elite premium', detail:'The sheet value is an anchor, not a hard cap, if the player fits your par sheet.'};
-	if (strategy.status === 'pass' && tier >= 3) return {label:'Mid-tier pivot', detail:'If replaceable middle tiers get bid up, save money for similar cheaper bets.'};
-	if (strategy.pace.key === 'tight') return {label:'Protect leverage', detail:'A few extra dollars matter when other teams are reduced to $1 bids.'};
-	if (strategy.pace.key === 'ahead') return {label:'Spend when right', detail:'You have room to beat value for a priority player.'};
-	return {label:'Room adjustment', detail:'Raise or lower live targets when a position is clearing hot or cheap.'};
+	if (playerQueueType(player) === 'avoid') return {label:'Pass', detail:'This is on your Do Not Want queue. Ignore discounts unless you remove that flag.'};
+	if (strategy.status === 'pass') return {label:'Pass', detail:tier >= 3 ? 'Do not chase this mid-tier price. Wait for a cheaper similar player.' : 'Only continue if this is a must-have exception.'};
+	if (tier <= 2) return {label:'Target', detail:'Elite tier. You can pay above value if the par sheet still balances.'};
+	if (strategy.pace.key === 'tight') return {label:'Hold leverage', detail:'Protect extra dollars. They matter when other teams can only bid $1.'};
+	if (strategy.pace.key === 'ahead') return {label:'Spend selectively', detail:'You have room to beat value for a priority player, not every player.'};
+	if (strategy.status === 'caution') return {label:'Slow down', detail:'The price is above the anchor. Continue only for a clear roster need.'};
+	if (strategy.status === 'target') return {label:'Target', detail:'Bid while the price is inside your recommended max.'};
+	return {label:'Anchor', detail:'Use the value as a starting point, then adjust to the room.'};
+}
+function auctionActionHtml(strategy, player) {
+	if (!strategy || !player) return '<div class="auction-action-grid"><div class="auction-action practice"><b>Do</b><span>Nominate a player to get an action.</span></div><div class="auction-action projected"><b>Watch</b><span>Projected bids appear once an auction is live.</span></div></div>';
+	const practice = auctionPracticeAdvice(strategy, player);
+	const gap = strategy.gap >= 0 ? `$${strategy.gap} room to rec max` : `$${Math.abs(strategy.gap)} over rec max`;
+	const watch = [`Rec max $${strategy.recommended}`, `next $${strategy.nextBid}`, gap, strategy.needLabel || '', strategy.pace.label].filter(Boolean).join(' · ');
+	return `<div class="auction-action-grid"><div class="auction-action practice"><b>Do</b><span>${escapeHtml(practice.detail)}</span></div><div class="auction-action projected"><b>Watch</b><span>${escapeHtml(watch)}</span></div></div>`;
 }
 function strategyHtml(strategy, player) {
 	if (!strategy) return '<div class="strategy-card"><span>Strategy</span><strong>No active auction</strong><em>Nominate a player to see bid guidance.</em></div>';
 	const gap = strategy.gap >= 0 ? `$${strategy.gap} room` : `$${Math.abs(strategy.gap)} over`;
-	const practice = auctionPracticeAdvice(strategy, player);
 	const cards = [
+		auctionActionHtml(strategy, player),
 		`<div class="strategy-card strategy-status ${strategy.status}"><span>Strategy</span><strong>${escapeHtml(strategy.label)}</strong><em>${escapeHtml(displayPlayer(player))}</em></div>`,
 		`<div class="strategy-card"><span>Recommended max</span><strong>$${strategy.recommended}</strong><em>Next $${strategy.nextBid} - ${gap}</em></div>`,
 		`<div class="strategy-card"><span>Bid value</span><strong>$${Math.round(strategy.value)}</strong><em>${escapeHtml(player.auction_tier || '')}</em></div>`,
 		`<div class="strategy-card"><span>Budget pace</span><strong>${escapeHtml(strategy.pace.label)}</strong><em>${escapeHtml(strategy.pace.detail)}</em></div>`,
-		`<div class="strategy-card"><span>Build fit</span><strong>${escapeHtml(strategy.fit.label)}</strong><em>${escapeHtml(strategy.fit.detail)}</em></div>`,
-		`<div class="strategy-card"><span>Auction rule</span><strong>${escapeHtml(practice.label)}</strong><em>${escapeHtml(practice.detail)}</em></div>`
+		`<div class="strategy-card"><span>Build fit</span><strong>${escapeHtml(strategy.fit.label)}</strong><em>${escapeHtml(strategy.fit.detail)}</em></div>`
 	];
 	if (strategy.needLabel) cards.splice(3, 0, `<div class="strategy-card"><span>Roster need</span><strong>${escapeHtml(strategy.needLabel)}</strong><em>${rawFmt(n(player.auction_points))} fpts</em></div>`);
 	return cards.join('');
@@ -2090,7 +2125,7 @@ function slowLotGuidanceHtml(strategy, player) {
 	const gap = strategy.gap >= 0 ? `$${strategy.gap} room` : `$${Math.abs(strategy.gap)} over`;
 	const need = strategy.needLabel ? `<div class="slow-guide-chip"><span>Roster need</span><strong>${escapeHtml(strategy.needLabel)}</strong><em>${rawFmt(n(player.auction_points))} fpts</em></div>` : '';
 	const practice = auctionPracticeAdvice(strategy, player);
-	return `<div class="slow-lot-guidance"><div class="slow-guide-chip strategy-status ${strategy.status}"><span>Strategy</span><strong>${escapeHtml(strategy.label)}</strong><em>${escapeHtml(gap)}</em></div><div class="slow-guide-chip"><span>Rec max</span><strong>$${strategy.recommended}</strong><em>Next $${strategy.nextBid}</em></div><div class="slow-guide-chip"><span>Bid value</span><strong>$${Math.round(strategy.value)}</strong><em>${escapeHtml(player.auction_tier || '')}</em></div>${need}<div class="slow-guide-chip"><span>Auction rule</span><strong>${escapeHtml(practice.label)}</strong><em>${escapeHtml(practice.detail)}</em></div></div>`;
+	return `<div class="slow-lot-guidance"><div class="auction-action practice"><b>Do</b><span>${escapeHtml(practice.detail)}</span></div><div class="auction-action projected"><b>Watch</b><span>Rec max $${strategy.recommended} · next $${strategy.nextBid} · ${escapeHtml(gap)}</span></div><div class="slow-guide-chip"><span>Bid value</span><strong>$${Math.round(strategy.value)}</strong><em>${escapeHtml(player.auction_tier || '')}</em></div>${need}</div>`;
 }
 function teamNeedSummary(team) {
 	const roster = team?.roster || [];
@@ -2194,11 +2229,13 @@ function marketPressureHtml(player, teams, options={}) {
 		return {team, allowed, predicted};
 	}).sort((a,b)=>b.predicted - a.predicted || b.allowed - a.allowed).slice(0, options.limit || 6);
 	if (!rows.length) return '';
-	const line = rows.map(row => {
-		const status = row.predicted > currentBid ? `up to $${row.predicted}` : 'unlikely';
-		return `${row.team.name} ${status}`;
-	}).join('; ');
-	return `<div class="market-pressure"><h4>Projected bids</h4><p class="pressure-line">${escapeHtml(line)}</p></div>`;
+	const cards = rows.map(row => {
+		const canBid = row.predicted > currentBid;
+		const status = canBid ? `up to $${row.predicted}` : 'unlikely';
+		const room = row.allowed ? `max $${row.allowed}` : 'no room';
+		return `<div class="pressure-item ${canBid ? 'can-bid' : 'unlikely'}"><strong>${escapeHtml(row.team.name)}<em>${escapeHtml(status)}</em></strong><span>${escapeHtml(room)}</span></div>`;
+	}).join('');
+	return `<div class="market-pressure projected-pressure"><h4>Watch projected bids</h4><div class="pressure-grid">${cards}</div></div>`;
 }
 function ensureMockStrategyPanel() {
 	let root = document.getElementById('mockStrategy');
@@ -2609,7 +2646,8 @@ function mockAwardCurrent() {
 	recordAuctionEvent(m, {type:'win', mode:'fast', teamId:m.highBidder, lotId:m.currentLotId, amount:paid, bidCount:m.events.filter(event => event.lotId === m.currentLotId && event.type === 'bid').length, ...auctionEventPlayer(m.current)});
 	team.budget -= paid; team.roster.push({...m.current, paid}); m.drafted.add(m.current.id);
 	const slot = assignRosterSlots(team.roster).find(s => s.player?.id === m.current.id)?.slot || '';
-	m.results.unshift({player:m.current.player, position:m.current.position, team:m.current.team, paid, buyer:team.name, profile:team.profile?.label || 'Human', slot});
+	const bidCount = Math.max(1, m.events.filter(event => event.lotId === m.currentLotId && event.type === 'bid').length + 1);
+	m.results.unshift({player:m.current.player, playerId:m.current.id, position:m.current.position, team:m.current.team, paid, buyer:team.name, profile:team.profile?.label || 'Human', slot, value:Math.round(n(m.current.auction_value)), auction_tier:m.current.auction_tier, bid_signal:n(m.current.bid_signal), bidCount});
 	m.nominatorIndex = (m.highBidder + 1) % m.teams.length; m.current = null; m.currentBid = 0; m.highBidder = null; m.currentLotId = null; m.passed = new Set(); resetMockTimer('nomination');
 }
 function mockAutoResolveOne() {
@@ -3078,9 +3116,25 @@ function renderSlowDraftBoard(m) {
 	root.innerHTML = `<div class="mock-board-grid">${heads}${rows}</div>`;
 	root.querySelectorAll('[data-slow-board-team-id]').forEach(el => el.addEventListener('click', () => { m.selectedTeamId = Number(el.dataset.slowBoardTeamId); renderSlowAuction(); }));
 }
+function auctionResultPlayer(result) {
+	return auctionPool().find(player => String(player.id) === String(result.playerId)) || auctionPool().find(player => player.player === result.player && player.position === result.position) || null;
+}
+function auctionResultHtml(result) {
+	const player = auctionResultPlayer(result);
+	const value = Math.max(0, Math.round(n(result.value ?? player?.auction_value)));
+	const paid = Math.round(n(result.paid));
+	const delta = value ? paid - value : null;
+	const pct = value ? overPct(paid, value) : null;
+	const deltaClass = delta === null ? 'neutral' : delta > 0 ? 'over' : delta < 0 ? 'under' : 'even';
+	const deltaText = delta === null ? 'value n/a' : delta === 0 ? 'at projected value' : `${delta > 0 ? '+' : '-'}$${Math.abs(delta)} vs projected`;
+	const pctTextValue = pct === null ? 'n/a' : `${pct > 0 ? '+' : ''}${pct}%`;
+	const bidText = Number.isFinite(Number(result.bidCount)) ? `${Math.round(Number(result.bidCount))} bid${Math.round(Number(result.bidCount)) === 1 ? '' : 's'}` : 'bids n/a';
+	const tier = result.auction_tier || player?.auction_tier || '';
+	return `<div class="result-item result-rich"><div class="result-main"><strong class="${positionClass(result.position)}">${escapeHtml(result.player)}</strong><span>${escapeHtml(result.position)}${result.team ? ' ' + escapeHtml(result.team) : ''} · ${escapeHtml(result.buyer || '')}${result.slot ? ' · ' + escapeHtml(result.slot) : ''}</span></div><div class="result-price"><strong>$${paid}</strong><span class="${deltaClass}">${escapeHtml(pctTextValue)}</span></div><div class="result-stats"><span>${escapeHtml(deltaText)}</span><span>${value ? `$${value} value` : 'no value match'}</span><span>${escapeHtml(bidText)}</span>${tier ? `<span>${escapeHtml(tier)}</span>` : ''}</div></div>`;
+}
 function renderMockResults(m) {
 	const root = document.getElementById('mockResults'); if (!root) return;
-	root.innerHTML = m.results.length ? m.results.map(r => `<div class="result-item"><strong>${escapeHtml(r.player)}</strong> <span class="small">${escapeHtml(r.position)}${r.team ? ' ' + escapeHtml(r.team) : ''}</span><br><span class="small">$${r.paid} to ${escapeHtml(r.buyer)}${r.slot ? ' - ' + escapeHtml(r.slot) : ''}${r.profile ? ' - ' + escapeHtml(r.profile) : ''}</span></div>`).join('') : '<div class="mock-empty">No completed nominations yet.</div>';
+	root.innerHTML = m.results.length ? m.results.map(auctionResultHtml).join('') : '<div class="mock-empty">No completed nominations yet.</div>';
 }
 function ensureMockPlayerPager(table) {
 	let pager = document.getElementById('mockPlayerPager');
@@ -3638,7 +3692,7 @@ function slowAwardLot(lotId) {
 	team.roster.push({...lot.player, paid});
 	m.drafted.add(lot.player.id);
 	const slot = assignRosterSlots(team.roster).find(s => s.player?.id === lot.player.id)?.slot || '';
-	m.results.unshift({player:lot.player.player, position:lot.player.position, team:lot.player.team, paid, buyer:team.name, profile:team.profile?.label || 'Human', slot});
+	m.results.unshift({player:lot.player.player, playerId:lot.player.id, position:lot.player.position, team:lot.player.team, paid, buyer:team.name, profile:team.profile?.label || 'Human', slot, value:Math.round(n(lot.player.auction_value)), auction_tier:lot.player.auction_tier, bid_signal:n(lot.player.bid_signal), bidCount:lot.bidCount});
 	m.lots.splice(idx, 1);
 	if (m.selectedLotId === lot.id) m.selectedLotId = m.lots[0]?.id || null;
 	return true;
@@ -3791,7 +3845,7 @@ function renderSlowSelectedTeam(m) {
 }
 function renderSlowResults(m) {
 	const root = document.getElementById('slowResults'); if (!root) return;
-	root.innerHTML = m.results.length ? m.results.map(r => `<div class="result-item"><strong>${escapeHtml(r.player)}</strong> <span class="small">${escapeHtml(r.position)}${r.team ? ' ' + escapeHtml(r.team) : ''}</span><br><span class="small">$${r.paid} to ${escapeHtml(r.buyer)}${r.slot ? ' - ' + escapeHtml(r.slot) : ''}${r.profile ? ' - ' + escapeHtml(r.profile) : ''}</span></div>`).join('') : '<div class="mock-empty">No completed slow auctions yet.</div>';
+	root.innerHTML = m.results.length ? m.results.map(auctionResultHtml).join('') : '<div class="mock-empty">No completed slow auctions yet.</div>';
 }
 function ensureSlowPlayerPager(table) {
 	let pager = document.getElementById('slowPlayerPager');
