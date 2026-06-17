@@ -266,8 +266,14 @@ button.tendency-chip:hover, button.tendency-chip:focus-visible { border-color:#9
 .par-tier-cell em { display:block; margin-top:2px; color:var(--muted); font-size:11px; font-style:normal; }
 .par-tier-players { margin-top:6px; display:grid; gap:3px; }
 .par-tier-player { display:grid; grid-template-columns:minmax(0, 1fr) auto; gap:5px; align-items:center; padding:3px 5px; border-radius:6px; background:#fff; color:var(--ink); font-size:11px; }
-.par-tier-player span { margin:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
-.par-tier-player em { margin:0; white-space:nowrap; }
+.par-tier-player-name { margin:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; font-weight:850; }
+.par-tier-player .par-tier-player-name.pos-QB { color:#ff5c93; }
+.par-tier-player .par-tier-player-name.pos-RB { color:#52d8a7; }
+.par-tier-player .par-tier-player-name.pos-WR { color:#6ab2ff; }
+.par-tier-player .par-tier-player-name.pos-TE { color:#c084fc; }
+.par-tier-bid { margin:0; white-space:nowrap; font-style:normal; font-weight:900; }
+.par-tier-bid.live { color:#6ee7b7; }
+.par-tier-bid.final { color:#93c5fd; }
 .par-tier-empty { color:var(--muted); font-size:11px; }
 .par-tier-reset { align-self:center; padding:6px 8px; font-size:12px; white-space:nowrap; }
 .par-delta.over { color:#b91c1c; font-weight:850; }
@@ -316,6 +322,8 @@ button.tendency-chip:hover, button.tendency-chip:focus-visible { border-color:#9
 .auction-action { border:1px solid var(--line); border-radius:8px; background:var(--panel-2); color:var(--muted); padding:8px; min-width:0; }
 .auction-action b { display:block; margin-bottom:3px; color:var(--ink); font-size:11px; font-weight:900; letter-spacing:0; text-transform:uppercase; }
 .auction-action span { display:block; color:var(--muted); font-size:12px; line-height:1.28; }
+.auction-action ul { margin:0; padding-left:17px; color:var(--muted); font-size:12px; line-height:1.32; }
+.auction-action li { margin:2px 0; }
 .auction-action.practice { border-color:rgba(94,209,197,.62); background:rgba(39,184,158,.13); }
 .auction-action.practice b { color:#b9fff3; }
 .auction-action.projected { border-color:rgba(74,140,255,.58); background:rgba(74,140,255,.12); }
@@ -624,11 +632,12 @@ th::after { color:#7f8ca5; }
 }
 @supports (background: color-mix(in srgb, red, blue)) {
 	tbody tr.colored-row td, #cheatsTable tbody tr.colored-row td.sticky-cheat {
-		background:color-mix(in srgb, var(--row-bg) 38%, var(--panel) 62%);
-		color:var(--ink);
+		background:color-mix(in srgb, var(--row-bg) 24%, var(--panel) 76%);
+		color:#f7fbff;
+		text-shadow:0 1px 1px rgba(0,0,0,.32);
 	}
 	tbody tr.colored-row:hover td, #cheatsTable tbody tr.colored-row:hover td.sticky-cheat {
-		background:color-mix(in srgb, var(--row-bg) 45%, var(--panel-2) 55%);
+		background:color-mix(in srgb, var(--row-bg) 30%, var(--panel-2) 70%);
 		filter:none;
 	}
 }
@@ -713,6 +722,35 @@ th::after { color:#7f8ca5; }
 .pressure-item.can-bid strong,
 .pressure-item.can-bid em {
 	color:#ffe1a8;
+}
+.bid-pill,
+button.bid-pill,
+.tag-pill.bid-pill {
+	color:#06231d !important;
+	border-color:rgba(6,35,29,.36) !important;
+	font-weight:900;
+	text-shadow:none;
+	box-shadow:0 0 0 1px rgba(255,255,255,.28) inset;
+}
+.queue-btn,
+.queue-badge,
+.tag-pill,
+.note-pill {
+	text-shadow:none;
+}
+.harmon-tag-pill,
+.tag-pill.harmon-tag-pill {
+	color:#102033 !important;
+	border-color:rgba(15,23,42,.36) !important;
+	font-weight:900;
+	box-shadow:0 0 0 1px rgba(255,255,255,.26) inset;
+}
+.bid-pill:hover,
+button.bid-pill:hover,
+.tag-pill.bid-pill:hover {
+	color:#031712 !important;
+	background:#a7f3d0 !important;
+	border-color:#5eead4 !important;
 }
 #teamY1Table th:nth-child(-n+2),
 #teamY2Table th:nth-child(-n+2),
@@ -1232,7 +1270,7 @@ function activeTierLegend() { const mode = currentCheatMode(); if (mode === 'wal
 function renderTierLegend() { const root=document.getElementById('tierLegend'); if(!root) return; root.innerHTML = activeTierLegend().map(x => { const color = tierFilterColor(x); return `<button type="button" class="legend-item ${state.cheatTierColor === color ? 'active' : ''}" data-tier-color="${escapeHtml(color)}" title="Filter to ${escapeHtml(x.label)}"><span class="legend-swatch" style="background:${escapeHtml(color)}"></span>${escapeHtml(x.label)}</button>`; }).join(''); root.querySelectorAll('.legend-item').forEach(btn=>btn.addEventListener('click',()=>{ const color=btn.dataset.tierColor; state.cheatTierColor = state.cheatTierColor === color ? '' : color; renderTierLegend(); renderCurrentTables(); })); }
 function renderNotes(row) { const notes = row.notes || ''; const details = row.note_details || []; if (!notes) return ''; if (!details.length) return escapeHtml(notes); return `<span class="note-cell">${details.map(d => `<button type="button" class="note-pill" title="${escapeHtml(d.meaning)}" data-tip="${escapeHtml(d.code + ': ' + d.meaning)}">${escapeHtml(d.code)}</button>`).join('')}</span>`; }
 function tagColor(value) { return HARMON_ACTION_COLORS[value] || HARMON_MARKET_COLORS[value] || '#eef2f7'; }
-function renderTag(value) { if (!value) return ''; return `<span class="tag-pill" style="background:${escapeHtml(tagColor(value))}">${escapeHtml(value)}</span>`; }
+function renderTag(value) { if (!value) return ''; return `<span class="tag-pill harmon-tag-pill" style="background:${escapeHtml(tagColor(value))}; color:#102033; border-color:rgba(15,23,42,.36);">${escapeHtml(value)}</span>`; }
 function renderBidSignal(row) {
 	const signals = row.bid_signals || [];
 	if (!signals.length) return '';
@@ -2102,13 +2140,16 @@ function auctionPracticeAdvice(strategy, player) {
 function auctionActionHtml(strategy, player) {
 	if (!strategy || !player) return '<div class="auction-action-grid"><div class="auction-action practice"><b>Do</b><span>Nominate a player to get an action.</span></div><div class="auction-action projected"><b>Watch</b><span>Projected bids appear once an auction is live.</span></div></div>';
 	const practice = auctionPracticeAdvice(strategy, player);
-	const gap = strategy.gap >= 0 ? `$${strategy.gap} below rec max` : `$${Math.abs(strategy.gap)} over rec max`;
-	const watch = [`Bid value $${Math.round(strategy.value)}`, `rec max $${strategy.recommended}`, gap, strategy.needLabel || '', strategy.pace.label].filter(Boolean).join(' · ');
-	return `<div class="auction-action-grid"><div class="auction-action practice"><b>Do</b><span>${escapeHtml(practice.detail)}</span></div><div class="auction-action projected"><b>Watch</b><span>${escapeHtml(watch)}</span></div></div>`;
+	const watch = auctionWatchListHtml(strategy);
+	return `<div class="auction-action-grid"><div class="auction-action practice"><b>Do</b><span>${escapeHtml(practice.detail)}</span></div><div class="auction-action projected"><b>Watch</b>${watch}</div></div>`;
+}
+function auctionWatchListHtml(strategy) {
+	const maxLine = strategy.gap >= 0 ? `Your bid would be $${strategy.gap} under max` : `Your bid would be $${Math.abs(strategy.gap)} over max`;
+	return `<ul><li>${escapeHtml(`Bid value $${Math.round(strategy.value)}`)}</li><li>${escapeHtml(`Rec max $${strategy.recommended}`)}</li><li>${escapeHtml(maxLine)}</li></ul>`;
 }
 function strategyHtml(strategy, player) {
 	if (!strategy) return '<div class="strategy-card"><span>Strategy</span><strong>No active auction</strong><em>Nominate a player to see bid guidance.</em></div>';
-	const gap = strategy.gap >= 0 ? `$${strategy.gap} below rec max` : `$${Math.abs(strategy.gap)} over rec max`;
+	const gap = strategy.gap >= 0 ? `Your bid would be $${strategy.gap} under max` : `Your bid would be $${Math.abs(strategy.gap)} over max`;
 	const cards = [
 		auctionActionHtml(strategy, player),
 		`<div class="strategy-card strategy-status ${strategy.status}"><span>Strategy</span><strong>${escapeHtml(strategy.label)}</strong><em>${escapeHtml(displayPlayer(player))}</em></div>`,
@@ -2124,8 +2165,8 @@ function slowLotGuidanceHtml(strategy, player) {
 	if (!strategy || !player) return '';
 	const need = strategy.needLabel ? `<div class="slow-guide-chip"><span>Roster need</span><strong>${escapeHtml(strategy.needLabel)}</strong><em>${rawFmt(n(player.auction_points))} fpts</em></div>` : '';
 	const practice = auctionPracticeAdvice(strategy, player);
-	const watchGap = strategy.gap >= 0 ? `$${strategy.gap} below rec max` : `$${Math.abs(strategy.gap)} over rec max`;
-	return `<div class="slow-lot-guidance"><div class="auction-action practice"><b>Do</b><span>${escapeHtml(practice.detail)}</span></div><div class="auction-action projected"><b>Watch</b><span>Bid value $${Math.round(strategy.value)} · rec max $${strategy.recommended} · ${escapeHtml(watchGap)}</span></div><div class="slow-guide-chip"><span>Bid value</span><strong>$${Math.round(strategy.value)}</strong><em>${escapeHtml(player.auction_tier || '')}</em></div>${need}</div>`;
+	const watch = auctionWatchListHtml(strategy);
+	return `<div class="slow-lot-guidance"><div class="auction-action practice"><b>Do</b><span>${escapeHtml(practice.detail)}</span></div><div class="auction-action projected"><b>Watch</b>${watch}</div><div class="slow-guide-chip"><span>Bid value</span><strong>$${Math.round(strategy.value)}</strong><em>${escapeHtml(player.auction_tier || '')}</em></div>${need}</div>`;
 }
 function teamNeedSummary(team) {
 	const roster = team?.roster || [];
@@ -3002,7 +3043,12 @@ function parTierPlayersHtml(players=[]) {
 	return players
 		.slice()
 		.sort((a,b)=>n(b.par_amount)-n(a.par_amount) || String(a.player).localeCompare(String(b.player)))
-		.map(player => `<div class="par-tier-player"><span>${escapeHtml(player.player)}</span><em>$${Math.round(n(player.par_amount))}${player.par_status === 'Live' ? ' live' : ''}</em></div>`)
+		.map(player => {
+			const isLive = player.par_status === 'Live';
+			const bidClass = isLive ? 'live' : 'final';
+			const bidLabel = isLive ? 'live' : 'final';
+			return `<div class="par-tier-player"><span class="par-tier-player-name ${positionClass(player.position)}">${escapeHtml(player.player)}</span><em class="par-tier-bid ${bidClass}">$${Math.round(n(player.par_amount))} ${bidLabel}</em></div>`;
+		})
 		.join('');
 }
 function parTierPriceRange(pos, bucketKey) {
