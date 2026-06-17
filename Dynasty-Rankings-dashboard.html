@@ -2356,14 +2356,15 @@ function ensureOptimizerTierStacks() {
 function renderOptimizerTierStacks(result) {
 	const root = ensureOptimizerTierStacks();
 	if (!root) return;
-	const tiers = [1, 2, 3, 4], premium = result.premium, budget = result.budget, focus = result.focus, preference = result.preference, shape = result.shape, ageCap = result.ageCap;
+	const tiers = [1, 2, 3, 4];
 	root.innerHTML = tiers.map(maxTier => {
-		const build = buildOptimizedTeam(premium, budget, focus, preference, 'tiers', maxTier, shape, ageCap);
-		const counts = optimizerTierCounts(build.players), topPlayers = build.players.filter(p => optimizerTierIndex(p) <= maxTier).sort((a,b)=>optimizerTierIndex(a)-optimizerTierIndex(b) || n(b.auction_value)-n(a.auction_value) || n(b.auction_points)-n(a.auction_points));
+		const topPlayers = result.players.filter(p => optimizerTierIndex(p) <= maxTier).sort((a,b)=>optimizerTierIndex(a)-optimizerTierIndex(b) || n(b.buy_price)-n(a.buy_price) || n(b.auction_points)-n(a.auction_points));
+		const counts = optimizerTierCounts(topPlayers);
 		const pos = rosterCounts(topPlayers);
 		const active = result.goal === 'tiers' && Number(result.tierMax) === maxTier;
+		const topCost = topPlayers.reduce((sum, p) => sum + n(p.buy_price), 0);
 		const body = topPlayers.slice(0, 10).map(p => `<div class="position-player-row"><div><strong>${escapeHtml(p.player)}</strong><span>${escapeHtml(p.position)}${p.team ? ' ' + escapeHtml(p.team) : ''} - ${escapeHtml(p.auction_tier || '')} - ${rawFmt(n(p.auction_points))} fpts</span></div><div><strong>$${Math.round(n(p.buy_price))}</strong></div></div>`).join('') || '<div class="position-player-row"><span>No top-tier players fit this build.</span></div>';
-		return `<div class="position-group tier-stack-card ${active ? 'active' : ''}"><h3>${escapeHtml(optimizerTierLabel(maxTier))}: ${topPlayers.length} players - $${build.cost}</h3><div class="tier-stack-meta"><span class="tier-pill">T1 ${counts[1]}</span><span class="tier-pill">T2 ${counts[2]}</span><span class="tier-pill">T3 ${counts[3]}</span><span class="tier-pill">T4 ${counts[4]}</span><span class="tier-pill">QB ${pos.QB || 0}</span><span class="tier-pill">RB ${pos.RB || 0}</span><span class="tier-pill">WR ${pos.WR || 0}</span><span class="tier-pill">TE ${pos.TE || 0}</span></div>${body}</div>`;
+		return `<div class="position-group tier-stack-card ${active ? 'active' : ''}"><h3>${escapeHtml(optimizerTierLabel(maxTier))} in current roster: ${topPlayers.length} players - $${topCost}</h3><div class="tier-stack-meta"><span class="tier-pill">T1 ${counts[1]}</span><span class="tier-pill">T2 ${counts[2]}</span><span class="tier-pill">T3 ${counts[3]}</span><span class="tier-pill">T4 ${counts[4]}</span><span class="tier-pill">QB ${pos.QB || 0}</span><span class="tier-pill">RB ${pos.RB || 0}</span><span class="tier-pill">WR ${pos.WR || 0}</span><span class="tier-pill">TE ${pos.TE || 0}</span></div>${body}</div>`;
 	}).join('');
 }
 function renderOptimizer(result=state.optimizer || buildOptimizedTeam()) {
