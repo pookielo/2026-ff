@@ -183,6 +183,8 @@ svg { width:100%; max-width:100%; min-width:0; height:auto; display:block; }
 .tendency-table { width:100%; min-width:860px; font-size:12px; }
 .tendency-table th, .tendency-table td { padding:7px 8px; }
 .tendency-table th { cursor:default; }
+.tendency-table th[data-tendency-sort] { cursor:pointer; user-select:none; }
+.tendency-table th[data-tendency-sort]:hover { color:var(--blue); }
 .tendency-table th::after { content:''; }
 .tendency-table td:last-child { min-width:220px; }
 #slowTendencies { min-width:760px; }
@@ -289,7 +291,7 @@ button.tendency-chip:hover, button.tendency-chip:focus-visible { border-color:#9
 #ltPlayerTable { min-width:960px; }
 .slow-auction-layout { display:grid; grid-template-columns:minmax(740px, 1.45fr) minmax(330px, .7fr); gap:14px; align-items:start; }
 .slow-lot-grid { display:grid; grid-template-columns:repeat(auto-fill, minmax(220px, 1fr)); gap:8px; max-height:760px; overflow:auto; padding-right:2px; }
-.slow-topbar { position:sticky; top:0; z-index:24; display:grid; grid-template-columns:auto minmax(360px, 1fr); gap:12px; align-items:center; margin:0 0 10px; padding:10px 12px; border:1px solid var(--line); border-radius:8px; background:rgba(255,255,255,.96); box-shadow:0 8px 24px rgba(15,23,42,.08); backdrop-filter:blur(8px); }
+.slow-topbar { display:grid; grid-template-columns:auto minmax(360px, 1fr); gap:12px; align-items:center; margin:0 0 10px; padding:10px 12px; border:1px solid var(--line); border-radius:8px; background:rgba(255,255,255,.96); box-shadow:0 8px 24px rgba(15,23,42,.08); }
 .slow-topbar h2 { margin:0; font-size:18px; line-height:1.1; }
 .slow-top-metrics { grid-template-columns:repeat(4, minmax(116px, 1fr)); }
 .slow-top-metrics .metric { padding:8px 10px; }
@@ -848,7 +850,7 @@ button.bid-pill:hover,
 
 <section id="auctionBuilder" class="panel"><div class="card"><h2>Best Team Builder</h2><div class="toolbar"><label class="inline-control">Premium<select id="optimizerPremium"><option value="0">At bid</option><option value="0.05" selected>5% over</option><option value="0.1">10% over</option><option value="0.15">15% over</option></select></label><label class="inline-control">Build focus<select id="optimizerFocus"><option value="balanced" selected>Balanced</option><option value="qb">Better QBs</option><option value="rb">Better RBs</option><option value="wr">Better WRs</option><option value="te">Better TEs</option><option value="qb_wr">QB + WR</option><option value="qb_wr_te">QB + WR + TE</option><option value="rb_wr">RB + WR</option><option value="rb_te">RB + TE</option><option value="custom">Custom Mix</option></select></label><label class="inline-control">Preferred<select id="optimizerPreference"><option value="none" selected>Value only</option><option value="queue">My Want Queue</option><option value="waldman_win">Waldman Win Now</option><option value="waldman_long">Waldman Long-Term</option><option value="waldman">Waldman Overall</option><option value="harmon">Harmon Buy/Super Buy</option><option value="kyle">Kyle Suggestions</option><option value="fantasypros">FantasyPros Suggestions</option><option value="common">Common Preferred</option></select></label><label class="inline-control">Shape<select id="optimizerShape"><option value="stars" selected>Stars + values</option><option value="balanced">Balanced spend</option><option value="breakout">Young breakouts</option></select></label><label class="inline-control">Age cap<select id="optimizerAgeCap"><option value="">No cap</option><option value="29">29 or younger</option><option value="27">27 or younger</option><option value="25">25 or younger</option></select></label><label class="inline-control">Budget<input id="optimizerBudget" type="number" min="25" max="200" step="1" value="200"></label><button id="runOptimizer" type="button">Build team</button></div><div class="toolbar mix-toolbar"><label class="inline-control">QB mix<input id="optimizerMixQB" type="number" min="0.5" max="2" step="0.1" value="1"></label><label class="inline-control">RB mix<input id="optimizerMixRB" type="number" min="0.5" max="2" step="0.1" value="1"></label><label class="inline-control">WR mix<input id="optimizerMixWR" type="number" min="0.5" max="2" step="0.1" value="1"></label><label class="inline-control">TE mix<input id="optimizerMixTE" type="number" min="0.5" max="2" step="0.1" value="1"></label></div><p class="small">Builds a 25-player roster using tier-banded bid values plus the selected premium. Shape controls whether the optimizer chases premium stars, balances spend, or leans into younger mid-priced breakout profiles. Age cap excludes players with known ages above the selected limit. Players marked Avoid are excluded; My Want Queue boosts marked targets.</p><div class="auction-principles"><span><strong>Use values as anchors</strong> Raise or lower live targets when the room is paying more or less by position.</span><span><strong>Spend for elite tiers</strong> It is acceptable to beat value for a player you want if the roster build still works.</span><span><strong>Keep endgame leverage</strong> A few extra dollars matter when the room is stuck at $1 bids.</span><span><strong>Avoid flat mid-tier prices</strong> If 6th-10th round profiles are getting bid up, pivot to similar cheaper bets.</span></div><div id="optimizerSummary" class="metric-grid"></div><div id="optimizerByPosition" class="position-list"></div><div id="optimizerRoster" class="roster-slots"></div></div></section>
 <section id="mockAuction" class="panel"><div class="card"><div class="auction-card-head"><h2>Fast Auction</h2><p class="small auction-directions">Click a team header or summary to inspect that roster. Bot profiles can be changed in Team Summary. Sim buttons complete one or ten full nomination-and-sale cycles. The board scrolls horizontally so you can compare every team at once.</p></div><div class="toolbar"><button id="startMock" type="button">Start / Reset</button><button id="mockClockToggle" type="button">Start clock</button><span id="mockTimer" class="mock-timer">:30</span><label class="inline-control">Nom sec<input id="mockNominationSeconds" type="number" min="3" max="120" step="1" value="30"></label><label class="inline-control">Reset sec<input id="mockResetSeconds" type="number" min="3" max="120" step="1" value="10"></label><button id="mockAutoOne" type="button" title="Simulates one full nomination, bot bidding sequence, and sale award.">Sim 1 sale</button><button id="mockAutoTen" type="button" title="Repeats the full automated sale cycle ten times or until the draft cannot continue.">Sim 10 sales</button><button id="mockBotRound" type="button">Next nomination / bot bid</button><button id="mockPass" type="button">Pass</button><button id="mockBidPlus1" type="button">Bid +$1</button><button id="mockBidPlus5" type="button">Bid +$5</button><button id="mockBidValue" type="button">Bid to value</button><label class="inline-control">Bid<input id="mockCustomBid" type="number" min="1" max="200" step="1" value="1"></label><button id="mockBidCustom" type="button">Bid amount</button></div><div id="mockWantedRemainders" class="queue-tier-summary"></div><div id="mockCurrent" class="current-auction"></div><div id="mockDraftBoard" class="mock-draft-board"></div></div><div class="mock-draft-layout"><div class="mock-stack"><div class="card"><h2>Team Summary</h2><div id="mockTeams" class="mock-board"></div></div><div class="card"><h2>Nomination Pool</h2><div class="toolbar"><input id="mockPlayerSearch" type="search" placeholder="Search auction pool"><select id="mockPosFilter"><option value="">All positions</option></select><label class="inline-control"><input id="mockShowDrafted" type="checkbox">Show drafted</label></div><div class="table-wrap mock-player-list"><table id="mockPlayerTable"></table></div></div></div><div class="mock-side-panel"><div class="card"><h2>Selected Team</h2><div id="mockHumanTeam" class="metric-grid"></div><div id="mockHumanRoster" class="roster-slots"></div></div><div class="card"><h2>Results</h2><div id="mockResults" class="result-log"></div></div></div></div></section>
-<section id="slowAuction" class="panel"><div class="card"><h2>Slow Auction</h2><div class="toolbar"><button id="startSlow" type="button">Start / Reset</button><button id="slowFillNominations" type="button">Fill nominations</button><button id="slowClockToggle" type="button">Start clock</button><span id="slowTimer" class="mock-timer">0 active</span><label class="inline-control">Active lots<input id="slowNominationCount" type="number" min="20" max="50" step="1" value="30"></label><label class="inline-control">Nom<input id="slowNominationMinutes" type="number" min="1" max="86400" step="1" value="30"><select id="slowNominationUnit"><option value="seconds">sec</option><option value="minutes" selected>min</option><option value="hours">hr</option></select></label><label class="inline-control">Bid<input id="slowBidMinutes" type="number" min="1" max="86400" step="1" value="720"><select id="slowBidUnit"><option value="seconds">sec</option><option value="minutes" selected>min</option><option value="hours">hr</option></select></label><label class="inline-control">Reset<input id="slowResetMinutes" type="number" min="1" max="86400" step="1" value="30"><select id="slowResetUnit"><option value="seconds">sec</option><option value="minutes" selected>min</option><option value="hours">hr</option></select></label><button id="slowBotBids" type="button">Bot bid round</button><button id="slowAdvanceFive" type="button">Advance 5 min</button><button id="slowResolveExpired" type="button">Resolve expired</button><button id="slowBidPlus1" type="button">Bid +$1</button><button id="slowBidPlus5" type="button">Bid +$5</button><button id="slowBidValue" type="button">Bid to value</button><label class="inline-control">Bid / max<input id="slowCustomBid" type="number" min="1" max="200" step="1" value="1"></label><button id="slowBidCustom" type="button">Bid amount</button><button id="slowMaxBid" type="button">Set max</button></div><p class="small">Modeled after slow auction drafts: many players can be auctioned simultaneously, every player has an independent timer, and expired lots award to the high bidder. Timer inputs can use seconds, minutes, or hours and clamp from 5 seconds to 24 hours. Fill nominations follows the nomination order, including bot teams. Use Set max to store a proxy bid: if another team bids below your ceiling, the mock auto-bids $1 higher on your behalf.</p><div id="slowSummary" class="metric-grid"></div><div id="slowNominationOrder" class="nomination-order"></div></div><div class="slow-auction-layout"><div class="mock-stack"><div class="card"><h2>Active Auctions</h2><div id="slowLots" class="slow-lot-grid"></div></div><div class="card"><h2>Nomination Pool</h2><div class="toolbar"><input id="slowPlayerSearch" type="search" placeholder="Search slow auction pool"><select id="slowPosFilter"><option value="">All positions</option></select><label class="inline-control"><input id="slowShowDrafted" type="checkbox">Show drafted</label></div><div class="table-wrap slow-pool-list"><table id="slowPlayerTable"></table></div></div></div><div class="mock-side-panel"><div class="card"><h2>Team Summary</h2><div id="slowTeams" class="mock-board"></div></div><div class="card"><h2>Selected Team</h2><div id="slowHumanTeam" class="metric-grid"></div><div id="slowHumanRoster" class="roster-slots"></div></div><div class="card"><h2>Results</h2><div id="slowResults" class="result-log"></div></div></div></div></section>
+<section id="slowAuction" class="panel"><div class="card"><h2>Slow Auction</h2><div class="toolbar"><button id="startSlow" type="button">Start / Reset</button><button id="slowFillNominations" type="button">Fill nominations</button><button id="slowClockToggle" class="mock-timer" type="button" title="Start clock">Clock paused</button><label class="inline-control">Active lots<input id="slowNominationCount" type="number" min="20" max="50" step="1" value="30"></label><label class="inline-control">Nom<input id="slowNominationMinutes" type="number" min="1" max="86400" step="1" value="30"><select id="slowNominationUnit"><option value="seconds">sec</option><option value="minutes" selected>min</option><option value="hours">hr</option></select></label><label class="inline-control">Bid<input id="slowBidMinutes" type="number" min="1" max="86400" step="1" value="720"><select id="slowBidUnit"><option value="seconds">sec</option><option value="minutes" selected>min</option><option value="hours">hr</option></select></label><label class="inline-control">Reset<input id="slowResetMinutes" type="number" min="1" max="86400" step="1" value="30"><select id="slowResetUnit"><option value="seconds">sec</option><option value="minutes" selected>min</option><option value="hours">hr</option></select></label><button id="slowBotBids" type="button">Bot bid round</button><button id="slowAdvanceFive" type="button">Advance 5 min</button><button id="slowResolveExpired" type="button">Resolve expired</button><button id="slowBidPlus1" type="button">Bid +$1</button><button id="slowBidPlus5" type="button">Bid +$5</button><button id="slowBidValue" type="button">Bid to value</button><label class="inline-control">Bid / max<input id="slowCustomBid" type="number" min="1" max="200" step="1" value="1"></label><button id="slowBidCustom" type="button">Bid amount</button><button id="slowMaxBid" type="button">Set max</button></div><p class="small">Modeled after slow auction drafts: many players can be auctioned simultaneously, every player has an independent timer, and expired lots award to the high bidder. Timer inputs can use seconds, minutes, or hours and clamp from 5 seconds to 24 hours. Fill nominations follows the nomination order, including bot teams. Use Set max to store a proxy bid: if another team bids below your ceiling, the mock auto-bids $1 higher on your behalf.</p><div id="slowSummary" class="metric-grid"></div><div id="slowNominationOrder" class="nomination-order"></div></div><div class="slow-auction-layout"><div class="mock-stack"><div class="card"><h2>Active Auctions</h2><div id="slowLots" class="slow-lot-grid"></div></div><div class="card"><h2>Results</h2><div id="slowResults" class="result-log"></div></div><div class="card"><h2>Nomination Pool</h2><div class="toolbar"><input id="slowPlayerSearch" type="search" placeholder="Search slow auction pool"><select id="slowPosFilter"><option value="">All positions</option></select><label class="inline-control"><input id="slowShowDrafted" type="checkbox">Show drafted</label></div><div class="table-wrap slow-pool-list"><table id="slowPlayerTable"></table></div></div></div><div class="mock-side-panel"><div class="card"><h2>Team Summary</h2><div id="slowTeams" class="mock-board"></div></div><div class="card"><h2>Selected Team</h2><div id="slowHumanTeam" class="metric-grid"></div><div id="slowHumanRoster" class="roster-slots"></div></div></div></div></section>
 
 <section id="teamStats" class="panel"><div class="scoring-settings" id="scoringSettings"><strong>League scoring</strong><label>Pass yd<input id="scorePassYards" type="number" min="0" step="0.01" value="0.04"></label><label>Pass TD<input id="scorePassTd" type="number" step="0.5" value="6"></label><label>INT<input id="scoreInt" type="number" step="0.5" value="-2"></label><label>Rush yd<input id="scoreRushYards" type="number" min="0" step="0.01" value="0.1"></label><label>Rush TD<input id="scoreRushTd" type="number" step="0.5" value="6"></label><label>Rec yd<input id="scoreRecYards" type="number" min="0" step="0.01" value="0.1"></label><label>Rec TD<input id="scoreRecTd" type="number" step="0.5" value="6"></label><label>Reception<input id="scoreReception" type="number" step="0.25" value="1"></label><label>TE bonus / rec<input id="scoreTeBonus" type="number" step="0.25" value="0.5"></label><button id="resetScoring" type="button">Reset scoring</button></div><nav class="subtabs" id="teamSubtabs"><button class="subtab active" data-team-panel="teamYear1">Year 1 Projections</button><button class="subtab" data-team-panel="teamYear2">Year 2 Projections</button><button class="subtab" data-team-panel="teamClay">Mike Clay 2026</button><button class="subtab" data-team-panel="teamHistory">Historical Performance</button></nav><section id="teamYear1" class="subpanel active"><div class="toolbar"><input id="teamY1Search" type="search" placeholder="Search year 1 projections"><select id="teamY1Team"><option value="">All teams</option></select><select id="teamY1Pos"><option value="">All positions</option></select></div><div class="table-wrap"><table id="teamY1Table"></table></div></section><section id="teamYear2" class="subpanel"><div class="toolbar"><input id="teamY2Search" type="search" placeholder="Search year 2 projections"><select id="teamY2Team"><option value="">All teams</option></select><select id="teamY2Pos"><option value="">All positions</option></select></div><div class="table-wrap"><table id="teamY2Table"></table></div></section><section id="teamClay" class="subpanel"><div class="toolbar"><input id="teamClaySearch" type="search" placeholder="Search Mike Clay 2026 projections"><select id="teamClayTeam"><option value="">All teams</option></select><select id="teamClayPos"><option value="">All positions</option></select></div><p class="small">Mike Clay projections are imported from ESPN's 2026 NFL projection guide PDF. The Cheatsheets tab also derives Clay position ranks and tiers from these projections using the active scoring settings.</p><div class="table-wrap"><table id="teamClayTable"></table></div></section><section id="teamHistory" class="subpanel"><div class="toolbar"><input id="histSearch" type="search" placeholder="Search historical performance"><select id="histTeam"><option value="">All teams</option></select></div><div class="table-wrap"><table id="historyTable"></table></div></section></section>
 </main><div id="noteToast"></div>
@@ -1845,7 +1847,7 @@ function setupAuctionSettingsPanel(panelId, settingsIds, label='Auction settings
 }
 function setupAuctionSettingsPanels() {
 	setupAuctionSettingsPanel('mockAuction', ['startMock','mockClockToggle','mockNominationSeconds','mockResetSeconds','mockAutoOne','mockAutoTen','mockBotRound','mockPass'], 'Fast auction settings');
-	setupAuctionSettingsPanel('slowAuction', ['startSlow','slowFillNominations','slowClockToggle','slowNominationCount','slowNominationMinutes','slowNominationUnit','slowBidMinutes','slowBidUnit','slowResetMinutes','slowResetUnit','slowBotBids','slowAdvanceFive','slowResolveExpired'], 'Slow auction settings');
+	setupAuctionSettingsPanel('slowAuction', ['startSlow','slowFillNominations','slowNominationCount','slowNominationMinutes','slowNominationUnit','slowBidMinutes','slowBidUnit','slowResetMinutes','slowResetUnit','slowBotBids','slowAdvanceFive','slowResolveExpired'], 'Slow auction settings');
 }
 function queueFilterSelectHtml(id) {
 	return `<select id="${escapeHtml(id)}"><option value="">All queue states</option><option value="want">Want queue</option><option value="avoid">Avoid queue</option></select>`;
@@ -2684,28 +2686,111 @@ function slowTeamIntelHtml(m, team) {
 	tells.forEach(tell => chips.push(tipChip(`Tell ${tell}`, tendencyTellDetail(tell))));
 	return chips.length ? `<div class="tendency-line">${chips.join('')}</div>` : '';
 }
-function ensureTendencyPanel(panelId, title) {
-	let root = document.getElementById(panelId);
-	if (root) return root;
+function placeTendencyCard(panelId, card) {
+	if (!card) return false;
+	if (panelId === 'slowTendencies') {
+		const boardCard = document.getElementById('slowDraftBoard')?.closest('.slow-draft-card');
+		if (boardCard) { boardCard.insertAdjacentElement('afterend', card); return true; }
+		const resultsCard = document.getElementById('slowResults')?.closest('.card');
+		if (resultsCard) { resultsCard.insertAdjacentElement('afterend', card); return true; }
+	}
 	const results = panelId === 'mockTendencies' ? document.getElementById('mockResults') : document.getElementById('slowResults');
 	const side = results?.closest('.mock-side-panel');
-	if (!side) return null;
+	if (!side) return false;
+	side.appendChild(card);
+	return true;
+}
+function ensureTendencyPanel(panelId, title) {
+	let root = document.getElementById(panelId);
+	if (root) {
+		if (panelId === 'slowTendencies') placeTendencyCard(panelId, root.closest('.card'));
+		return root;
+	}
 	const card = document.createElement('div');
 	card.className = 'card';
 	card.innerHTML = `<h2>${escapeHtml(title)}</h2><div class="table-wrap"><table id="${panelId}" class="tendency-table"></table></div>`;
-	side.appendChild(card);
+	if (!placeTendencyCard(panelId, card)) return null;
 	return document.getElementById(panelId);
+}
+const TENDENCY_COLUMNS = [
+	{key:'name', label:'Team', type:'text'},
+	{key:'profile', label:'Profile', type:'text'},
+	{key:'nominations', label:'Nom', type:'number', title:'Players nominated by this team.'},
+	{key:'bids', label:'Bids', type:'number', title:'Total bids placed by this team.'},
+	{key:'bidPerNom', label:'Bids / Nom', type:'number', title:'Average bids made for every player this team nominated. Example: 69 bids over 2 nominations shows as 34.5.'},
+	{key:'wins', label:'Wins', type:'number'},
+	{key:'avgOver', label:'Avg Over', type:'number', title:'Average bid percentage above or below model value.'},
+	{key:'maxOver', label:'Max Over', type:'number', title:'Largest observed bid percentage above or below model value.'},
+	{key:'lateRate', label:'Late', type:'number', title:'Share of bids placed late in the timer.'},
+	{key:'noFollowRate', label:'No-follow Nom', type:'number', title:'Share of nominations where this team did not bid on its own nominee.'},
+	{key:'tells', label:'Tells', type:'text'}
+];
+function tendencySortState(panelId) {
+	if (!state.tendencySorts) state.tendencySorts = new Map();
+	if (!state.tendencySorts.has(panelId)) state.tendencySorts.set(panelId, {key:'bids', dir:-1});
+	return state.tendencySorts.get(panelId);
+}
+function tendencySortValue(row, key) {
+	if (key === 'tells') return (row.tells || []).join(' ');
+	return row[key];
+}
+function sortTendencyRows(rows, panelId) {
+	const sort = tendencySortState(panelId), col = TENDENCY_COLUMNS.find(item => item.key === sort.key) || TENDENCY_COLUMNS[0];
+	return [...rows].sort((a, b) => {
+		const av = tendencySortValue(a, col.key), bv = tendencySortValue(b, col.key);
+		const missingA = av === null || av === undefined || (typeof av === 'number' && !Number.isFinite(av));
+		const missingB = bv === null || bv === undefined || (typeof bv === 'number' && !Number.isFinite(bv));
+		if (missingA && missingB) return a.teamId - b.teamId;
+		if (missingA) return 1;
+		if (missingB) return -1;
+		if (col.type === 'number') return (Number(av) - Number(bv)) * sort.dir || a.teamId - b.teamId;
+		return String(av).localeCompare(String(bv)) * sort.dir || a.teamId - b.teamId;
+	});
+}
+function renderTendencyHead(panelId) {
+	const sort = tendencySortState(panelId);
+	return TENDENCY_COLUMNS.map(col => {
+		const active = sort.key === col.key;
+		const title = col.title ? ` title="${escapeHtml(col.title)}"` : '';
+		const aria = active ? (sort.dir > 0 ? 'ascending' : 'descending') : 'none';
+		const arrow = active ? (sort.dir > 0 ? ' ↑' : ' ↓') : '';
+		return `<th data-tendency-sort="${escapeHtml(col.key)}" aria-sort="${aria}"${title}>${escapeHtml(col.label)}${arrow}</th>`;
+	}).join('');
+}
+function avgFmt(value) {
+	const num = Number(value);
+	if (!Number.isFinite(num)) return '-';
+	return num.toFixed(1).replace(/\.0$/, '');
+}
+function renderTendencyCell(row, key) {
+	if (key === 'avgOver') return row.avgOver === null ? '-' : pctText(row.avgOver);
+	if (key === 'maxOver') return row.maxOver === null ? '-' : pctText(row.maxOver);
+	if (key === 'lateRate') return pctText(row.lateRate);
+	if (key === 'noFollowRate') return pctText(row.noFollowRate);
+	if (key === 'bidPerNom') return avgFmt(row.bidPerNom);
+	if (key === 'tells') return `<div class="tell-list">${row.tells.map(tell => tipChip(tell, tendencyTellDetail(tell))).join('')}</div>`;
+	return escapeHtml(row[key] ?? '-');
+}
+function attachTendencySortHandlers(table, panelId, m, title) {
+	table.querySelectorAll('th[data-tendency-sort]').forEach(th => th.addEventListener('click', () => {
+		const key = th.dataset.tendencySort, current = tendencySortState(panelId);
+		const col = TENDENCY_COLUMNS.find(item => item.key === key);
+		const defaultDir = col?.type === 'number' ? -1 : 1;
+		state.tendencySorts.set(panelId, {key, dir:current.key === key ? -current.dir : defaultDir});
+		renderAuctionTendencies(panelId, m, title);
+	}));
 }
 function renderAuctionTendencies(panelId, m, title) {
 	const table = ensureTendencyPanel(panelId, title);
 	if (!table) return;
 	const rows = auctionTendencyRows(m);
-	const activeRows = rows.filter(row => row.bids || row.nominations || row.wins || row.passes);
+	const activeRows = sortTendencyRows(rows.filter(row => row.bids || row.nominations || row.wins || row.passes), panelId);
 	if (!activeRows.length) {
 		table.innerHTML = `<tbody><tr><td class="mock-empty">Run auction activity to learn team tendencies.</td></tr></tbody>`;
 		return;
 	}
-	table.innerHTML = `<thead><tr><th>Team</th><th>Profile</th><th>Nom</th><th>Bids</th><th>Bid/Nom</th><th>Wins</th><th>Avg Over</th><th>Max Over</th><th>Late</th><th>No-follow Nom</th><th>Tells</th></tr></thead><tbody>${activeRows.map(row => `<tr><td>${escapeHtml(row.name)}</td><td>${escapeHtml(row.profile || '-')}</td><td>${row.nominations}</td><td>${row.bids}</td><td>${rawFmt(row.bidPerNom)}</td><td>${row.wins}</td><td>${row.avgOver === null ? '-' : pctText(row.avgOver)}</td><td>${row.maxOver === null ? '-' : pctText(row.maxOver)}</td><td>${pctText(row.lateRate)}</td><td>${pctText(row.noFollowRate)}</td><td><div class="tell-list">${row.tells.map(tell => tipChip(tell, tendencyTellDetail(tell))).join('')}</div></td></tr>`).join('')}</tbody>`;
+	table.innerHTML = `<thead><tr>${renderTendencyHead(panelId)}</tr></thead><tbody>${activeRows.map(row => `<tr>${TENDENCY_COLUMNS.map(col => `<td>${renderTendencyCell(row, col.key)}</td>`).join('')}</tr>`).join('')}</tbody>`;
+	attachTendencySortHandlers(table, panelId, m, title);
 	attachTipHandlers(table);
 }
 function createMockTeam(id, profileKey='human') { const profile = MOCK_BOT_PROFILES[profileKey]; return {id, name:id === 0 ? 'You' : `Bot ${id}`, bot:id !== 0, profileKey, profile, budget:AUCTION_CONFIG.budget, roster:[]}; }
@@ -3293,15 +3378,25 @@ function renderMockDraftBoard(m) {
 	root.innerHTML = `<div class="mock-board-grid">${heads}${rows}</div>`;
 	root.querySelectorAll('[data-team-id]').forEach(el => el.addEventListener('click', () => { m.selectedTeamId = Number(el.dataset.teamId); renderMockAuction(); }));
 }
+function placeSlowDraftBoardCard(card) {
+	const stack = document.querySelector('#slowAuction .slow-auction-layout .mock-stack');
+	if (!stack || !card) return;
+	const resultsCard = document.getElementById('slowResults')?.closest('.card');
+	if (resultsCard && resultsCard.parentElement === stack) resultsCard.insertAdjacentElement('afterend', card);
+	else stack.insertBefore(card, stack.children[1] || null);
+}
 function ensureSlowDraftBoard() {
 	let root = document.getElementById('slowDraftBoard');
-	if (root) return root;
-	const panel = document.getElementById('slowAuction'), layout = panel?.querySelector('.slow-auction-layout');
-	if (!panel || !layout) return null;
+	if (root) {
+		placeSlowDraftBoardCard(root.closest('.slow-draft-card'));
+		return root;
+	}
+	const stack = document.querySelector('#slowAuction .slow-auction-layout .mock-stack');
+	if (!stack) return null;
 	const card = document.createElement('div');
 	card.className = 'card slow-draft-card';
-	card.innerHTML = '<h2>Slow Auction Board</h2><div id="slowDraftBoard" class="mock-draft-board slow-draft-board"></div>';
-	panel.insertBefore(card, layout);
+	card.innerHTML = '<h2>Final Roster Grid</h2><div id="slowDraftBoard" class="mock-draft-board slow-draft-board"></div>';
+	placeSlowDraftBoardCard(card);
 	return document.getElementById('slowDraftBoard');
 }
 function renderSlowDraftBoard(m) {
@@ -3982,9 +4077,13 @@ function renderSlowSummary(m) {
 		const team = m.teams.find(item => item.id === teamId);
 		return team ? `<span class="nomination-chip ${team.id === next?.id ? 'active' : ''}">${escapeHtml(team.name)}</span>` : '';
 	}).join('');
-	const timer = document.getElementById('slowTimer'), toggle = document.getElementById('slowClockToggle');
-	if (timer) { timer.textContent = slowClockId ? 'Clock on' : 'Clock paused'; timer.classList.toggle('running', Boolean(slowClockId)); }
-	if (toggle) toggle.textContent = slowClockId ? 'Pause clock' : 'Start clock';
+	const toggle = document.getElementById('slowClockToggle');
+	if (toggle) {
+		toggle.textContent = slowClockId ? 'Clock on' : 'Clock paused';
+		toggle.classList.toggle('running', Boolean(slowClockId));
+		toggle.title = slowClockId ? 'Pause clock' : 'Start clock';
+		toggle.setAttribute('aria-pressed', slowClockId ? 'true' : 'false');
+	}
 	const input = document.getElementById('slowCustomBid'), lot = slowSelectedLot();
 	if (input && lot) input.value = slowProxyMax(lot, 0) || Math.min(slowTeamMaxBid(m.teams[0], lot.id), Math.max(1, lot.currentBid + 1));
 }
@@ -4008,7 +4107,7 @@ function renderSlowLots(m) {
 	const root = document.getElementById('slowLots'); if (!root) return;
 	if (!m.lots.length) { root.innerHTML = '<div class="mock-empty">No active auctions. Fill nominations or nominate from the pool.</div>'; return; }
 	const focusedInput = captureSlowLotInputFocus(root);
-	root.innerHTML = [...m.lots].sort((a,b)=>a.timeRemaining-b.timeRemaining).map(lot => {
+	root.innerHTML = m.lots.map(lot => {
 		const high = m.teams[lot.highBidder], nominator = m.teams[lot.nominatorId], expiring = lot.timeRemaining <= slowResetSeconds();
 		const humanBidState = lot.highBidder === 0 ? 'human-winning' : slowHumanHasBid(lot) ? 'human-outbid' : '';
 		const humanMax = slowProxyMax(lot, 0);
