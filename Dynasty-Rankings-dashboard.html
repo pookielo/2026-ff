@@ -2284,7 +2284,7 @@ function auctionTierScarcityHtml(m, activeIds=new Set()) {
 		});
 	});
 	const shown = rows.sort((a,b)=>b.score-a.score || a.count-b.count).slice(0, 6);
-	return `<div class="auction-insight"><h4>Tier Scarcity</h4><div class="auction-mini-list">${shown.map(row => `<div class="auction-mini-row"><span><strong>${escapeHtml(row.pos)} T${row.tier}</strong><small>${row.teamsNeeding} teams still need ${escapeHtml(row.pos)} depth</small></span><b class="${row.className}">${row.count} left</b></div>`).join('')}</div></div>`;
+	return `<div class="auction-insight"><h4>Tier Scarcity</h4><div class="auction-mini-list">${shown.map(row => `<div class="auction-mini-row"><span><strong>${escapeHtml(row.pos)} T${row.tier}</strong><small>${row.teamsNeeding} teams still need ${escapeHtml(row.pos)} depth</small></span><b class="${row.className}">${row.count} available</b></div>`).join('')}</div></div>`;
 }
 function auctionEndgameLeverageHtml(m, maxBidForTeam) {
 	const teams = m?.teams || [], human = teams[0];
