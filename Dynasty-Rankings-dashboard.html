@@ -304,10 +304,7 @@ button.tendency-chip:hover, button.tendency-chip:focus-visible { border-color:#9
 .nomination-chip { border:1px solid var(--line); border-radius:999px; background:#f8fafc; color:#475569; padding:5px 8px; font-size:12px; font-weight:750; }
 .nomination-chip.active { border-color:var(--blue); background:#dbeafe; color:#1d4ed8; }
 .slow-lot { position:relative; border:1px solid var(--line); border-radius:8px; background:#f8fafc; padding:8px; cursor:pointer; min-height:168px; display:flex; flex-direction:column; gap:6px; }
-.slow-lot.active { border-color:var(--blue); box-shadow:0 0 0 2px rgba(37,99,235,.16); }
-.slow-lot.expiring { border-color:#3b82f6; box-shadow:0 0 0 2px rgba(59,130,246,.12); }
-.slow-lot.human-winning { border-color:#059669; box-shadow:0 0 0 2px rgba(5,150,105,.18); }
-.slow-lot.human-outbid { border-color:#8b5cf6; box-shadow:0 0 0 2px rgba(139,92,246,.16); }
+.slow-lot.active, .slow-lot.expiring, .slow-lot.human-winning, .slow-lot.human-outbid { border-color:var(--line); box-shadow:none; }
 .slow-lot h3 { margin:0; padding-right:86px; font-size:15px; line-height:1.15; }
 .slow-lot-meta, .slow-lot-status { display:flex; align-items:center; justify-content:space-between; gap:8px; color:var(--muted); font-size:12px; }
 .slow-lot-status { min-height:18px; padding-right:86px; }
@@ -315,6 +312,8 @@ button.tendency-chip:hover, button.tendency-chip:focus-visible { border-color:#9
 .slow-lot-badges { display:flex; flex-wrap:wrap; justify-content:flex-end; gap:4px; }
 .slow-lot-badges .tag-pill { font-size:11px; padding:3px 7px; }
 .slow-lot-bid { display:flex; align-items:flex-end; justify-content:space-between; gap:8px; border:1px solid #dbe4f0; border-radius:8px; background:white; padding:7px; }
+.slow-lot.active .slow-lot-bid { border-color:#bfdbfe; }
+.slow-lot.expiring .slow-lot-bid { border-color:#bfdbfe; }
 .slow-lot.human-winning .slow-lot-bid { border-color:#86efac; }
 .slow-lot.human-outbid .slow-lot-bid { border-color:#c4b5fd; }
 .slow-lot-bid span { display:block; color:var(--muted); font-size:11px; font-weight:850; text-transform:uppercase; }
@@ -548,12 +547,12 @@ th::after { color:#7f8ca5; }
 	border-color:var(--line);
 	color:var(--ink);
 }
-.queue-btn.want, .queue-badge.want, .queue-card.want, .strategy-status.target, .slow-lot.human-winning {
+.queue-btn.want, .queue-badge.want, .queue-card.want, .strategy-status.target {
 	background:rgba(39,184,158,.16);
 	border-color:rgba(94,209,197,.62);
 	color:#b9fff3;
 }
-.queue-btn.avoid, .queue-badge.avoid, .queue-card.avoid, .strategy-status.pass, .slow-lot.human-outbid {
+.queue-btn.avoid, .queue-badge.avoid, .queue-card.avoid, .strategy-status.pass {
 	background:rgba(167,139,250,.12);
 	border-color:rgba(167,139,250,.58);
 	color:#ddd6fe;
@@ -568,12 +567,12 @@ th::after { color:#7f8ca5; }
 	border-color:#a78bfa;
 	color:#fff;
 }
-.strategy-status, .strategy-status.fair, .lt-lot-card.active, .slow-lot.active {
+.strategy-status, .strategy-status.fair, .lt-lot-card.active {
 	background:rgba(74,140,255,.13);
 	border-color:rgba(74,140,255,.58);
 	box-shadow:0 0 0 2px rgba(74,140,255,.14);
 }
-.strategy-status.caution, .slow-lot.expiring {
+.strategy-status.caution {
 	background:rgba(96,165,250,.12);
 	border-color:rgba(96,165,250,.58);
 }
@@ -582,23 +581,9 @@ th::after { color:#7f8ca5; }
 .slow-lot.human-winning,
 .slow-lot.human-outbid {
 	background:var(--panel-2);
+	border-color:var(--line);
 	color:var(--ink);
-}
-.slow-lot.active {
-	border-color:rgba(74,140,255,.72);
-	box-shadow:0 0 0 2px rgba(74,140,255,.18);
-}
-.slow-lot.expiring {
-	border-color:rgba(96,165,250,.76);
-	box-shadow:0 0 0 2px rgba(96,165,250,.18);
-}
-.slow-lot.human-winning {
-	border-color:rgba(94,209,197,.78);
-	box-shadow:0 0 0 2px rgba(94,209,197,.18);
-}
-.slow-lot.human-outbid {
-	border-color:rgba(167,139,250,.76);
-	box-shadow:0 0 0 2px rgba(167,139,250,.18);
+	box-shadow:none;
 }
 .current-auction {
 	background:linear-gradient(180deg, #101a2e 0%, #0c1424 100%);
