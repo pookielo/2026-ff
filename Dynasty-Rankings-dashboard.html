@@ -229,9 +229,9 @@ button.tendency-chip:hover, button.tendency-chip:focus-visible { border-color:#9
 .mock-side-panel { display:grid; gap:14px; min-width:0; }
 .mock-timer { display:inline-flex; align-items:center; justify-content:center; min-width:72px; border:1px solid var(--line); border-radius:999px; background:#f8fafc; padding:8px 12px; font-weight:850; }
 .mock-timer.running { border-color:var(--green); color:#065f46; background:#ecfdf5; }
-.auction-toolbar-compact { align-items:flex-start; }
-.auction-command-row { flex:1 1 520px; min-width:0; }
-.auction-settings-wrap { position:relative; flex:0 0 auto; }
+.auction-toolbar-compact { align-items:center; }
+.auction-command-row { flex:1 1 520px; min-width:0; align-items:center; margin:0; }
+.auction-settings-wrap { position:relative; flex:0 0 auto; align-self:center; display:flex; align-items:center; }
 .auction-settings-toggle { list-style:none; display:inline-flex; align-items:center; justify-content:center; width:42px; height:40px; min-height:40px; padding:0; border:1px solid var(--line); border-radius:8px; background:#f8fafc; color:var(--ink); font-size:20px; line-height:1; font-weight:850; cursor:pointer; }
 .auction-settings-toggle::marker { content:''; }
 .auction-settings-toggle::-webkit-details-marker { display:none; }
