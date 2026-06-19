@@ -357,10 +357,10 @@ button.tendency-chip:hover, button.tendency-chip:focus-visible { border-color:#9
 .pool-pager button { padding:6px 9px; font-size:12px; min-height:32px; }
 .pool-pager strong { color:var(--ink); }
 .pos-name { font-weight:500; }
-.pos-QB { color:#9f1239; }
-.pos-RB { color:#047857; }
-.pos-WR { color:#1d4ed8; }
-.pos-TE { color:#6d28d9; }
+.pos-QB { color:#ff7aa5; }
+.pos-RB { color:#66e4ad; }
+.pos-WR { color:#78b8ff; }
+.pos-TE { color:#ffc06b; }
 .market-pressure { border:1px solid rgba(148,163,184,.45); border-radius:8px; background:#f8fafc; margin:10px 0; padding:8px; }
 .market-pressure h4 { margin:0 0 7px; color:#475569; font-size:11px; font-weight:850; text-transform:uppercase; }
 .pressure-grid { display:grid; grid-template-columns:repeat(auto-fit, minmax(150px, 1fr)); gap:6px; }
@@ -1129,6 +1129,48 @@ button.bid-pill:hover,
 }
 .auction-active-card + .auction-active-card {
 	margin-top:10px;
+}
+.auction-status-strip {
+	display:flex;
+	flex-wrap:wrap;
+	align-items:center;
+	gap:6px;
+	margin:0 0 10px;
+}
+.auction-status-pill {
+	display:inline-flex;
+	align-items:center;
+	gap:5px;
+	min-height:25px;
+	padding:3px 8px;
+	border:1px solid rgba(92,111,145,.74);
+	border-radius:999px;
+	background:rgba(31,45,70,.62);
+	color:var(--muted);
+	font-size:12px;
+	font-weight:850;
+	line-height:1;
+	white-space:nowrap;
+}
+.auction-status-pill strong {
+	color:var(--ink);
+	font-size:13px;
+}
+.auction-status-pill.good {
+	border-color:rgba(126,242,141,.46);
+	color:#baf7c4;
+}
+.auction-status-pill.warn {
+	border-color:rgba(255,227,111,.52);
+	color:#ffeaa0;
+}
+.auction-status-pill.bad {
+	border-color:rgba(255,107,115,.48);
+	color:#ffc5ca;
+}
+.auction-status-pill.target {
+	border-color:rgba(94,209,197,.56);
+	color:#b9fff3;
 }
 .current-auction.auction-active-host {
 	background:transparent !important;
@@ -3328,6 +3370,21 @@ function auctionAdviceBlocksHtml({player, strategy, teams, currentBid=0, maxBidF
 		<div class="auction-advice-card if-win"><b>If Win</b><ul><li>If you win: $${budgetAfter} left</li><li>next max $${maxAfter} with ${openAfter} spots open</li></ul></div>
 	</div>`;
 }
+function auctionPlayerIsPriority(player) {
+	if (!player) return false;
+	const signals = player.bid_signals || [];
+	return playerQueueType(player) === 'want' || signals.some(signal => signal.strong) || signals.length > 1;
+}
+function auctionStatusStripHtml(stats={}) {
+	const items = [
+		['Active', stats.total || 0, ''],
+		['Ending', stats.ending || 0, 'warn'],
+		['Winning', stats.winning || 0, 'good'],
+		['Want / Bid++', stats.target || 0, 'target'],
+		["Can't bid", stats.blocked || 0, 'bad']
+	];
+	return `<div class="auction-status-strip">${items.map(([label, value, tone]) => `<span class="auction-status-pill ${tone}">${escapeHtml(label)} <strong>${value}</strong></span>`).join('')}</div>`;
+}
 function auctionActiveBidCardHtml({player, currentBid=0, highName='-', highIsHuman=false, timeText='', timeSeconds=null, bidCount=null, strategy=null, teams=[], maxBidForTeam=null, ownTeam=null, committed=0, controls='', attrs='', className=''}) {
 	if (!player) return '';
 	const tier = player.auction_tier || player.position || '';
@@ -3895,7 +3952,13 @@ function renderMockCurrent(m) {
 	const strategy = auctionStrategy(m.current, m.teams[0], m.currentBid, humanMaxAllowed);
 	const bidCount = Math.max(1, m.events.filter(event => event.lotId === m.currentLotId && event.type === 'bid').length);
 	const tooExpensive = m.highBidder !== 0 && humanMaxAllowed <= m.currentBid;
-	root.innerHTML = auctionActiveBidCardHtml({
+	root.innerHTML = auctionStatusStripHtml({
+		total:1,
+		ending:m.timerRemaining < 600 ? 1 : 0,
+		winning:m.highBidder === 0 ? 1 : 0,
+		target:auctionPlayerIsPriority(m.current) ? 1 : 0,
+		blocked:tooExpensive ? 1 : 0
+	}) + auctionActiveBidCardHtml({
 		player:m.current,
 		currentBid:m.currentBid,
 		highName:high ? high.name : '-',
@@ -5221,7 +5284,16 @@ function renderSlowLots(m) {
 	if (!m.lots.length) { root.innerHTML = '<div class="mock-empty">No active bids. Fill nominations or nominate from the pool.</div>'; return; }
 	const focusedInput = captureSlowLotInputFocus(root);
 	const scrollSnapshot = captureAuctionScroll(root);
-	root.innerHTML = m.lots.map(lot => {
+	const status = m.lots.reduce((acc, lot) => {
+		const humanMaxAllowed = slowTeamMaxBid(m.teams[0], lot.id);
+		acc.total += 1;
+		if (lot.timeRemaining < 600) acc.ending += 1;
+		if (lot.highBidder === 0) acc.winning += 1;
+		if (auctionPlayerIsPriority(lot.player)) acc.target += 1;
+		if (lot.highBidder !== 0 && humanMaxAllowed <= lot.currentBid) acc.blocked += 1;
+		return acc;
+	}, {total:0, ending:0, winning:0, target:0, blocked:0});
+	root.innerHTML = auctionStatusStripHtml(status) + m.lots.map(lot => {
 		const high = m.teams[lot.highBidder], expiring = lot.timeRemaining <= slowResetSeconds();
 		const humanBidState = lot.highBidder === 0 ? 'human-winning' : slowHumanHasBid(lot) ? 'human-outbid' : '';
 		const humanMax = slowProxyMax(lot, 0);
