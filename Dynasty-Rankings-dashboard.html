@@ -1147,10 +1147,27 @@ button.bid-pill:hover,
 	border-radius:999px;
 	background:rgba(31,45,70,.62);
 	color:var(--muted);
+	font:inherit;
 	font-size:12px;
 	font-weight:850;
 	line-height:1;
 	white-space:nowrap;
+}
+button.auction-status-pill {
+	cursor:pointer;
+}
+button.auction-status-pill:hover,
+button.auction-status-pill.active {
+	border-color:rgba(74,140,255,.82);
+	background:rgba(74,140,255,.18);
+	color:var(--ink);
+}
+button.auction-status-pill.active strong {
+	color:#fff;
+}
+button.auction-status-pill:disabled {
+	cursor:not-allowed;
+	opacity:.48;
 }
 .auction-status-pill strong {
 	color:var(--ink);
@@ -2046,7 +2063,7 @@ const HARMON_RANKS = `1|Ja'Marr Chase|CIN|26.3|'21|BUY|Market Aligned||1
 	const [rank, player, team, age, draft, action, market, delta, market_rank] = line.split('|');
 	return {position:'WR', rank:Number(rank), player, team, age, draft, action, market, delta, market_rank, commentary:HARMON_COMMENTS[rank] || '', tier:action, tier_color:HARMON_ACTION_COLORS[action] || HARMON_MARKET_COLORS[market] || '#ffffff'};
 });
-const state = { sorts: new Map(), cheatTierColor: '', optimizer:null, mock:null, slow:null, leagueTycoon:null, parTargets:{}, parCounts:{}, parTierTargets:{}, parTierDollars:{}, parTierCounts:{}, playerQueues:{want:[], avoid:[]}, mockPlayerPage:1, slowPlayerPage:1, slowLotDetails:{}, mockDraftBoardScroll:{left:0, top:0}, slowDraftBoardScroll:{left:0, top:0}, ltDraftBoardScroll:{left:0, top:0} };
+const state = { sorts: new Map(), cheatTierColor: '', optimizer:null, mock:null, slow:null, leagueTycoon:null, parTargets:{}, parCounts:{}, parTierTargets:{}, parTierDollars:{}, parTierCounts:{}, playerQueues:{want:[], avoid:[]}, mockPlayerPage:1, slowPlayerPage:1, slowLotDetails:{}, mockActiveFilter:'all', slowActiveFilter:'all', mockDraftBoardScroll:{left:0, top:0}, slowDraftBoardScroll:{left:0, top:0}, ltDraftBoardScroll:{left:0, top:0} };
 let mockClockId = null, slowClockId = null;
 const DASHBOARD_STORAGE_KEY = 'rspDynastyDashboardState:v1';
 const DASHBOARD_STORAGE_VERSION = 1;
@@ -3375,15 +3392,45 @@ function auctionPlayerIsPriority(player) {
 	const signals = player.bid_signals || [];
 	return playerQueueType(player) === 'want' || signals.some(signal => signal.strong) || signals.length > 1;
 }
-function auctionStatusStripHtml(stats={}) {
-	const items = [
-		['Active', stats.total || 0, ''],
-		['Ending', stats.ending || 0, 'warn'],
-		['Winning', stats.winning || 0, 'good'],
-		['Want / Bid++', stats.target || 0, 'target'],
-		["Can't bid", stats.blocked || 0, 'bad']
-	];
-	return `<div class="auction-status-strip">${items.map(([label, value, tone]) => `<span class="auction-status-pill ${tone}">${escapeHtml(label)} <strong>${value}</strong></span>`).join('')}</div>`;
+const AUCTION_ACTIVE_FILTERS = [
+	['all', 'Active', ''],
+	['ending', 'Ending', 'warn'],
+	['winning', 'Winning', 'good'],
+	['target', 'Want / Bid++', 'target'],
+	['blocked', "Can't bid", 'bad']
+];
+function validAuctionActiveFilter(filter) {
+	return AUCTION_ACTIVE_FILTERS.some(([key]) => key === filter) ? filter : 'all';
+}
+function auctionActiveFilterMatches(filter, item={}) {
+	const active = validAuctionActiveFilter(filter);
+	if (active === 'all') return true;
+	return Boolean(item[active]);
+}
+function auctionActiveStats(items=[]) {
+	return items.reduce((acc, item) => {
+		acc.total += 1;
+		if (item.ending) acc.ending += 1;
+		if (item.winning) acc.winning += 1;
+		if (item.target) acc.target += 1;
+		if (item.blocked) acc.blocked += 1;
+		return acc;
+	}, {total:0, ending:0, winning:0, target:0, blocked:0});
+}
+function auctionStatusStripHtml(stats={}, activeFilter='all') {
+	const active = validAuctionActiveFilter(activeFilter);
+	return `<div class="auction-status-strip">${AUCTION_ACTIVE_FILTERS.map(([key, label, tone]) => {
+		const value = key === 'all' ? stats.total || 0 : stats[key] || 0;
+		return `<button type="button" class="auction-status-pill ${tone} ${active === key ? 'active' : ''}" data-auction-filter="${key}" ${value ? '' : 'disabled'}>${escapeHtml(label)} <strong>${value}</strong></button>`;
+	}).join('')}</div>`;
+}
+function attachAuctionStatusFilters(root, stateKey, renderFn) {
+	root.querySelectorAll('[data-auction-filter]').forEach(btn => btn.addEventListener('click', e => {
+		const filter = e.currentTarget.dataset.auctionFilter || 'all';
+		state[stateKey] = state[stateKey] === filter ? 'all' : filter;
+		scheduleAutoSave();
+		renderFn?.();
+	}));
 }
 function auctionActiveBidCardHtml({player, currentBid=0, highName='-', highIsHuman=false, timeText='', timeSeconds=null, bidCount=null, strategy=null, teams=[], maxBidForTeam=null, ownTeam=null, committed=0, controls='', attrs='', className=''}) {
 	if (!player) return '';
@@ -3952,13 +3999,14 @@ function renderMockCurrent(m) {
 	const strategy = auctionStrategy(m.current, m.teams[0], m.currentBid, humanMaxAllowed);
 	const bidCount = Math.max(1, m.events.filter(event => event.lotId === m.currentLotId && event.type === 'bid').length);
 	const tooExpensive = m.highBidder !== 0 && humanMaxAllowed <= m.currentBid;
-	root.innerHTML = auctionStatusStripHtml({
-		total:1,
-		ending:m.timerRemaining < 600 ? 1 : 0,
-		winning:m.highBidder === 0 ? 1 : 0,
-		target:auctionPlayerIsPriority(m.current) ? 1 : 0,
-		blocked:tooExpensive ? 1 : 0
-	}) + auctionActiveBidCardHtml({
+	const filter = validAuctionActiveFilter(state.mockActiveFilter);
+	const item = {
+		ending:m.timerRemaining < 600,
+		winning:m.highBidder === 0,
+		target:auctionPlayerIsPriority(m.current),
+		blocked:tooExpensive
+	};
+	const body = auctionActiveFilterMatches(filter, item) ? auctionActiveBidCardHtml({
 		player:m.current,
 		currentBid:m.currentBid,
 		highName:high ? high.name : '-',
@@ -3971,7 +4019,9 @@ function renderMockCurrent(m) {
 		maxBidForTeam:team => mockTeamMaxBid(team),
 		ownTeam:m.teams[0],
 		className:tooExpensive ? 'too-expensive' : ''
-	});
+	}) : '<div class="mock-empty">No active bid matches this filter.</div>';
+	root.innerHTML = auctionStatusStripHtml(auctionActiveStats([item]), filter) + body;
+	attachAuctionStatusFilters(root, 'mockActiveFilter', () => renderMockCurrent(m));
 	root.querySelectorAll('.bid-pill').forEach(btn=>btn.addEventListener('click',()=>showNote(btn.dataset.tip)));
 }
 function refreshMockClockDisplay(m=ensureMockState()) {
@@ -5284,20 +5334,24 @@ function renderSlowLots(m) {
 	if (!m.lots.length) { root.innerHTML = '<div class="mock-empty">No active bids. Fill nominations or nominate from the pool.</div>'; return; }
 	const focusedInput = captureSlowLotInputFocus(root);
 	const scrollSnapshot = captureAuctionScroll(root);
-	const status = m.lots.reduce((acc, lot) => {
+	const lotItems = m.lots.map(lot => {
 		const humanMaxAllowed = slowTeamMaxBid(m.teams[0], lot.id);
-		acc.total += 1;
-		if (lot.timeRemaining < 600) acc.ending += 1;
-		if (lot.highBidder === 0) acc.winning += 1;
-		if (auctionPlayerIsPriority(lot.player)) acc.target += 1;
-		if (lot.highBidder !== 0 && humanMaxAllowed <= lot.currentBid) acc.blocked += 1;
-		return acc;
-	}, {total:0, ending:0, winning:0, target:0, blocked:0});
-	root.innerHTML = auctionStatusStripHtml(status) + m.lots.map(lot => {
+		return {
+			lot,
+			humanMaxAllowed,
+			ending:lot.timeRemaining < 600,
+			winning:lot.highBidder === 0,
+			target:auctionPlayerIsPriority(lot.player),
+			blocked:lot.highBidder !== 0 && humanMaxAllowed <= lot.currentBid
+		};
+	});
+	const filter = validAuctionActiveFilter(state.slowActiveFilter);
+	const visibleItems = lotItems.filter(item => auctionActiveFilterMatches(filter, item));
+	const cardsHtml = visibleItems.length ? visibleItems.map(item => {
+		const { lot, humanMaxAllowed } = item;
 		const high = m.teams[lot.highBidder], expiring = lot.timeRemaining <= slowResetSeconds();
 		const humanBidState = lot.highBidder === 0 ? 'human-winning' : slowHumanHasBid(lot) ? 'human-outbid' : '';
 		const humanMax = slowProxyMax(lot, 0);
-		const humanMaxAllowed = slowTeamMaxBid(m.teams[0], lot.id);
 		const strategy = auctionStrategy(lot.player, m.teams[0], lot.currentBid, humanMaxAllowed, slowTeamCommitted(m.teams[0], lot.id));
 		const tooExpensive = lot.highBidder !== 0 && humanMaxAllowed <= lot.currentBid;
 		const maxAmount = Math.min(humanMaxAllowed, Math.max(lot.currentBid + 1, humanMax || Math.ceil(n(lot.player.auction_value) * 1.1) || lot.currentBid + 1));
@@ -5320,7 +5374,9 @@ function renderSlowLots(m) {
 			className:classes,
 			attrs:`data-slow-lot="${lot.id}" role="button" tabindex="0"`
 		}).replace('data-active-timer', `data-active-timer data-slow-lot-timer="${lot.id}"`);
-	}).join('');
+	}).join('') : '<div class="mock-empty">No active bids match this filter.</div>';
+	root.innerHTML = auctionStatusStripHtml(auctionActiveStats(lotItems), filter) + cardsHtml;
+	attachAuctionStatusFilters(root, 'slowActiveFilter', () => renderSlowLots(m));
 	root.querySelectorAll('[data-slow-lot]').forEach(card => card.addEventListener('click', e => { if (e.target.closest('button,input,label,select,textarea,details,summary')) return; m.selectedLotId = Number(card.dataset.slowLot); renderSlowAuction({preserveScroll:true}); }));
 	root.querySelectorAll('[data-slow-bid]').forEach(btn => btn.addEventListener('click', e => {
 		e.preventDefault();
