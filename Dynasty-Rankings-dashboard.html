@@ -424,7 +424,7 @@ button.tendency-chip:hover, button.tendency-chip:focus-visible { border-color:#9
 	--panel-4:#2e3b57;
 	--ink:#f4f7fb;
 	--muted:#a7b4ca;
-	--line:#293752;
+	--line:#202b41;
 	--blue:#4a8cff;
 	--blue-2:#2f6df6;
 	--green:#5ed1c5;
@@ -433,6 +433,7 @@ button.tendency-chip:hover, button.tendency-chip:focus-visible { border-color:#9
 	--purple:#9da7ff;
 	--danger:#ff6b6b;
 	--warning:#f8b84e;
+	--line-strong:#2a3853;
 	--shadow:0 18px 44px rgba(0,0,0,.35);
 }
 body {
@@ -476,7 +477,7 @@ input:focus, select:focus, textarea:focus, button:focus-visible {
 .card, .scoring-settings, .queue-card, .age-range-filter, .market-calibration, .par-sheet, .table-wrap {
 	background:rgba(20,29,47,.96);
 	border-color:var(--line);
-	box-shadow:0 1px 0 rgba(255,255,255,.03) inset;
+	box-shadow:none;
 }
 .card h2, .card h3, .scoring-settings strong, .age-range-filter span:first-child {
 	color:var(--ink);
@@ -587,7 +588,7 @@ th::after { color:#7f8ca5; }
 }
 .current-auction {
 	background:linear-gradient(180deg, #101a2e 0%, #0c1424 100%);
-	border-color:#2c3c5e;
+	border-color:#22314d;
 	box-shadow:var(--shadow);
 }
 .current-auction .metric {
@@ -1422,8 +1423,8 @@ button.bid-pill:hover,
 	filter:grayscale(.55) saturate(.65);
 }
 .result-item.human-win {
-	border:1px solid rgba(94,209,197,.34);
-	background:rgba(39,184,158,.1);
+	border:1px solid rgba(94,209,197,.22);
+	background:rgba(39,184,158,.075);
 	border-radius:8px;
 	padding:8px 10px;
 }
@@ -1491,6 +1492,74 @@ button.bid-pill:hover,
 }
 .auction-advice-card li {
 	margin:2px 0;
+}
+.card,
+.table-wrap,
+.scoring-settings,
+.queue-card,
+.age-range-filter,
+.market-calibration,
+.par-sheet,
+.mock-draft-board,
+.slow-topbar,
+.current-auction,
+.auction-settings-menu,
+.auction-settings-menu-head {
+	border-color:rgba(62,76,110,.42);
+}
+.metric,
+.strategy-card,
+.position-group,
+.tier-drop-card,
+.team-tile,
+.roster-slot,
+.mock-empty,
+.mock-roster-cell,
+.lt-lot-card,
+.slow-lot,
+.par-tier-cell,
+.queue-tier-pill,
+.auction-settings-toggle,
+.mock-timer,
+.auction-active-card {
+	border-color:rgba(62,76,110,.36);
+}
+.mock-board-grid > *,
+.mock-slot-head,
+.mock-team-head,
+.mock-slot-label,
+.position-player-row,
+.tier-stack-meta,
+.tier-drop-row,
+.tier-player-list,
+.market-calibration-body,
+.par-row,
+.par-tier-row,
+.result-item {
+	border-color:rgba(62,76,110,.34);
+}
+#mockAuction > .card,
+#mockAuction .card,
+#slowAuction > .card,
+#slowAuction .card,
+#mockAuction .auction-shell-card,
+#slowAuction .auction-shell-card,
+#mockAuction .current-auction,
+#slowAuction .current-auction,
+#mockAuction .result-log,
+#slowAuction .result-log {
+	border-color:rgba(52,66,98,.24) !important;
+	box-shadow:none;
+}
+#mockAuction .auction-active-card,
+#slowAuction .auction-active-card,
+#mockAuction .metric,
+#slowAuction .metric,
+#mockAuction .mock-draft-board,
+#slowAuction .mock-draft-board,
+#mockAuction .mock-board-grid > *,
+#slowAuction .mock-board-grid > * {
+	border-color:rgba(52,66,98,.28) !important;
 }
 </style>
 </head>
@@ -5097,12 +5166,17 @@ function restoreAuctionScroll(root, snapshot) {
 		window.scrollTo(snapshot.windowX, snapshot.windowY);
 	};
 	apply();
-	requestAnimationFrame(apply);
+	requestAnimationFrame(() => {
+		apply();
+		setTimeout(apply, 0);
+		setTimeout(apply, 60);
+	});
 }
 function withAuctionScrollPreserved(rootId, action) {
 	const root = document.getElementById(rootId);
 	const snapshot = captureAuctionScroll(root);
 	action?.();
+	document.activeElement?.blur?.();
 	restoreAuctionScroll(document.getElementById(rootId) || root, snapshot);
 }
 function captureSlowLotInputFocus(root) {
@@ -5183,6 +5257,7 @@ function renderSlowLots(m) {
 		const snapshot = captureAuctionScroll(root);
 		slowHumanBid(Number(btn.dataset.amount), btn.dataset.slowBid);
 		renderSlowAuction({preserveScroll:true});
+		document.activeElement?.blur?.();
 		restoreAuctionScroll(document.getElementById('slowLots') || root, snapshot);
 	}));
 	root.querySelectorAll('[data-slow-set-max]').forEach(btn => btn.addEventListener('click', e => {
@@ -5193,6 +5268,7 @@ function renderSlowLots(m) {
 		const input = [...root.querySelectorAll('[data-slow-max-input]')].find(el => el.dataset.slowMaxInput === btn.dataset.slowSetMax);
 		slowSetMaxBid(Number(input?.value), btn.dataset.slowSetMax);
 		renderSlowAuction({preserveScroll:true});
+		document.activeElement?.blur?.();
 		restoreAuctionScroll(document.getElementById('slowLots') || root, snapshot);
 	}));
 	root.querySelectorAll('[data-slow-max-input]').forEach(input => input.addEventListener('click', e => e.stopPropagation()));
