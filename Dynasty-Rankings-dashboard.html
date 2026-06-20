@@ -3727,10 +3727,10 @@ function auctionEndgameLeverageHtml(m, maxBidForTeam) {
 	if (!human) return '';
 	const maxes = teams.map(team => ({team, max:Math.max(0, Math.round(maxBidForTeam ? maxBidForTeam(team) : mockTeamMaxBid(team)))}));
 	const oneDollar = maxes.filter(row => row.max <= 1).length, threeDollar = maxes.filter(row => row.max <= 3).length, humanMax = maxes.find(row => row.team.id === human.id)?.max || 0;
-	const aboveHuman = maxes.filter(row => row.team.id !== human.id && row.max > humanMax).length;
+	const aboveInfo = teamsAboveMaxBidInfo(teams, human, maxBidForTeam || mockTeamMaxBid);
 	const rank = maxes.slice().sort((a,b)=>b.max-a.max).findIndex(row => row.team.id === human.id) + 1;
 	const note = oneDollar ? `You can steal $2 players from ${oneDollar} capped team${oneDollar === 1 ? '' : 's'}.` : 'No $1-only teams yet; preserve leverage when possible.';
-	return `<div class="auction-insight"><h4>Endgame Leverage</h4><div class="auction-mini-list"><div class="auction-mini-row"><span><strong>Your max $${humanMax}</strong><small>${escapeHtml(note)}</small></span><b class="${rank <= 3 ? 'discount' : 'fair'}">#${rank}/${teams.length}</b></div><div class="auction-mini-row"><span><strong>Teams above your max</strong><small>These teams can still outbid you.</small></span><b>${aboveHuman}</b></div><div class="auction-mini-row"><span><strong>$3-or-less teams</strong><small>Extra dollars become stronger late.</small></span><b>${threeDollar}</b></div></div></div>`;
+	return `<div class="auction-insight"><h4>Endgame Leverage</h4><div class="auction-mini-list"><div class="auction-mini-row"><span><strong>Your max $${humanMax}</strong><small>${escapeHtml(note)}</small></span><b class="${rank <= 3 ? 'discount' : 'fair'}">#${rank}/${teams.length}</b></div><div class="auction-mini-row"><span><strong>Teams above your max</strong><small>${escapeHtml(aboveInfo.count < 4 ? 'Listed with their max bids.' : 'These teams can still outbid you.')}</small></span><b>${escapeHtml(teamsAboveMaxBidText(aboveInfo))}</b></div><div class="auction-mini-row"><span><strong>$3-or-less teams</strong><small>Extra dollars become stronger late.</small></span><b>${threeDollar}</b></div></div></div>`;
 }
 function auctionBidLadderHtml(strategy, currentBid=0) {
 	if (!strategy) return '';
@@ -4409,6 +4409,31 @@ function teamsAboveMaxBid(teams, currentTeam, maxForTeam) {
 	const currentMax = Math.max(0, Math.round(n(maxForTeam ? maxForTeam(currentTeam) : 0)));
 	return (teams || []).filter(team => team && team.id !== currentTeam.id && Math.max(0, Math.round(n(maxForTeam ? maxForTeam(team) : 0))) > currentMax).length;
 }
+function teamsAboveMaxBidInfo(teams, currentTeam, maxForTeam) {
+	if (!currentTeam) return {count:0, currentMax:0, teams:[]};
+	const currentMax = Math.max(0, Math.round(n(maxForTeam ? maxForTeam(currentTeam) : 0)));
+	const teamsAbove = (teams || [])
+		.filter(team => team && team.id !== currentTeam.id)
+		.map(team => ({team, max: Math.max(0, Math.round(n(maxForTeam ? maxForTeam(team) : 0)))}))
+		.filter(row => row.max > currentMax)
+		.sort((a,b)=>b.max-a.max || String(a.team.name).localeCompare(String(b.team.name)));
+	return {count:teamsAbove.length, currentMax, teams:teamsAbove};
+}
+function teamsAboveMaxBidText(info) {
+	if (!info?.count) return '0 teams';
+	if (info.count < 4) return info.teams.map(row => `${row.team.name} $${row.max}`).join(' · ');
+	return String(info.count);
+}
+function guaranteedWinBidInfo(teams, currentTeam, maxForTeam) {
+	if (!currentTeam) return {lockoutBid: 0, possible: false, bestOpponentMax: 0, currentMax: 0};
+	const currentMax = Math.max(0, Math.round(n(maxForTeam ? maxForTeam(currentTeam) : 0)));
+	const opponentMaxes = (teams || [])
+		.filter(team => team && team.id !== currentTeam.id)
+		.map(team => Math.max(0, Math.round(n(maxForTeam ? maxForTeam(team) : 0))));
+	const bestOpponentMax = opponentMaxes.length ? Math.max(...opponentMaxes) : 0;
+	const lockoutBid = bestOpponentMax + 1;
+	return {lockoutBid, possible: lockoutBid <= currentMax, bestOpponentMax, currentMax};
+}
 function mockPositionNeed(team, pos) {
 	const counts = rosterCounts(team.roster), count = counts[pos] || 0, target = AUCTION_POSITION_TARGETS[pos] || 3;
 	let need = count < target ? 1 + Math.min(0.26, (target - count) * 0.08) : 1;
@@ -5002,7 +5027,11 @@ function renderMockSelectedTeam(m) {
 	const team = m.teams.find(t => t.id === m.selectedTeamId) || m.teams[0], summary = document.getElementById('mockHumanTeam'), roster = document.getElementById('mockHumanRoster');
 	if (!summary || !roster) return;
 	const maxBid = mockTeamMaxBid(team);
-	summary.innerHTML = [renderMetric('Team', team.name), renderMetric('Budget', '$' + team.budget), renderMetric('Max bid', '$' + maxBid), renderMetric('Teams above max', String(teamsAboveMaxBid(m.teams, team, mockTeamMaxBid))), renderMetric('Players', `${team.roster.length}/${AUCTION_CONFIG.rosterSpots}`), draftGradeMetric(team, m.teams)].join('') + draftGradeExplanationHtml(team, m.teams);
+	const aboveInfo = teamsAboveMaxBidInfo(m.teams, team, mockTeamMaxBid);
+	const lockout = guaranteedWinBidInfo(m.teams, team, mockTeamMaxBid);
+	const aboveHtml = `<div class="small" style="grid-column:1/-1;"><strong>Teams above max:</strong> ${escapeHtml(teamsAboveMaxBidText(aboveInfo))}</div>`;
+	const lockoutHtml = `<div class="small" style="grid-column:1/-1;"><strong>Guaranteed opening bid:</strong> ${lockout.possible ? `$${lockout.lockoutBid}` : `Impossible - need $${lockout.lockoutBid}, max is $${lockout.currentMax}`}</div>`;
+	summary.innerHTML = [renderMetric('Team', team.name), renderMetric('Budget', '$' + team.budget), renderMetric('Max bid', '$' + maxBid), renderMetric('Players', `${team.roster.length}/${AUCTION_CONFIG.rosterSpots}`), draftGradeMetric(team, m.teams)].join('') + aboveHtml + lockoutHtml + draftGradeExplanationHtml(team, m.teams);
 	renderParSheet(ensureParSheetRoot('mockParSheet', summary), team, m.current && m.highBidder === team.id ? [{player:m.current, currentBid:m.currentBid}] : []);
 	roster.innerHTML = assignRosterSlots(team.roster).map(slot => renderRosterSlot(slot, 'paid')).join('');
 }
@@ -5989,7 +6018,11 @@ function renderSlowSelectedTeam(m) {
 	const team = m.teams.find(t => t.id === m.selectedTeamId) || m.teams[0], summary = document.getElementById('slowHumanTeam'), roster = document.getElementById('slowHumanRoster');
 	if (!summary || !roster) return;
 	const maxBid = slowTeamMaxBid(team);
-	summary.innerHTML = [renderMetric('Team', team.name), renderMetric('Budget', '$' + team.budget), renderMetric('Committed', '$' + slowTeamCommitted(team)), renderMetric('Max bid', '$' + maxBid), renderMetric('Teams above max', String(teamsAboveMaxBid(m.teams, team, slowTeamMaxBid))), renderMetric('Players', `${team.roster.length}/${AUCTION_CONFIG.rosterSpots}`), draftGradeMetric(team, m.teams)].join('') + draftGradeExplanationHtml(team, m.teams);
+	const aboveInfo = teamsAboveMaxBidInfo(m.teams, team, slowTeamMaxBid);
+	const lockout = guaranteedWinBidInfo(m.teams, team, slowTeamMaxBid);
+	const aboveHtml = `<div class="small" style="grid-column:1/-1;"><strong>Teams above max:</strong> ${escapeHtml(teamsAboveMaxBidText(aboveInfo))}</div>`;
+	const lockoutHtml = `<div class="small" style="grid-column:1/-1;"><strong>Guaranteed opening bid:</strong> ${lockout.possible ? `$${lockout.lockoutBid}` : `Impossible - need $${lockout.lockoutBid}, max is $${lockout.currentMax}`}</div>`;
+	summary.innerHTML = [renderMetric('Team', team.name), renderMetric('Budget', '$' + team.budget), renderMetric('Committed', '$' + slowTeamCommitted(team)), renderMetric('Max bid', '$' + maxBid), renderMetric('Players', `${team.roster.length}/${AUCTION_CONFIG.rosterSpots}`), draftGradeMetric(team, m.teams)].join('') + aboveHtml + lockoutHtml + draftGradeExplanationHtml(team, m.teams);
 	renderParSheet(ensureParSheetRoot('slowParSheet', summary), team, slowTeamCommittedLots(team));
 	roster.innerHTML = assignRosterSlots(team.roster).map(slot => renderRosterSlot(slot, 'paid')).join('');
 }
