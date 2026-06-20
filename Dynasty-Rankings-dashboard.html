@@ -1628,7 +1628,7 @@ button.auction-status-pill:disabled {
 <div class="save-strip"><span id="saveStatus">Auto-save ready</span><button id="resetSavedState" type="button">Reset saved state</button></div>
 <section id="overview" class="panel active"><div class="grid"><div class="card"><h2>Players By Position</h2><div id="chartPos"></div></div><div class="card"><h2>Age Distribution</h2><div id="chartAge"></div></div><div class="card"><h2>Top Team Average PPR</h2><div id="chartTeam"></div><p class="small">Average uses each team's top 20 projected PPR values. Invalid team labels are excluded.</p></div><div class="card"><h2>Tier Drop-Offs</h2><p class="small tier-drop-note">These are cliffs after a tier ends. A $0 drop means the next tier starts in the same rounded auction-dollar bucket. Open a row to see the players in that tier.</p><div id="tierDropSummary" class="metric-grid"></div><div id="tierDropCharts" class="tier-drop-grid"></div></div></div></section>
 <section id="players" class="panel"><div class="toolbar"><input id="playerSearch" type="search" placeholder="Search players, teams, positions, comments"><select id="posFilter"><option value="">All positions</option></select><select id="teamFilter"><option value="">All teams</option></select><button id="resetPlayers">Reset</button></div><p class="small">Upside is the source ceiling score; Downside is the source miss-risk score. Higher numbers mean more of that trait. Auction values assume 12 teams, $200 budgets, super-super-flex depth, PPR, TE premium, and strategic 3-deep QB/RB/WR/TE targets. Bid+ means an analyst target signal; Bid++ means a stronger signal such as Harmon SUPER BUY or multiple target signals. Hover or click a Bid marker for the source.</p><div class="grid"><div class="card"><h2>Filtered Top Fpts</h2><div class="toolbar"><select id="filteredTopLimit"><option value="10">Top 10</option><option value="20" selected>Top 20</option><option value="50">Top 50</option><option value="100">Top 100</option></select></div><div id="chartFilteredPpr"></div></div><div class="card"><h2>Filtered Position Mix</h2><div id="chartFilteredPos"></div></div></div><div class="table-wrap"><table id="playersTable"></table></div></section>
-<section id="cheatsheets" class="panel"><div class="toolbar"><input id="cheatSearch" type="search" placeholder="Search cheatsheets"><select id="rankMode"><option value="waldman">Waldman ranks</option><option value="kyle">Kyle ranks</option><option value="fantasypros">FantasyPros ranks</option><option value="clay">Mike Clay ranks</option><option value="harmon">Harmon WR ranks</option><option value="combined">Combined rank</option><option value="compare">Consensus stats</option></select><select id="buildFilter"><option value="">All builds</option><option>Win-Now</option><option>Long Build</option></select><select id="cheatPosFilter"><option value="">All positions</option></select><select id="harmonMarketFilter"><option value="">All Harmon markets</option></select><label class="age-range-filter">Age <span id="cheatAgeRangeLabel">20-50</span><span class="range-row"><input id="cheatAgeMin" type="range" min="20" max="50" value="20"><input id="cheatAgeMax" type="range" min="20" max="50" value="50"></span></label></div><p class="small" id="cheatModeNote">Waldman mode keeps workbook tier colors. Kyle mode uses the supplied rankings and tier shading. FantasyPros mode uses the imported 2026 dynasty ECR CSV.</p><div class="legend" id="tierLegend"></div><div class="table-wrap"><table id="cheatsTable"></table></div></section>
+<section id="cheatsheets" class="panel"><div class="toolbar"><input id="cheatSearch" type="search" placeholder="Search cheatsheets"><select id="rankMode"><option value="waldman">Waldman ranks</option><option value="kyle">Kyle ranks</option><option value="fantasypros">FantasyPros ranks</option><option value="kluge">Dave Kluge ranks</option><option value="clay">Mike Clay ranks</option><option value="harmon">Harmon WR ranks</option><option value="combined">Combined rank</option><option value="compare">Consensus stats</option></select><select id="buildFilter"><option value="">All builds</option><option>Win-Now</option><option>Long Build</option></select><select id="cheatPosFilter"><option value="">All positions</option></select><select id="harmonMarketFilter"><option value="">All Harmon markets</option></select><label class="age-range-filter">Age <span id="cheatAgeRangeLabel">20-50</span><span class="range-row"><input id="cheatAgeMin" type="range" min="20" max="50" value="20"><input id="cheatAgeMax" type="range" min="20" max="50" value="50"></span></label></div><p class="small" id="cheatModeNote">Waldman mode keeps workbook tier colors. Kyle mode uses the supplied rankings and tier shading. FantasyPros mode uses the imported 2026 dynasty ECR CSV.</p><div class="legend" id="tierLegend"></div><div class="table-wrap"><table id="cheatsTable"></table></div></section>
 
 <section id="auctionBuilder" class="panel"><div class="card"><h2>Best Team Builder</h2><div class="toolbar"><label class="inline-control">Premium<select id="optimizerPremium"><option value="0">At bid</option><option value="0.05" selected>5% over</option><option value="0.1">10% over</option><option value="0.15">15% over</option></select></label><label class="inline-control">Build focus<select id="optimizerFocus"><option value="balanced" selected>Balanced</option><option value="qb">Better QBs</option><option value="rb">Better RBs</option><option value="wr">Better WRs</option><option value="te">Better TEs</option><option value="qb_wr">QB + WR</option><option value="qb_wr_te">QB + WR + TE</option><option value="rb_wr">RB + WR</option><option value="rb_te">RB + TE</option><option value="custom">Custom Mix</option></select></label><label class="inline-control">Preferred<select id="optimizerPreference"><option value="none" selected>Value only</option><option value="queue">My Want Queue</option><option value="waldman_win">Waldman Win Now</option><option value="waldman_long">Waldman Long-Term</option><option value="waldman">Waldman Overall</option><option value="harmon">Harmon Buy/Super Buy</option><option value="kyle">Kyle Suggestions</option><option value="fantasypros">FantasyPros Suggestions</option><option value="common">Common Preferred</option></select></label><label class="inline-control">Shape<select id="optimizerShape"><option value="stars" selected>Stars + values</option><option value="balanced">Balanced spend</option><option value="breakout">Young breakouts</option></select></label><label class="inline-control">Age cap<select id="optimizerAgeCap"><option value="">No cap</option><option value="29">29 or younger</option><option value="27">27 or younger</option><option value="25">25 or younger</option></select></label><label class="inline-control">Budget<input id="optimizerBudget" type="number" min="25" max="200" step="1" value="200"></label><button id="runOptimizer" type="button">Build team</button></div><div class="toolbar mix-toolbar"><label class="inline-control">QB mix<input id="optimizerMixQB" type="number" min="0.5" max="2" step="0.1" value="1"></label><label class="inline-control">RB mix<input id="optimizerMixRB" type="number" min="0.5" max="2" step="0.1" value="1"></label><label class="inline-control">WR mix<input id="optimizerMixWR" type="number" min="0.5" max="2" step="0.1" value="1"></label><label class="inline-control">TE mix<input id="optimizerMixTE" type="number" min="0.5" max="2" step="0.1" value="1"></label></div><p class="small">Builds a 25-player roster using tier-banded bid values plus the selected premium. Shape controls whether the optimizer chases premium stars, balances spend, or leans into younger mid-priced breakout profiles. Age cap excludes players with known ages above the selected limit. Players marked Avoid are excluded; My Want Queue boosts marked targets.</p><div class="auction-principles"><span><strong>Use values as anchors</strong> Raise or lower live targets when the room is paying more or less by position.</span><span><strong>Spend for elite tiers</strong> It is acceptable to beat value for a player you want if the roster build still works.</span><span><strong>Keep endgame leverage</strong> A few extra dollars matter when the room is stuck at $1 bids.</span><span><strong>Avoid flat mid-tier prices</strong> If 6th-10th round profiles are getting bid up, pivot to similar cheaper bets.</span></div><div id="optimizerSummary" class="metric-grid"></div><div id="optimizerByPosition" class="position-list"></div><div id="optimizerRoster" class="roster-slots"></div></div></section>
 <section id="mockAuction" class="panel"><div class="card"><div class="auction-card-head"><h2>Fast Auction</h2><p class="small auction-directions">Click a team header or summary to inspect that roster. Bot profiles can be changed in Team Summary. Sim buttons complete one or ten full nomination-and-sale cycles. The board scrolls horizontally so you can compare every team at once.</p></div><div class="toolbar"><button id="startMock" type="button">Start / Reset</button><button id="mockClockToggle" type="button">Start clock</button><span id="mockTimer" class="mock-timer">:30</span><label class="inline-control">Nom sec<input id="mockNominationSeconds" type="number" min="3" max="120" step="1" value="30"></label><label class="inline-control">Reset sec<input id="mockResetSeconds" type="number" min="3" max="120" step="1" value="10"></label><button id="mockAutoOne" type="button" title="Simulates one full nomination, bot bidding sequence, and sale award.">Sim 1 sale</button><button id="mockAutoTen" type="button" title="Repeats the full automated sale cycle ten times or until the draft cannot continue.">Sim 10 sales</button><button id="mockBotRound" type="button">Next nomination / bot bid</button><button id="mockPass" type="button">Pass</button><button id="mockBidPlus1" type="button">Bid +$1</button><button id="mockBidPlus5" type="button">Bid +$5</button><button id="mockBidValue" type="button">Bid to value</button><label class="inline-control">Bid<input id="mockCustomBid" type="number" min="1" max="200" step="1" value="1"></label><button id="mockBidCustom" type="button">Bid amount</button></div><div id="mockWantedRemainders" class="queue-tier-summary"></div><div id="mockCurrent" class="current-auction"></div><div id="mockDraftBoard" class="mock-draft-board"></div></div><div class="mock-draft-layout"><div class="mock-stack"><div class="card"><h2>Team Summary</h2><div id="mockTeams" class="mock-board"></div></div><div class="card"><h2>Nomination Pool</h2><div class="toolbar"><input id="mockPlayerSearch" type="search" placeholder="Search auction pool"><select id="mockPosFilter"><option value="">All positions</option></select><label class="inline-control"><input id="mockShowDrafted" type="checkbox">Show drafted</label></div><div class="table-wrap mock-player-list"><table id="mockPlayerTable"></table></div></div></div><div class="mock-side-panel"><div class="card"><h2>Selected Team</h2><div id="mockHumanTeam" class="metric-grid"></div><div id="mockHumanRoster" class="roster-slots"></div></div><div class="card"><h2>Results</h2><div id="mockResults" class="result-log"></div></div></div></div></section>
@@ -1741,6 +1741,516 @@ const KYLE_RANKS = [
 	{position:'RB', rank:1, player:'Bijan Robinson', team:'ATL'}, {position:'RB', rank:2, player:'Jahmyr Gibbs', team:'DET'}, {position:'RB', rank:3, player:'Ashton Jeanty', team:'LV'}, {position:'RB', rank:4, player:'Jeremiyah Love', team:'ARI'}, {position:'RB', rank:5, player:'Omarion Hampton', team:'LAC'}, {position:'RB', rank:6, player:"De'Von Achane", team:'MIA'}, {position:'RB', rank:7, player:'James Cook', team:'BUF'}, {position:'RB', rank:8, player:'Jonathan Taylor', team:'IND'}, {position:'RB', rank:9, player:'Kenneth Walker', team:'KC'}, {position:'RB', rank:10, player:'Breece Hall', team:'NYJ'}, {position:'RB', rank:11, player:'Quinshon Judkins', team:'CLE'}, {position:'RB', rank:12, player:'Chase Brown', team:'CIN'}, {position:'RB', rank:13, player:'Christian McCaffrey', team:'SF'}, {position:'RB', rank:14, player:'TreVeyon Henderson', team:'NE'}, {position:'RB', rank:15, player:'Cam Skattebo', team:'NYG'}, {position:'RB', rank:16, player:'Kyren Williams', team:'LAR'}, {position:'RB', rank:17, player:'Saquon Barkley', team:'PHI'}, {position:'RB', rank:18, player:'Javonte Williams', team:'DAL'}, {position:'RB', rank:19, player:'Bucky Irving', team:'TB'}, {position:'RB', rank:20, player:'Jadarian Price', team:'SEA'}, {position:'RB', rank:21, player:'Josh Jacobs', team:'GB'}, {position:'RB', rank:22, player:'Travis Etienne', team:'NO'}, {position:'RB', rank:23, player:'Derrick Henry', team:'BAL'}, {position:'RB', rank:24, player:"D'Andre Swift", team:'CHI'}, {position:'RB', rank:25, player:'Bhayshul Tuten', team:'JAX'}, {position:'RB', rank:26, player:'David Montgomery', team:'HOU'}, {position:'RB', rank:27, player:'Jaylen Warren', team:'PIT'}, {position:'RB', rank:28, player:'Chubba Hubbard', team:'CAR'}, {position:'RB', rank:29, player:'RJ Harvey', team:'DEN'}, {position:'RB', rank:30, player:'Blake Corum', team:'LAR'}, {position:'RB', rank:31, player:'Jonathan Brooks', team:'CAR'}, {position:'RB', rank:32, player:'Zach Charbonnet', team:'SEA'}, {position:'RB', rank:33, player:'Rhamondre Stevenson', team:'NE'}, {position:'RB', rank:34, player:'Jonah Coleman', team:'DEN'}, {position:'RB', rank:35, player:'Rico Dowdle', team:'PIT'}, {position:'RB', rank:36, player:'Kyle Monangai', team:'CHI'}, {position:'RB', rank:37, player:'Tyler Allgeier', team:'ARI'}, {position:'RB', rank:38, player:'Dylan Sampson', team:'CLE'}, {position:'RB', rank:39, player:'JK Dobbins', team:'DEN'}, {position:'RB', rank:40, player:'Woody Marks', team:'HOU'},
 	{position:'WR', rank:1, player:"Ja'Marr Chase", team:'CIN'}, {position:'WR', rank:2, player:'Jaxon Smith-Njigba', team:'SEA'}, {position:'WR', rank:3, player:'Puka Nacua', team:'LAR'}, {position:'WR', rank:4, player:'Amon-Ra St. Brown', team:'DET'}, {position:'WR', rank:5, player:'Justin Jefferson', team:'MIN'}, {position:'WR', rank:6, player:'Drake London', team:'ATL'}, {position:'WR', rank:7, player:'Malik Nabers', team:'NYG'}, {position:'WR', rank:8, player:'CeeDee Lamb', team:'DAL'}, {position:'WR', rank:9, player:'Ladd McConkey', team:'LAC'}, {position:'WR', rank:10, player:'George Pickens', team:'DAL'}, {position:'WR', rank:11, player:'Chris Olave', team:'NO'}, {position:'WR', rank:12, player:'Garrett Wilson', team:'NYJ'}, {position:'WR', rank:13, player:'Tetairoa McMillan', team:'CAR'}, {position:'WR', rank:14, player:'Emeka Egbuka', team:'TB'}, {position:'WR', rank:15, player:'Luther Burden', team:'CHI'}, {position:'WR', rank:16, player:'Carnell Tate', team:'TEN'}, {position:'WR', rank:17, player:'Nico Collins', team:'HOU'}, {position:'WR', rank:18, player:'Zay Flowers', team:'BAL'}, {position:'WR', rank:19, player:'Rome Odunze', team:'CHI'}, {position:'WR', rank:20, player:'Jordyn Tyson', team:'NO'}, {position:'WR', rank:21, player:'Rashee Rice', team:'KC'}, {position:'WR', rank:22, player:'AJ Brown', team:'NE'}, {position:'WR', rank:23, player:'DeVonta Smith', team:'PHI'}, {position:'WR', rank:24, player:'Tee Higgins', team:'CIN'}, {position:'WR', rank:25, player:'Marvin Harrison Jr.', team:'ARI'}, {position:'WR', rank:26, player:'Makai Lemon', team:'PHI'}, {position:'WR', rank:27, player:'Jaylen Waddle', team:'MIA'}, {position:'WR', rank:28, player:'Jameson Williams', team:'DET'}, {position:'WR', rank:29, player:'Brian Thomas Jr.', team:'JAX'}, {position:'WR', rank:30, player:'KC Concepcion', team:'CLE'}, {position:'WR', rank:31, player:'Parker Washington', team:'JAX'}, {position:'WR', rank:32, player:'Ricky Pearsall', team:'SF'}, {position:'WR', rank:33, player:'Christian Watson', team:'GB'}, {position:'WR', rank:34, player:'Alec Pierce', team:'IND'}, {position:'WR', rank:35, player:'Omar Cooper Jr.', team:'NYJ'}, {position:'WR', rank:36, player:'Jordan Addison', team:'MIN'}, {position:'WR', rank:37, player:'Jayden Higgins', team:'HOU'}, {position:'WR', rank:38, player:'Terry McLaurin', team:'WAS'}, {position:'WR', rank:39, player:'DJ Moore', team:'BUF'}, {position:'WR', rank:40, player:'Matthew Golden', team:'GB'}
 ];
+const KLUGE_TIER_COLORS = Object.fromEntries(Array.from({length: 24}, (_, index) => [String(index + 1), `hsl(${(index * 31) % 360} 75% 88%)`]));
+function klugeTierFor(position, rank) {
+	const value = Number(rank);
+	if (!Number.isFinite(value)) return '1';
+	const pos = String(position || '').toUpperCase();
+	const ranges = pos === 'QB' ? [[12, '1'], [51, '2']]
+		: pos === 'WR' ? [[30, '1'], [119, '2']]
+		: pos === 'TE' ? [[2, '1'], [5, '2'], [8, '3'], [10, '4'], [13, '5'], [17, '6'], [22, '7'], [25, '8'], [30, '9'], [37, '10'], [41, '11'], [44, '12'], [50, '13'], [56, '14'], [63, '15'], [71, '16'], [80, '17']]
+		: pos === 'RB' ? [[2, '1'], [4, '2'], [7, '3'], [10, '4'], [11, '5'], [15, '6'], [18, '7'], [21, '8'], [24, '9'], [32, '10'], [33, '11'], [39, '12'], [49, '13'], [59, '14'], [74, '15'], [77, '16'], [83, '17'], [98, '18'], [103, '19'], [109, '20'], [122, '21'], [139, '22']]
+		: [[99, '1']];
+	for (const [max, tier] of ranges) if (value <= max) return tier;
+	return ranges[ranges.length - 1][1];
+}
+const KLUGE_COMMENTARY = {
+	'QB|Caleb Williams': 'The arrow is pointing up for Williams, who proved that on-field magic from college can translate to the next level. He\'ll need to learn to play better in structure, but a top-6 finish in a new offense, elite pedigree, and rushing upside give him both a desirable floor and ceiling. Click here for more of my recent thoughts on Caleb Williams, and what he needs to do to ascend to superstardom.',
+	'QB|Drake Maye': "We\'re really splitting hairs between Williams, Daniels, and Maye. This ranking may seem like a knock against Maye. It isn\'t. A preference for Williams\' system and Daniels\' elite rushing just tips the scales ever-so-slightly in their favor.",
+	'QB|Brock Purdy': "Purdy was fantasy's QB5 last year. Early-career concerns about his shelf life and being a product of Kyle Shanahan's offense should have been put to rest by his $265 million extension — but dynasty markets haven't adjusted for whatever reason.",
+	'QB|C.J. Stroud': "Stroud won't ever recapture the value he had after his rookie season, but he's a young, highly-drafted QB on a team trending upward. The lack of rushing is the major knock, but he should have a lengthy NFL career as a starter.",
+	'QB|Jordan Love': 'Love has dealt with some injuries since taking over as the starter, but his 17-game pace over the last three seasons has been 3,953 passing yards and 29 touchdowns. A former first-round pick, he\'s proven capable of being a long-term NFL starter.',
+	'QB|Jaxson Dart': "Dart's rushing upside makes him an alluring target in redraft leagues. But he was evaluated for five concussions as a rookie, and his accuracy was very questionable. Weekly projections should be strong, but his long-term outlook is shaky at the moment.",
+	'QB|Bo Nix': "Nix's per-game production dipped from his rookie season, and he'll now be recovering from ankle surgery. Playing Year 3 at age 26 isn't cause for panic, but it does shorten his expected longevity — especially as a rusher.",
+	'QB|Dak Prescott': 'After 2027, Prescott could hit the market as a 35-year-old free agent. His value in Dallas is real, but a change of scenery would almost assuredly leave a negative imprint on his long-term outlook.',
+	'QB|Sam Darnold': "Darnold was in the MVP conversation two years ago and won a Super Bowl last year, but memories of his early career in New York still leave dynasty managers hesitant. He's creeping up there in age, but has galvanized himself as a starter for the next few seasons.",
+	'QB|Baker Mayfield': "Everything ran pure in 2024, rocketing Mayfield up dynasty rankings. 2025 was a season of expected regression. He's a valuable NFL starter, but being on the wrong side of 30 makes him a tough buy in trades. Solid QB2, hard to value him above that.",
+	'QB|J.J. McCarthy': "McCarthy has had a tough start to his career, but he's still just 23 and showed some promising moments through his first two seasons. A year sitting behind a vet could benefit him. A lot of dynasty managers are ready to give up — but there's an opportunity to buy low on a young player with a decent ceiling.",
+	'QB|Aaron Rodgers': "Any long-term value? No. Is he going to start all of 2026? Probably. It's hard to rank a guy whose career is quickly expiring, but one season as a starter is a lot more than you'll get from the rest of the guys in this range.",
+	'QB|Kirk Cousins': 'See: Rodgers, Aaron.',
+	'QB|Shedeur Sanders': "Sanders might start a couple of games if Deshaun Watson proves incapable, but there wasn't much from his rookie season to inspire hope about his availability as a long-term starter.",
+	'WR|Ja\'Marr Chase': "We're really splitting hairs between the top guys, and I have a slight preference for the youth of Nacua and Smith-Njigba. Check out last month's deep dive on my dynasty receiver rankings for more thoughts on the top three.",
+	'WR|Malik Nabers': "The market is obviously reacting to Nabers' ACL injury, but I'm of the belief that he will rebound to be an elite talent soon. And at age 22, there's ample time for him to heal up while still maintaining elite value.",
+	'WR|Tetairoa McMillan': "Top-ten draft capital, a productive and efficient season. What's not to like? McMillan could ascend the rankings and become a top-tier asset if he can follow up his promising rookie season with a bit of growth.",
+	'WR|Justin Jefferson': "After losing his \"QB-proof\" label last year, Jefferson's age jumps out a bit. He's undoubtedly one of the league's best talents and should bounce back in 2026, but fantasy managers might think about tiering down off the name value.",
+	'WR|Amon-Ra St. Brown': "Being four spots lower on St. Brown might appear disrespectful, and that isn't the intent. This is a top-heavy position, and there are younger players with iron-clad profiles ahead of him. He's still a great receiver and a strong buy.",
+	'WR|Zay Flowers': 'Just 25 years old, Flowers, a first-round pick, was sixth in the league in receiving yards last year. Just a bit of positive regression in the touchdown column could help everyone realize how good he has been.',
+	'WR|Jameson Williams': "A top-20 wide receiver in 2024 and a top-12 receiver last year, Williams is trending up after a bumpy start to his NFL career. Just 25 years old, we likely haven't even seen his best days yet.",
+	'WR|Jordyn Tyson': "Drafted eighth overall this year, Tyson's value should be insulated for the next few seasons. He's got some injury concerns to overcome, but his ceiling is as high as any other receiver in this year's class, and he's just 21 years old.",
+	'WR|DeVonta Smith': "Smith is set up for a career year after the departure of A.J. Brown. At 27, it's hard to imagine that he can gain much value in dynasty. But he's a steady and productive veteran with a few years left atop the age apex.",
+	'WR|Wan\'Dale Robinson': "Coming off a career year, Robinson proved he's more than a gimmicky player last year, running deeper routes. Following Brian Daboll to Tennessee and earning a big contract should keep his value safe for the next few seasons.",
+	'WR|Travis Hunter': "The last time we saw Hunter on an NFL field, he caught eight of 14 targets for 101 yards and a touchdown. Don't let offseason speculation about his usage scare you away from acquiring one of the league's most dynamic players.",
+	'WR|Xavier Worthy': "I had my initial doubts about Worthy coming into the league, but he's shown an ability to draw targets and create explosive plays. The market is obviously reacting to his injured 2025 season, but probably more than it should.",
+	'WR|De\'Zhaun Stribling': "Stribling could be the next Jonathon Mingo or Treylon Burks. He could also be the next A.J. Brown. He's got desirable draft capital and fantastic athleticism. I'll bet on the upside, even if the downside is steep.",
+	'WR|Tre\' Harris': "Harris had a desirable prospect profile but struggled to see the field much as a rookie. A thinner receiver room going into his second season should allow for more playing time, making him a great offseason buy.",
+	'WR|Alec Pierce': "Coming off a career year, Pierce received a mega extension. But he'll need to prove healthy from his ankle surgery and show that he's more than a deep threat before I can fully buy in long term.",
+	'WR|Brandon Aiyuk': "I understand the concerns, but Aiyuk can sign somewhere tomorrow and immediately rebound in value. Aiyuk's ranking is more about risk management than talent at this point, and I'm happy to absorb the risk given the upside.",
+	'WR|Keon Coleman': "Sure, his first two years in the league have been incredibly disappointing. But Coleman was drafted as a developmental project. Maybe we shouldn't bury him after two seasons. He could see better results in a new offense, and is still just 23.",
+	'WR|Ja\'Kobi Lane': "Lane was a third-round pick with desirable size and athleticism. He's far from a sure thing, but his upside makes him an alluring target in dynasty leagues.",
+	'WR|Zavion Thomas': "4.28 speed in a Ben Johnson offense is alluring. This deep down the dynasty rankings, you should be chasing upside. Thomas' multiple paths to relevance as a receiver or a rusher, combined with his athleticism, give him plenty of upside.",
+	'WR|Xavier Legette': "Legette hasn't been very productive to start his career, and the Panthers seem content with Tetairoa McMillan and Jalen Coker atop the depth chart. But he's on the right side of the age curve with a strong athletic profile.",
+	'WR|Tyquan Thornton': "A former second-round pick, Thornton has off-the-charts speed. He stepped up for a brief stretch last year in Kansas City and will return in 2026. Still just 25, he can get his career back on track.",
+};
+const KLUGE_SECTION_SUMMARIES = {
+	RB: [
+		{min: 1, max: 2, text: 'Elite backs with rare combination of youth, production, and value insulation.'},
+		{min: 3, max: 4, text: 'Premium young bets with top-end draft capital and clear paths to dynasty value spikes.'},
+		{min: 5, max: 10, text: 'Established starters who still have age and production on their side, even if the window is narrowing.'},
+		{min: 11, max: 11, text: 'A uniquely tricky rookie case: the draft capital matters, but the profile is still unsettled.'},
+		{min: 12, max: 18, text: 'Young backs with room to gain value, either because of profile, injury recovery, or open paths to volume.'},
+		{min: 19, max: 24, text: 'Riskier backs that carry more downside, but still offer buy-low paths if the market is too aggressive.'},
+		{min: 25, max: 32, text: 'Younger committee backs whose value is more about age and projection than current role stability.'},
+		{min: 33, max: 33, text: 'Henry is an outlier: older than the tier around him, but still too productive to dismiss.'},
+		{min: 34, max: 39, text: 'Developmental rookies who need a lot to break right, but have enough upside to merit roster spots.'},
+		{min: 40, max: 49, text: 'Veterans with usable roles now, but limited insulation if their current production slips.'},
+		{min: 50, max: 59, text: 'Second-year backs with some upside, though most are still fighting for more meaningful workloads.'},
+		{min: 60, max: 74, text: 'Cheap veterans whose value depends on injuries ahead of them, but who can matter if opportunity opens.'},
+		{min: 75, max: 77, text: 'Worth a very cheap flier because the draft capital and talent still leave a path to usefulness.'},
+		{min: 78, max: 83, text: 'Aging veterans whose best fantasy seasons are probably behind them, but who can still help contenders in the short term.'},
+		{min: 84, max: 98, text: 'Late rookies who are unlikely to matter soon, but can stay on the radar in very deep formats.'},
+		{min: 99, max: 103, text: 'Extremely cheap second-year bets with almost no insulation, but enough uncertainty to keep them interesting.'},
+		{min: 104, max: 109, text: 'Very deep-league handcuffs and emergency stashes, mostly one injury away from relevance.'},
+		{min: 110, max: 122, text: 'Names to remember only in deep formats; these are mostly speculative or fringe roster players.'},
+		{min: 123, max: 139, text: 'Faded veterans who have largely moved out of fantasy relevance.'},
+	],
+	TE: [
+		{min: 1, max: 2, text: 'The elite tight end tier: young, productive anchors you can build around.'},
+		{min: 3, max: 5, text: 'Strong year-two and rookie bets with real long-term upside and enough draft capital to matter.'},
+		{min: 6, max: 8, text: 'Young producers whose values could still climb if health and usage cooperate.'},
+		{min: 9, max: 10, text: 'Top-tier rookies whose profiles and draft slots keep the upside intact.'},
+		{min: 11, max: 13, text: 'Talented young starters who are close to the next value tier if the ceiling shows up.'},
+		{min: 14, max: 17, text: 'Veteran tight ends at or near the age apex, still useful but with shrinking insulation.'},
+		{min: 18, max: 22, text: 'Second-year breakout bets and athletic bets who could gain value quickly.'},
+		{min: 23, max: 25, text: 'Young TE2 options with upside, usually coming from opportunity more than proven production.'},
+		{min: 26, max: 30, text: 'Useful veterans who can still produce, but mostly belong on contender rosters.'},
+		{min: 31, max: 37, text: 'Rookies and developmental prospects worth stashing in deeper formats.'},
+		{min: 38, max: 41, text: 'Athletic projects whose best path to relevance is volume and mismatch usage.'},
+		{min: 42, max: 44, text: 'Veterans whose fantasy utility is mostly tied to short-term opportunity or contingency.'},
+		{min: 45, max: 50, text: 'Pure contingent streamers who need injuries or role changes to matter.'},
+		{min: 51, max: 56, text: 'Players whose upside is fading and who are mostly hanging on to roster spots.'},
+		{min: 57, max: 63, text: 'Former fantasy names whose best days are behind them, but who can still pop in the right spot.'},
+		{min: 64, max: 71, text: 'Deep-league stashes with enough youth or athleticism to keep watch on.'},
+		{min: 72, max: 80, text: 'Taxi-squad type rookies and long shots, useful mainly in the deepest formats.'},
+	],
+};
+function klugeCommentaryFor(row) {
+	const exact = KLUGE_COMMENTARY[`${row.position}|${row.player}`];
+	if (exact) return exact;
+	const pos = String(row.position || '').toUpperCase();
+	if (pos === 'RB' || pos === 'TE') {
+		const rank = Number(row.rank);
+		const bucket = (KLUGE_SECTION_SUMMARIES[pos] || []).find(section => Number.isFinite(rank) && rank >= section.min && rank <= section.max);
+		return bucket ? bucket.text : '';
+	}
+	return '';
+}
+const KLUGE_RANKS = `WR|1|Puka Nacua|LAR||
+WR|2|Jaxon Smith-Njigba|SEA||
+WR|3|Ja'Marr Chase|CIN||
+WR|4|Malik Nabers|NYG||
+WR|5|Drake London|ATL||
+WR|6|Tetairoa McMillan|CAR||
+WR|7|Justin Jefferson|MIN||
+WR|8|CeeDee Lamb|DAL||
+WR|9|Amon-Ra St. Brown|DET||
+WR|10|Nico Collins|HOU||
+WR|11|Garrett Wilson|NYJ||
+WR|12|Zay Flowers|BAL||
+WR|13|Jameson Williams|DET||
+WR|14|Jordyn Tyson|NO||
+WR|15|Carnell Tate|TEN||
+WR|16|Chris Olave|NO||
+WR|17|Emeka Egbuka|TB||
+WR|18|DeVonta Smith|PHI||
+WR|19|George Pickens|DAL||
+WR|20|Ladd McConkey|LAC||
+WR|21|Luther Burden III|CHI||
+WR|22|Tee Higgins|CIN||
+WR|23|A.J. Brown|NE||
+WR|24|Rashee Rice|KC||
+WR|25|Rome Odunze|CHI||
+WR|26|Marvin Harrison Jr.|ARI||
+WR|27|Brian Thomas Jr.|JAX||
+WR|28|Makai Lemon|PHI||
+WR|29|KC Concepcion|CLE||
+WR|30|DJ Moore|BUF||
+WR|31|Jaylen Waddle|DEN||
+WR|32|Wan'Dale Robinson|TEN||
+WR|33|Terry McLaurin|WAS||
+WR|34|Denzel Boston|CLE||
+WR|35|Ricky Pearsall|SF||
+WR|36|Travis Hunter|JAX||
+WR|37|Jordan Addison|MIN||
+WR|38|Quentin Johnston|LAC||
+WR|39|Michael Pittman Jr.|PIT||
+WR|40|Matthew Golden|GB||
+WR|41|Xavier Worthy|KC||
+WR|42|Christian Watson|GB||
+WR|43|DK Metcalf|PIT||
+WR|44|Omar Cooper Jr.|NYJ||
+WR|45|De'Zhaun Stribling|SF||
+WR|46|Michael Wilson|ARI||
+WR|47|Jayden Higgins|HOU||
+WR|48|Tre' Harris|LAC||
+WR|49|Alec Pierce|IND||
+WR|50|Brandon Aiyuk|SF||
+WR|51|Jayden Reed|GB||
+WR|52|Josh Downs|IND||
+WR|53|Khalil Shakir|BUF||
+WR|54|Davante Adams|LAR||
+WR|55|Chris Godwin Jr.|TB||
+WR|56|Courtland Sutton|DEN||
+WR|57|Keon Coleman|BUF||
+WR|58|Mike Evans|SF||
+WR|59|Stefon Diggs|FA||
+WR|60|Deebo Samuel Sr.|FA||
+WR|61|Tyreek Hill|FA||
+WR|62|Jakobi Meyers|JAX||
+WR|63|Germie Bernard|PIT||
+WR|64|Antonio Williams|WAS||
+WR|65|Ja'Kobi Lane|BAL||
+WR|66|Chris Brazzell II|CAR||
+WR|67|Ted Hurst|TB||
+WR|68|Jalen Coker|CAR||
+WR|69|Romeo Doubs|NE||
+WR|70|Parker Washington|JAX||
+WR|71|Zachariah Branch|ATL||
+WR|72|Malachi Fields|NYG||
+WR|73|Zavion Thomas|CHI||
+WR|74|Xavier Legette|CAR||
+WR|75|Caleb Douglas|MIA||
+WR|76|Chris Bell|MIA||
+WR|77|Tory Horton|SEA||
+WR|78|Isaac TeSlaa|DET||
+WR|79|Jaylin Noel|HOU||
+WR|80|Rashid Shaheed|SEA||
+WR|81|Elic Ayomanor|TEN||
+WR|82|Cooper Kupp|SEA||
+WR|83|Calvin Ridley|TEN||
+WR|84|Jauan Jennings|MIN||
+WR|85|Pat Bryant|DEN||
+WR|86|Jack Bech|LV||
+WR|87|Kyle Williams|NE||
+WR|88|Chimere Dike|TEN||
+WR|89|Adonai Mitchell|NYJ||
+WR|90|Kayshon Boutte|NE||
+WR|91|Tre Tucker|LV||
+WR|92|Jalen McMillan|TB||
+WR|93|Troy Franklin|DEN||
+WR|94|Ryan Flournoy|DAL||
+WR|95|Jerry Jeudy|CLE||
+WR|96|Rashod Bateman|BAL||
+WR|97|Christian Kirk|SF||
+WR|98|Hollywood Brown|PHI||
+WR|99|Darnell Mooney|NYG||
+WR|100|DeMario Douglas|NE||
+WR|101|Tank Dell|HOU||
+WR|102|Skyler Bell|BUF||
+WR|103|Bryce Lance|NO||
+WR|104|Brenen Thompson|LAC||
+WR|105|Elijah Sarratt|BAL||
+WR|106|Reggie Virgil|ARI||
+WR|107|Cyrus Allen|KC||
+WR|108|Kevin Coleman Jr.|MIA||
+WR|109|Colbie Young|CIN||
+WR|110|Deion Burks|IND||
+WR|111|Lewis Bond|HOU||
+WR|112|Marvin Mims Jr.|DEN||
+WR|113|Jalen Nailor|LV||
+WR|114|Malik Washington|MIA||
+WR|115|Dontayvion Wicks|PHI||
+WR|116|Andrei Iosivas|CIN||
+WR|117|Cedric Tillman|CLE||
+WR|118|Tyquan Thornton|KC||
+WR|119|Isaiah Bond|CLE||
+QB|1|Josh Allen|BUF||
+QB|2|Caleb Williams|CHI||
+QB|3|Jayden Daniels|WAS||
+QB|4|Drake Maye|NE||
+QB|5|Lamar Jackson|BAL||
+QB|6|Joe Burrow|CIN||
+QB|7|Justin Herbert|LAC||
+QB|8|Patrick Mahomes II|KC||
+QB|9|Trevor Lawrence|JAX||
+QB|10|Brock Purdy|SF||
+QB|11|Jalen Hurts|PHI||
+QB|12|C.J. Stroud|HOU||
+QB|13|Jordan Love|GB||
+QB|14|Jaxson Dart|NYG||
+QB|15|Bo Nix|DEN||
+QB|16|Cam Ward|TEN||
+QB|17|Fernando Mendoza|LV||
+QB|18|Tyler Shough|NO||
+QB|19|Dak Prescott|DAL||
+QB|20|Sam Darnold|SEA||
+QB|21|Baker Mayfield|TB||
+QB|22|Jared Goff|DET||
+QB|23|Kyler Murray|MIN||
+QB|24|Matthew Stafford|LAR||
+QB|25|Daniel Jones|IND||
+QB|26|Bryce Young|CAR||
+QB|27|Malik Willis|MIA||
+QB|28|J.J. McCarthy|MIN||
+QB|29|Michael Penix Jr.|ATL||
+QB|30|Ty Simpson|LAR||
+QB|31|Deshaun Watson|CLE||
+QB|32|Mac Jones|SF||
+QB|33|Aaron Rodgers|PIT||
+QB|34|Tua Tagovailoa|ATL||
+QB|35|Kirk Cousins|LV||
+QB|36|Geno Smith|NYJ||
+QB|37|Jacoby Brissett|ARI||
+QB|38|Justin Fields|KC||
+QB|39|Jalen Milroe|SEA||
+QB|40|Anthony Richardson Sr.|IND||
+QB|41|Shedeur Sanders|CLE||
+QB|42|Tyson Bagent|CHI||
+QB|43|Jameis Winston|NYG||
+QB|44|Drew Allar|PIT||
+QB|45|Carson Beck|ARI||
+QB|46|Taylen Green|CLE||
+QB|47|Cole Payton|PHI||
+QB|48|Cade Klubnik|NYJ||
+QB|49|Garrett Nussmeier|KC||
+QB|50|Diego Pavia|BAL||
+QB|51|Joe Milton III|DAL||
+RB|1|Jahmyr Gibbs||||
+RB|2|Bijan Robinson||||
+RB|3|Jeremiyah Love||||
+RB|4|Ashton Jeanty||||
+RB|5|De'Von Achane||||
+RB|6|Breece Hall||||
+RB|7|Ken Walker III||||
+RB|8|James Cook||||
+RB|9|Jonathan Taylor||||
+RB|10|Travis Etienne Jr.||||
+RB|11|Jadarian Price||||
+RB|12|Omarion Hampton||||
+RB|13|TreVeyon Henderson||||
+RB|14|Quinshon Judkins||||
+RB|15|Cam Skattebo||||
+RB|16|Kyren Williams||||
+RB|17|Chase Brown||||
+RB|18|Bucky Irving||||
+RB|19|Christian McCaffrey||||
+RB|20|Saquon Barkley||||
+RB|21|Josh Jacobs||||
+RB|22|Javonte Williams||||
+RB|23|Blake Corum||||
+RB|24|Zach Charbonnet||||
+RB|25|Jonathon Brooks||||
+RB|26|RJ Harvey||||
+RB|27|Bhayshul Tuten||||
+RB|28|Kyle Monangai||||
+RB|29|Tyrone Tracy Jr.||||
+RB|30|Braelon Allen||||
+RB|31|Tyjae Spears||||
+RB|32|Trey Benson||||
+RB|33|Derrick Henry||||
+RB|34|Jonah Coleman||||
+RB|35|Nicholas Singleton||||
+RB|36|Emmett Johnson||||
+RB|37|Kaytron Allen||||
+RB|38|Kaelon Black||||
+RB|39|Mike Washington Jr.||||
+RB|40|D'Andre Swift||||
+RB|41|David Montgomery||||
+RB|42|J.K. Dobbins||||
+RB|43|Najee Harris||||
+RB|44|Jaylen Warren||||
+RB|45|Rhamondre Stevenson||||
+RB|46|Rachaad White||||
+RB|47|Chuba Hubbard||||
+RB|48|Alvin Kamara||||
+RB|49|Tony Pollard||||
+RB|50|Dylan Sampson||||
+RB|51|Devin Neal||||
+RB|52|Jacory Croskey-Merritt||||
+RB|53|Woody Marks||||
+RB|54|Kaleb Johnson||||
+RB|55|Tahj Brooks||||
+RB|56|Jordan James||||
+RB|57|Ollie Gordon II||||
+RB|58|LeQuint Allen Jr.||||
+RB|59|DJ Giddens||||
+RB|60|Tank Bigsby||||
+RB|61|Chris Rodriguez Jr.||||
+RB|62|Brian Robinson Jr||||
+RB|63|Isiah Pacheco||||
+RB|64|Sean Tucker||||
+RB|65|Kenneth Gainwell||||
+RB|66|Rico Dowdle||||
+RB|67|Tyler Allgeier||||
+RB|68|Ray Davis||||
+RB|69|Keaton Mitchell||||
+RB|70|Kimani Vidal||||
+RB|71|Emanuel Wilson||||
+RB|72|Jordan Mason||||
+RB|73|Chris Brooks||||
+RB|74|Justice Hill||||
+RB|75|Kendre Miller||||
+RB|76|Isaiah Davis||||
+RB|77|Will Shipley||||
+RB|78|James Conner||||
+RB|79|Aaron Jones Sr.||||
+RB|80|Kareem Hunt||||
+RB|81|Austin Ekeler||||
+RB|82|Joe Mixon||||
+RB|83|Nick Chubb||||
+RB|84|Adam Randall||||
+RB|85|Seth McGowan||||
+RB|86|Demond Claiborne||||
+RB|87|Le'Veon Moss||||
+RB|88|Robert Henry Jr.||||
+RB|89|J'Mari Taylor||||
+RB|90|Desmond Reid||||
+RB|91|Jam Miller||||
+RB|92|Noah Whittington||||
+RB|93|Jaydn Ott||||
+RB|94|CJ Donaldson||||
+RB|95|Roman Hemby||||
+RB|96|Jamal Haynes||||
+RB|97|Jaden Nixon||||
+RB|98|Coleman Bennett||||
+RB|99|Jaydon Blue||||
+RB|100|Phil Mafah||||
+RB|101|Trevor Etienne||||
+RB|102|Xavier Scott||||
+RB|103|Raheim Sanders||||
+RB|104|George Holani||||
+RB|105|Malik Davis||||
+RB|106|Rasheen Ali||||
+RB|107|Patrick Taylor Jr.||||
+RB|108|Jawhar Jordan||||
+RB|109|Emari Demercado||||
+RB|110|Jaylen Wright||||
+RB|111|Bam Knight||||
+RB|112|Audric Estimé||||
+RB|113|Michael Carter||||
+RB|114|Jerome Ford||||
+RB|115|Jarquez Hunter||||
+RB|116|Brashard Smith||||
+RB|117|MarShawn Lloyd||||
+RB|118|Isaac Guerendo||||
+RB|119|Roschon Johnson||||
+RB|120|Tyler Badie||||
+RB|121|Dylan Laube||||
+RB|122|Zamir White||||
+RB|123|Samaje Perine||||
+RB|124|Cam Akers||||
+RB|125|Zack Moss||||
+RB|126|Devin Singletary||||
+RB|127|Dameon Pierce||||
+RB|128|Elijah Mitchell||||
+RB|129|Khalil Herbert||||
+RB|130|Miles Sanders||||
+RB|131|Trey Sermon||||
+RB|132|Ty Chandler||||
+RB|133|A.J. Dillon||||
+RB|134|Gus Edwards||||
+RB|135|Jaleel McLaughlin||||
+RB|136|Alexander Mattison||||
+RB|137|Ty Johnson||||
+RB|138|Antonio Gibson||||
+RB|139|Sincere McCormick||||
+TE|1|Brock Bowers||||
+TE|2|Trey McBride||||
+TE|3|Colston Loveland||||
+TE|4|Tyler Warren||||
+TE|5|Harold Fannin Jr.||||
+TE|6|Kyle Pitts Sr.||||
+TE|7|Tucker Kraft||||
+TE|8|Sam LaPorta||||
+TE|9|Kenyon Sadiq||||
+TE|10|Eli Stowers||||
+TE|11|Dalton Kincaid||||
+TE|12|Isaiah Likely||||
+TE|13|Jake Ferguson||||
+TE|14|T.J. Hockenson||||
+TE|15|Mark Andrews||||
+TE|16|George Kittle||||
+TE|17|Dallas Goedert||||
+TE|18|Terrance Ferguson||||
+TE|19|Oronde Gadsden||||
+TE|20|Mason Taylor||||
+TE|21|Elijah Arroyo||||
+TE|22|Gunnar Helm||||
+TE|23|Brenton Strange||||
+TE|24|AJ Barner||||
+TE|25|Theo Johnson||||
+TE|26|Juwan Johnson||||
+TE|27|David Njoku||||
+TE|28|Pat Freiermuth||||
+TE|29|Hunter Henry||||
+TE|30|Dalton Schultz||||
+TE|31|Max Klare||||
+TE|32|Oscar Delp||||
+TE|33|Sam Roush||||
+TE|34|Justin Joly||||
+TE|35|Eli Raridon||||
+TE|36|Joe Royer||||
+TE|37|Tanner Koziol||||
+TE|38|Chig Okonkwo||||
+TE|39|Darnell Washington||||
+TE|40|Ja'Tavion Sanders||||
+TE|41|Greg Dulcich||||
+TE|42|Evan Engram||||
+TE|43|Travis Kelce||||
+TE|44|Jonnu Smith||||
+TE|45|Michael Mayer||||
+TE|46|Cade Otton||||
+TE|47|Cole Kmet||||
+TE|48|Colby Parkinson||||
+TE|49|Jake Tonges||||
+TE|50|Dawson Knox||||
+TE|51|Ben Sinnott||||
+TE|52|Tommy Tremble||||
+TE|53|Noah Gray||||
+TE|54|Daniel Bellinger||||
+TE|55|Cade Stover||||
+TE|56|Luke Musgrave||||
+TE|57|Noah Fant||||
+TE|58|Mike Gesicki||||
+TE|59|Darren Waller||||
+TE|60|Austin Hooper||||
+TE|61|Zach Ertz||||
+TE|62|Tyler Higbee||||
+TE|63|Taysom Hill||||
+TE|64|Erick All Jr.||||
+TE|65|Thomas Fidone II||||
+TE|66|Elijah Higgins||||
+TE|67|Charlie Kolar||||
+TE|68|Luke Schoonmaker||||
+TE|69|Mitchell Evans||||
+TE|70|Brevin Jordan||||
+TE|71|Davis Allen||||
+TE|72|Jack Endries||||
+TE|73|Michael Trigg||||
+TE|74|John Michael Gyllenborg||||
+TE|75|Marlin Klein||||
+TE|76|RJ Maryland||||
+TE|77|Dallen Bentley||||
+TE|78|Nate Boerkircher||||
+TE|79|Dae'Quan Wright||||
+TE|80|Bauer Sharp||||
+`.trim().split('\n').map(line => {
+	const [position, rank, player, team, age = '', commentary = ''] = line.split('|');
+	const parsedRank = Number(rank);
+	return {
+		position,
+		rank: parsedRank,
+		player,
+		team,
+		age: age === '' ? '' : Number(age),
+		commentary,
+		tier: klugeTierFor(position, parsedRank),
+		tier_color: KLUGE_TIER_COLORS[klugeTierFor(position, parsedRank)] || '',
+		build: 'Dave Kluge',
+		rank_set: 'Dave Kluge',
+		notes: '',
+		note_details: [],
+	};
+});
 const HARMON_ACTION_LEGEND = [
 	{label:'SUPER BUY', color:'#bbf7d0'}, {label:'BUY', color:'#dcfce7'}, {label:'HOLD', color:'#fef3c7'}, {label:'SELL', color:'#fee2e2'}
 ];
@@ -2448,8 +2958,8 @@ function withPlayerChartScore(rows) { return rows.map(r => { const projection = 
 function waldmanTierIndex(color) { const c = normalizeColor(color); if (c === '#8FAADC' || c === '#8F98A6') return 1; const idx = (DATA.tierLegend || []).findIndex(x => normalizeColor(x.color) === c); return idx >= 0 ? idx + 1 : 8; }
 function rowNoteText(row) { const details = row.note_details || []; if (details.length) return details.map(d => `${d.code}: ${d.meaning}`).join('; '); return row.notes || ''; }
 function addBidSignal(cur, label, tip, strong=false) { if (!cur.bidSignals.some(s => s.label === label && s.tip === tip)) cur.bidSignals.push({label, tip, strong}); }
-function rememberPlayerMeta(map, row, source) { if (!row || !row.position || !row.player) return; const key = rankKey(row); const cur = map.get(key) || { tierIndex:8, ranks:[], comment:'', notes:'', bidSignals:[] }; let tier = null; if (source === 'kyle') tier = Number(row.kyle_tier || row.tier); else if (source === 'fantasypros') tier = Number(row.fantasypros_tier || row.tier); else if (source === 'clay') tier = Number(row.clay_tier || row.tier); else if (source === 'waldman') tier = waldmanTierIndex(row.tier_color); if (Number.isFinite(tier)) cur.tierIndex = Math.min(cur.tierIndex, Math.max(1, Math.min(8, tier))); const rank = Number(source === 'fantasypros' ? fantasyProsPositionRank(row) : row.waldman_pos_rank ?? row.clay_rank ?? row.rank); if (Number.isFinite(rank)) cur.ranks.push(rank); if (!cur.comment && row.commentary) cur.comment = row.commentary; if (!cur.notes) cur.notes = rowNoteText(row); if (source === 'harmon' && row.action === 'SUPER BUY') addBidSignal(cur, 'Harmon SUPER BUY', 'Harmon: SUPER BUY', true); if (source === 'harmon' && row.action === 'BUY') addBidSignal(cur, 'Harmon BUY', 'Harmon: BUY'); if (source === 'waldman') (row.note_details || []).forEach(d => { if (['U','Z','\u2191'].includes(d.code)) addBidSignal(cur, `Waldman ${d.code}`, `Waldman ${d.code}: ${d.meaning}`); }); map.set(key, cur); }
-function playerCheatMeta() { if (playerCheatMeta.cache) return playerCheatMeta.cache; const map = new Map(); waldmanCompareRows().forEach(r => rememberPlayerMeta(map, r, 'waldman')); kyleRows().forEach(r => rememberPlayerMeta(map, r, 'kyle')); fantasyProsRows().forEach(r => rememberPlayerMeta(map, r, 'fantasypros')); clayRows().forEach(r => rememberPlayerMeta(map, r, 'clay')); harmonRows().forEach(r => rememberPlayerMeta(map, r, 'harmon')); map.forEach(value => { value.rank = value.ranks.length ? value.ranks.reduce((sum, rank) => sum + rank, 0) / value.ranks.length : null; }); playerCheatMeta.cache = map; return map; }
+function rememberPlayerMeta(map, row, source) { if (!row || !row.position || !row.player) return; const key = rankKey(row); const cur = map.get(key) || { tierIndex:8, ranks:[], comment:'', notes:'', bidSignals:[] }; let tier = null; if (source === 'kyle') tier = Number(row.kyle_tier || row.tier); else if (source === 'fantasypros') tier = Number(row.fantasypros_tier || row.tier); else if (source === 'kluge') tier = Number(row.tier || klugeTierFor(row.position, row.rank)); else if (source === 'clay') tier = Number(row.clay_tier || row.tier); else if (source === 'waldman') tier = waldmanTierIndex(row.tier_color); if (Number.isFinite(tier)) cur.tierIndex = Math.min(cur.tierIndex, Math.max(1, Math.min(8, tier))); const rank = Number(source === 'fantasypros' ? fantasyProsPositionRank(row) : row.waldman_pos_rank ?? row.clay_rank ?? row.rank); if (Number.isFinite(rank)) cur.ranks.push(rank); if (!cur.comment && row.commentary) cur.comment = row.commentary; if (!cur.notes) cur.notes = rowNoteText(row); if (source === 'harmon' && row.action === 'SUPER BUY') addBidSignal(cur, 'Harmon SUPER BUY', 'Harmon: SUPER BUY', true); if (source === 'harmon' && row.action === 'BUY') addBidSignal(cur, 'Harmon BUY', 'Harmon: BUY'); if (source === 'waldman') (row.note_details || []).forEach(d => { if (['U','Z','\u2191'].includes(d.code)) addBidSignal(cur, `Waldman ${d.code}`, `Waldman ${d.code}: ${d.meaning}`); }); map.set(key, cur); }
+function playerCheatMeta() { if (playerCheatMeta.cache) return playerCheatMeta.cache; const map = new Map(); waldmanCompareRows().forEach(r => rememberPlayerMeta(map, r, 'waldman')); kyleRows().forEach(r => rememberPlayerMeta(map, r, 'kyle')); fantasyProsRows().forEach(r => rememberPlayerMeta(map, r, 'fantasypros')); klugeRows().forEach(r => rememberPlayerMeta(map, r, 'kluge')); clayRows().forEach(r => rememberPlayerMeta(map, r, 'clay')); harmonRows().forEach(r => rememberPlayerMeta(map, r, 'harmon')); map.forEach(value => { value.rank = value.ranks.length ? value.ranks.reduce((sum, rank) => sum + rank, 0) / value.ranks.length : null; }); playerCheatMeta.cache = map; return map; }
 function auctionBandStep(raw) { if (raw >= 60) return 5; if (raw >= 35) return 4; if (raw >= 18) return 3; if (raw >= 8) return 2; return 1; }
 function auctionBandChunkSize(raw) { if (raw >= 55) return 2; if (raw >= 30) return 3; if (raw >= 14) return 4; return 6; }
 function normalizeAuctionTotals(items, totalBudget) {
@@ -5475,6 +5985,7 @@ function waldmanCompareRows() { return waldmanBuildRows('Win-Now'); }
 function kyleTierFor(row) { const rule = (KYLE_TIER_RULES[row.position] || []).find(([min,max]) => row.rank >= min && row.rank <= max); return rule ? rule[2] : '7'; }
 function kyleRows() { return KYLE_RANKS.map(r => { const tier = kyleTierFor(r); return {...r, build:'Kyle', rank_set:'Kyle', tier, kyle_tier:tier, tier_label:`Tier ${tier}`, tier_color:KYLE_TIER_COLORS[tier], age:'', notes:'', commentary:''}; }); }
 function fantasyProsRows() { return FANTASYPROS_RANKS.map(r => ({...r, build:'FantasyPros', rank_set:'FantasyPros', tier:String(r.tier || ''), fantasypros_tier:r.tier || '', tier_label:r.tier ? `Tier ${r.tier}` : '', tier_color:FANTASYPROS_TIER_COLORS[String(r.tier)] || '', notes:'', note_details:[], commentary:''})); }
+function klugeRows() { return KLUGE_RANKS.map(r => { const tier = r.tier || klugeTierFor(r.position, r.rank); return {...r, build:'Dave Kluge', rank_set:'Dave Kluge', tier, tier_color:r.tier_color || KLUGE_TIER_COLORS[String(tier)] || '', tier_label:`Tier ${tier}`, notes:'', note_details:[], commentary:klugeCommentaryFor(r)}; }); }
 function clayTierFor(row, topPoints) {
 	const rank = Number(row.clay_rank), points = n(row.clay_fpts), ratio = topPoints ? points / topPoints : 0;
 	if (rank <= 3 || ratio >= 0.9) return '1';
@@ -5564,24 +6075,26 @@ function fantasyProsPositionRank(row) { const match = String(row?.pos_rank ?? ''
 function rankDelta(a, b) { return Number.isFinite(Number(a)) && Number.isFinite(Number(b)) ? Number(a) - Number(b) : ''; }
 function comparisonRows() {
 	const includeHarmon = aggregateIncludesHarmon();
-	const wRows = waldmanCompareRows(), kRows = kyleRows(), fRows = fantasyProsRows(), cRows = clayRows();
+	const wRows = waldmanCompareRows(), kRows = kyleRows(), fRows = fantasyProsRows(), dRows = klugeRows(), cRows = clayRows();
 	const hRows = includeHarmon ? harmonRows() : [];
-	const wMap = bestByRankKey(wRows), kMap = bestByRankKey(kRows), fMap = bestByRankKey(fRows), cMap = bestByRankKey(cRows);
+	const wMap = bestByRankKey(wRows), kMap = bestByRankKey(kRows), fMap = bestByRankKey(fRows), dMap = bestByRankKey(dRows), cMap = bestByRankKey(cRows);
 	const hMap = includeHarmon ? bestByRankKey(hRows) : new Map();
 	const sourceStats = {
 		waldman: sourceStatsByPosition(wRows, 'waldman'),
 		kyle: sourceStatsByPosition(kRows, 'kyle'),
 		fantasypros: sourceStatsByPosition(fRows, 'fantasypros'),
+		kluge: sourceStatsByPosition(dRows, 'kluge'),
 		clay: sourceStatsByPosition(cRows, 'clay'),
 		harmon: includeHarmon ? sourceStatsByPosition(hRows, 'harmon') : new Map(),
 	};
-	const keys = [...new Set([...wMap.keys(), ...kMap.keys(), ...fMap.keys(), ...cMap.keys(), ...hMap.keys()])];
+	const keys = [...new Set([...wMap.keys(), ...kMap.keys(), ...fMap.keys(), ...dMap.keys(), ...cMap.keys(), ...hMap.keys()])];
 	return keys.map(key => {
-		const w=wMap.get(key), k=kMap.get(key), f=fMap.get(key), c=cMap.get(key), h=hMap.get(key), ref=h||k||f||c||w, fp=fantasyProsPositionRank(f);
+		const w=wMap.get(key), k=kMap.get(key), f=fMap.get(key), d=dMap.get(key), c=cMap.get(key), h=hMap.get(key), ref=h||d||k||f||c||w, fp=fantasyProsPositionRank(f);
 		const ranks = [
 			finiteRankValue(w, 'waldman'),
 			finiteRankValue(k, 'kyle'),
 			finiteRankValue(f, 'fantasypros'),
+			finiteRankValue(d, 'kluge'),
 			finiteRankValue(c, 'clay'),
 			includeHarmon ? finiteRankValue(h, 'harmon') : null,
 		].filter(Number.isFinite);
@@ -5590,6 +6103,7 @@ function comparisonRows() {
 			['waldman', w],
 			['kyle', k],
 			['fantasypros', f],
+			['kluge', d],
 			['clay', c],
 			['harmon', h],
 		].forEach(([source, row]) => {
@@ -5612,16 +6126,18 @@ function comparisonRows() {
 		const consensusScore = Number.isFinite(zMean) ? -(zMean + (Number.isFinite(zStdDev) ? zStdDev * 0.25 : 0)) : '';
 		return {
 			position:ref.position,
-			player:h?.player || k?.player || f?.player || c?.player || w?.player || '',
-			team:h?.team || k?.team || f?.team || c?.team || w?.team || '',
-			age:h?.age ?? k?.age ?? f?.age ?? c?.age ?? w?.age ?? '',
+			player:h?.player || d?.player || k?.player || f?.player || c?.player || w?.player || '',
+			team:h?.team || d?.team || k?.team || f?.team || c?.team || w?.team || '',
+			age:h?.age ?? d?.age ?? k?.age ?? f?.age ?? c?.age ?? w?.age ?? '',
 			harmon_rank:h?.rank ?? '', harmon_action:h?.action ?? '', harmon_market:h?.market ?? '', harmon_delta:h?.delta ?? '', harmon_market_rank:h?.market_rank ?? '',
+			kluge_rank:d?.rank ?? '', kluge_tier:d?.tier ?? '',
 			kyle_rank:k?.rank ?? '', kyle_tier:k?.tier ?? '',
 			fantasypros_rank:fp, fantasypros_overall_rank:f?.rank ?? '', fantasypros_tier:f?.tier ?? '',
 			clay_rank:c?.rank ?? '', clay_overall_rank:c?.clay_overall_rank ?? '', clay_tier:c?.tier ?? '', clay_fpts:c?.clay_fpts ?? '',
 			waldman_rank:w?.rank ?? '', waldman_overall_rank:w?.waldman_overall_rank ?? '',
-			tier_color:h?.tier_color || k?.tier_color || f?.tier_color || c?.tier_color || '',
+			tier_color:h?.tier_color || d?.tier_color || k?.tier_color || f?.tier_color || c?.tier_color || '',
 			kyle_vs_waldman:rankDelta(k?.rank, w?.rank), fantasypros_vs_waldman:rankDelta(fp, w?.rank), fantasypros_vs_kyle:rankDelta(fp, k?.rank),
+			kluge_vs_waldman:rankDelta(d?.rank, w?.rank), kluge_vs_kyle:rankDelta(d?.rank, k?.rank), kluge_vs_fantasypros:rankDelta(d?.rank, fp),
 			clay_vs_waldman:rankDelta(c?.rank, w?.rank), clay_vs_kyle:rankDelta(c?.rank, k?.rank), clay_vs_fantasypros:rankDelta(c?.rank, fp),
 			harmon_vs_waldman:rankDelta(h?.rank, w?.rank), harmon_vs_kyle:rankDelta(h?.rank, k?.rank), harmon_vs_fantasypros:rankDelta(h?.rank, fp), harmon_vs_clay:rankDelta(h?.rank, c?.rank),
 			rank_count:ranks.length, rank_mean:rankMean, rank_median:rankMedian, rank_stddev:rankStdDev, rank_mad:rankMad, rank_range:rankRange, best_rank:bestRank, worst_rank:worstRank,
@@ -5633,8 +6149,8 @@ function comparisonRows() {
 }
 function combinedRows() {
 	const includeHarmon = aggregateIncludesHarmon();
-	return comparisonRows().filter(r => r.kyle_rank !== '' || r.waldman_rank !== '' || r.fantasypros_rank !== '' || r.clay_rank !== '' || (includeHarmon && r.harmon_rank !== '')).map(r => {
-		const rankValues = [r.kyle_rank, r.waldman_rank, r.fantasypros_rank, r.clay_rank];
+	return comparisonRows().filter(r => r.kluge_rank !== '' || r.kyle_rank !== '' || r.waldman_rank !== '' || r.fantasypros_rank !== '' || r.clay_rank !== '' || (includeHarmon && r.harmon_rank !== '')).map(r => {
+		const rankValues = [r.kluge_rank, r.kyle_rank, r.waldman_rank, r.fantasypros_rank, r.clay_rank];
 		if (includeHarmon) rankValues.push(r.harmon_rank);
 		const values = rankValues.filter(v => v !== '').map(Number);
 		const combined = values.reduce((sum, value) => sum + value, 0) / values.length;
@@ -5643,8 +6159,8 @@ function combinedRows() {
 }
 function updateCheatControls() { const waldman = currentCheatMode() === 'waldman'; const build = document.getElementById('buildFilter'); const market = document.getElementById('harmonMarketFilter'); if (build) build.disabled = !waldman; if (market) market.disabled = !usesHarmonMarketFilter(); }
 function updateCheatAgeRangeLabel() { const label = document.getElementById('cheatAgeRangeLabel'); if (!label) return; const range = selectedCheatAgeRange(); label.textContent = `${range.min}-${range.max}`; }
-function updateCheatModeNote() { const note = document.getElementById('cheatModeNote'); if (!note) return; const mode = currentCheatMode(); const bidNote = ' Bid+ marks an analyst target; Bid++ marks Harmon SUPER BUY or multiple target signals.'; if (mode === 'harmon') note.textContent = 'Harmon ranks are WR-only. Market is an AND filter with selected action tags like SUPER BUY.' + bidNote; else if (mode === 'combined') note.textContent = 'Combined rank averages the available rankers after the position filters are applied. Harmon WR ranks are included when the position filter is WR and the Harmon Market filter is applied as an AND condition.' + bidNote; else if (mode === 'compare') note.textContent = 'Consensus stats normalize each ranker with z-scores, then summarize the player pool with mean, median, MAD, and spread so you can compare agreement instead of scanning source-by-source columns.' + bidNote; else if (mode === 'clay') note.textContent = 'Mike Clay mode derives position ranks and tiers from ESPN 2026 projections using the active league scoring settings.' + bidNote; else if (mode === 'fantasypros') note.textContent = 'FantasyPros mode uses the imported 2026 dynasty ECR CSV with overall rank, position rank, tier, and ECR spread.' + bidNote; else if (mode === 'kyle') note.textContent = 'Kyle mode uses the supplied rankings and tier shading.' + bidNote; else note.textContent = 'Waldman mode keeps workbook tier colors.' + bidNote; }
-function cheatRows() { const q=norm(document.getElementById('cheatSearch').value), build=document.getElementById('buildFilter').value, pos=document.getElementById('cheatPosFilter').value, market=usesHarmonMarketFilter() ? document.getElementById('harmonMarketFilter')?.value : '', ageRange=selectedCheatAgeRange(), tierColor=state.cheatTierColor, mode=currentCheatMode(); let rows; if (mode === 'kyle') rows = kyleRows(); else if (mode === 'fantasypros') rows = fantasyProsRows(); else if (mode === 'clay') rows = clayRows(); else if (mode === 'harmon') rows = harmonRows(); else if (mode === 'combined') rows = combinedRows(); else if (mode === 'compare') rows = comparisonRows(); else rows = DATA.cheatsheets.filter(r => (!build || r.build===build)); return rows.map(withCheatMetadata).filter(r => tierMatches(r, tierColor) && ageMatches(r, ageRange) && (!market || r.market === market || r.harmon_market === market) && (!pos || r.position===pos) && (!q || norm(Object.values(r).join(' ')).includes(q))); }
+function updateCheatModeNote() { const note = document.getElementById('cheatModeNote'); if (!note) return; const mode = currentCheatMode(); const bidNote = ' Bid+ marks an analyst target; Bid++ marks Harmon SUPER BUY or multiple target signals.'; if (mode === 'harmon') note.textContent = 'Harmon ranks are WR-only. Market is an AND filter with selected action tags like SUPER BUY.' + bidNote; else if (mode === 'combined') note.textContent = 'Combined rank averages the available rankers after the position filters are applied. Harmon WR ranks are included when the position filter is WR and the Harmon Market filter is applied as an AND condition.' + bidNote; else if (mode === 'compare') note.textContent = 'Consensus stats normalize each ranker with z-scores, then summarize the player pool with mean, median, MAD, and spread so you can compare agreement instead of scanning source-by-source columns.' + bidNote; else if (mode === 'kluge') note.textContent = 'Dave Kluge ranks are imported by position and can participate in consensus stats and combined views.' + bidNote; else if (mode === 'clay') note.textContent = 'Mike Clay mode derives position ranks and tiers from ESPN 2026 projections using the active league scoring settings.' + bidNote; else if (mode === 'fantasypros') note.textContent = 'FantasyPros mode uses the imported 2026 dynasty ECR CSV with overall rank, position rank, tier, and ECR spread.' + bidNote; else if (mode === 'kyle') note.textContent = 'Kyle mode uses the supplied rankings and tier shading.' + bidNote; else note.textContent = 'Waldman mode keeps workbook tier colors.' + bidNote; }
+function cheatRows() { const q=norm(document.getElementById('cheatSearch').value), build=document.getElementById('buildFilter').value, pos=document.getElementById('cheatPosFilter').value, market=usesHarmonMarketFilter() ? document.getElementById('harmonMarketFilter')?.value : '', ageRange=selectedCheatAgeRange(), tierColor=state.cheatTierColor, mode=currentCheatMode(); let rows; if (mode === 'kyle') rows = kyleRows(); else if (mode === 'fantasypros') rows = fantasyProsRows(); else if (mode === 'kluge') rows = klugeRows(); else if (mode === 'clay') rows = clayRows(); else if (mode === 'harmon') rows = harmonRows(); else if (mode === 'combined') rows = combinedRows(); else if (mode === 'compare') rows = comparisonRows(); else rows = DATA.cheatsheets.filter(r => (!build || r.build===build)); return rows.map(withCheatMetadata).filter(r => tierMatches(r, tierColor) && ageMatches(r, ageRange) && (!market || r.market === market || r.harmon_market === market) && (!pos || r.position===pos) && (!q || norm(Object.values(r).join(' ')).includes(q))); }
 function bestCheatRows(rows) { const map = new Map(); rows.forEach(r => { const key = `${r.position}|${r.player}|${r.team}`; const cur = map.get(key); if (!cur || r.rank < cur.rank) map.set(key, r); }); return [...map.values()].sort((a,b)=>a.rank-b.rank); }
 function teamRows(which) { const base = DATA.teamProjections[which] || []; const pfx = { year1:'teamY1', year2:'teamY2', clay2026:'teamClay' }[which] || 'teamY1'; const q=norm(document.getElementById(`${pfx}Search`).value), team=document.getElementById(`${pfx}Team`).value, pos=document.getElementById(`${pfx}Pos`).value; return withCustomPoints(base.filter(r => (!team || r.team===team) && (!pos || r.position===pos) && (!q || norm(Object.values(r).join(' ')).includes(q)))); }
 function histRows() { const q=norm(document.getElementById('histSearch').value), team=document.getElementById('histTeam').value; return DATA.teamProjections.historical.filter(r => (!team || r.team===team) && (!q || norm(Object.values(r).join(' ')).includes(q))); }
@@ -5709,7 +6225,8 @@ const combinedCheatCols = [['position','Pos'],['combined_rank','Combined','rate'
 const combinedWithHarmonCols = [['position','Pos'],['combined_rank','Combined','rate'],['player','Player'],['queue_sort','Queue','queue'],['team','Team'],['auction_tier','Price Tier'],['auction_value','Auction','money'],['bid_signal','Bid','bid'],['harmon_rank','Harmon','int'],['harmon_action','H Action','tag'],['harmon_market','H Market','tag'],['kyle_rank','Kyle Pos','int'],['kyle_tier','Kyle Tier'],['fantasypros_rank','FP Pos','int'],['fantasypros_tier','FP Tier'],['clay_rank','Clay Pos','int'],['clay_tier','Clay Tier'],['waldman_rank','Waldman Pos','int'],['harmon_vs_waldman','H-W','int'],['kyle_vs_waldman','K-W','int'],['fantasypros_vs_waldman','FP-W','int'],['clay_vs_waldman','Clay-W','int'],['harmon_vs_clay','H-Clay','int'],['similarity','Similarity'],['notes','Notes','notes'],['commentary','Commentary']];
 const compareCheatCols = [['position','Pos'],['player','Player'],['team','Team'],['age','Age','int'],['rank_count','Sources','int'],['consensus_score','Consensus','rate'],['z_mean','Z Mean','rate'],['z_median','Z Median','rate'],['z_stddev','Z Std Dev','rate'],['rank_mean','Avg Rank','rate'],['rank_median','Median','rate'],['rank_stddev','Rank Std Dev','rate'],['rank_mad','MAD','rate'],['rank_range','Range','int'],['best_rank','Best','int'],['worst_rank','Worst','int'],['agreement','Spread'],['auction_tier','Price Tier'],['auction_value','Auction','money'],['bid_signal','Bid','bid'],['notes','Notes','notes'],['commentary','Commentary']];
 const compareWithoutHarmonCols = compareCheatCols;
-function cheatColsForMode() { const mode = currentCheatMode(); if (mode === 'kyle') return kyleCheatCols; if (mode === 'fantasypros') return fantasyProsCheatCols; if (mode === 'clay') return clayCheatCols; if (mode === 'harmon') return harmonCheatCols; if (mode === 'combined') return aggregateIncludesHarmon() ? combinedWithHarmonCols : combinedCheatCols; if (mode === 'compare') return compareCheatCols; return waldmanCheatCols; }
+const klugeCheatCols = [['position','Pos'],['rank','Kluge Rank','int'],['player','Player'],['team','Team'],['age','Age','int'],['tier','Tier'],['auction_tier','Price Tier'],['auction_value','Auction','money'],['bid_signal','Bid','bid'],['commentary','Commentary']];
+function cheatColsForMode() { const mode = currentCheatMode(); if (mode === 'kyle') return kyleCheatCols; if (mode === 'fantasypros') return fantasyProsCheatCols; if (mode === 'kluge') return klugeCheatCols; if (mode === 'clay') return clayCheatCols; if (mode === 'harmon') return harmonCheatCols; if (mode === 'combined') return aggregateIncludesHarmon() ? combinedWithHarmonCols : combinedCheatCols; if (mode === 'compare') return compareCheatCols; return waldmanCheatCols; }
 const projectionCols = [['player','Player'],['fpts','Fpts'],['team','Team'],['position','Pos'],['age','Age','int'],['games','G','int'],['pass_att','Pass Att','int'],['pass_comp','Pass Comp','int'],['pass_pct','Pass %','pct'],['pass_yards','Pass Yds','int'],['pass_ypa','Pass Y/A','rate'],['pass_td','Pass TD','int'],['interceptions','INT','int'],['rush_att','Rush Att','int'],['rush_yards','Rush Yds','int'],['rush_ypa','Rush Y/A','rate'],['rush_td','Rush TD','int'],['targets','Targets','int'],['receptions','Rec','int'],['catch_pct','Catch %','pct'],['rec_yards','Rec Yds','int'],['rec_ypr','Yds/Rec','rate'],['rec_td','Rec TD','int'],['ppr_fpts','PPR'],['half_ppr','Half PPR'],['adjusted','Adjusted']];
 const historyCols = [['team','Team'],['team_name','Team Name'],['pass_att','Pass Att','int'],['pass_comp','Pass Comp','int'],['pass_yards','Pass Yds','int'],['pass_td','Pass TD','int'],['rec_targets','Targets','int'],['receptions','Rec','int'],['rec_yards','Rec Yds','int'],['rec_td','Rec TD','int'],['rush_att','Rush Att','int'],['rush_yards','Rush Yds','int'],['rush_td','Rush TD','int'],['run_pct','Run %','pct'],['pass_pct','Pass %','pct']];
 function renderCurrentTables() { const pr=playerRows(); renderTable('playersTable', pr, playerCols); renderQueueSummary(); const scoredPlayers = withPlayerChartScore(pr); barChart('chartFilteredPpr', [...scoredPlayers].sort((a,b)=>cmp(a,b,'chart_fpts',-1)).map(r=>({...r,label:`${r.player} (${r.position}${r.team ? ' '+r.team : ''})`})), 'label', 'chart_fpts', '#2563eb', filteredTopLimit()); countChart('chartFilteredPos', pr, 'position', '#0f9f6e'); updateCheatControls(); updateCheatModeNote(); updateCheatAgeRangeLabel(); renderTierLegend(); renderTierDropOffs(); const cr=cheatRows(); renderTable('cheatsTable', cr, cheatColsForMode()); renderTable('teamY1Table', teamRows('year1'), projectionCols); renderTable('teamY2Table', teamRows('year2'), projectionCols); renderTable('teamClayTable', teamRows('clay2026'), projectionCols); renderTable('historyTable', histRows(), historyCols); renderOptimizer(state.optimizer || buildOptimizedTeam()); renderMockAuction(); renderSlowAuction(); scheduleAutoSave(); }
@@ -5723,7 +6240,7 @@ function init() {
 	renderTierLegend();
 	fillSelect('posFilter', optionValues(DATA.players,'position'));
 	fillSelect('teamFilter', optionValues(DATA.players,'team'));
-	fillSelect('cheatPosFilter', [...new Set([...optionValues(DATA.cheatsheets,'position'), ...optionValues(KYLE_RANKS,'position'), ...optionValues(FANTASYPROS_RANKS,'position'), ...optionValues(DATA.teamProjections.clay2026,'position'), ...optionValues(HARMON_RANKS,'position')])].sort());
+	fillSelect('cheatPosFilter', [...new Set([...optionValues(DATA.cheatsheets,'position'), ...optionValues(KYLE_RANKS,'position'), ...optionValues(FANTASYPROS_RANKS,'position'), ...optionValues(KLUGE_RANKS,'position'), ...optionValues(DATA.teamProjections.clay2026,'position'), ...optionValues(HARMON_RANKS,'position')])].sort());
 	fillSelect('harmonMarketFilter', optionValues(HARMON_RANKS, 'market'));
 	fillSelect('teamY1Team', optionValues(DATA.teamProjections.year1, 'team'));
 	fillSelect('teamY2Team', optionValues(DATA.teamProjections.year2, 'team'));
