@@ -19,6 +19,9 @@ input, select { border:1px solid var(--line); border-radius:7px; padding:10px 11
 input[type=search] { min-width:280px; flex:1; max-width:620px; }
 button { border:1px solid var(--line); background:white; color:var(--ink); border-radius:7px; padding:9px 10px; cursor:pointer; }
 .save-strip { display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap:wrap; margin:-4px 0 10px; color:var(--muted); font-size:12px; }
+.save-strip-actions { display:flex; align-items:center; gap:10px; flex-wrap:wrap; }
+.tier-source-control { display:flex; align-items:center; gap:6px; color:#cbd5e1; font-size:12px; font-weight:700; }
+.tier-source-control select { min-height:30px; padding:4px 8px; font-size:12px; background:#1b2740; border-color:#31415f; color:#e2e8f0; }
 .save-strip button { padding:6px 8px; font-size:12px; }
 .age-range-filter { display:flex; align-items:center; gap:8px; border:1px solid var(--line); border-radius:7px; background:white; padding:6px 9px; min-height:42px; color:var(--muted); font-size:12px; font-weight:750; }
 .age-range-filter span:first-child { color:var(--ink); font-size:13px; min-width:42px; }
@@ -65,6 +68,20 @@ tbody tr.colored-row:hover td { filter:brightness(.97); }
 #coverageLegend .coverage-item strong { font-size:13px; color:#f4f7ff; }
 #coverageLegend .coverage-item small { color:#a8b7ce; line-height:1.25; font-weight:650; }
 #coverageLegend .coverage-item.dim { opacity:.82; }
+.compare-notes,
+#cheatCompareNotes.compare-notes {
+	display:block;
+	margin: 0 0 12px;
+	padding: 10px 12px;
+	border: 1px solid #24344f;
+	border-radius: 8px;
+	background: #0d1728 !important;
+	color: #d7e1ee !important;
+	line-height: 1.45;
+	box-shadow: inset 0 1px 0 rgba(255,255,255,.03);
+}
+.compare-notes strong,
+#cheatCompareNotes.compare-notes strong { color: #f4f7ff; }
 #playersTable th:nth-child(1), #playersTable td:nth-child(1) { position:sticky; left:0; z-index:4; width:170px; min-width:170px; max-width:170px; background:white; box-shadow:10px 0 12px -12px rgba(15,23,42,.55); overflow-wrap:anywhere; }
 #playersTable th:nth-child(1) { background:#eef2f7; z-index:7; }
 #playersTable tbody tr:hover td:nth-child(1) { background:#f8fafc; }
@@ -95,7 +112,8 @@ svg { width:100%; max-width:100%; min-width:0; height:auto; display:block; }
 .queue-card.avoid { border-color:#ddd6fe; background:#f5f3ff; }
 .queue-list { display:flex; flex-wrap:wrap; gap:5px; }
 .queue-pill { display:inline-flex; align-items:center; gap:5px; max-width:100%; border:1px solid rgba(15,23,42,.16); border-radius:999px; background:white; padding:3px 7px; color:#334155; font-size:12px; font-weight:750; }
-.queue-pill span { overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.queue-pill span { display:block; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.queue-pill .pos-name { font-weight:850; }
 .queue-pill button { min-height:20px; padding:0 4px; border:0; background:transparent; color:#64748b; font-weight:900; }
 #noteToast { position:fixed; left:50%; bottom:22px; transform:translateX(-50%); background:#111827; color:white; border-radius:8px; padding:10px 12px; box-shadow:0 10px 30px rgba(15,23,42,.25); z-index:20; max-width:min(560px, calc(100vw - 28px)); display:none; }
 #noteToast.show { display:block; }
@@ -125,6 +143,14 @@ svg { width:100%; max-width:100%; min-width:0; height:auto; display:block; }
 .position-player-row { display:grid; grid-template-columns:1fr auto; gap:8px; padding:8px 10px; border-top:1px solid #e2e8f0; }
 .position-player-row strong { display:block; }
 .position-player-row span { color:var(--muted); font-size:12px; }
+.position-player-row strong.pos-QB,
+.roster-slot .player-name.pos-QB { color:#ff5c93; }
+.position-player-row strong.pos-RB,
+.roster-slot .player-name.pos-RB { color:#52d8a7; }
+.position-player-row strong.pos-WR,
+.roster-slot .player-name.pos-WR { color:#6ab2ff; }
+.position-player-row strong.pos-TE,
+.roster-slot .player-name.pos-TE { color:#c084fc; }
 .tier-stack-card.active { border-color:var(--blue); box-shadow:0 0 0 2px rgba(37,99,235,.14); }
 .tier-stack-meta { display:flex; flex-wrap:wrap; gap:6px; padding:8px 10px; border-top:1px solid #e2e8f0; }
 .tier-pill { display:inline-flex; align-items:center; border:1px solid #cbd5e1; border-radius:999px; background:white; color:#334155; padding:3px 8px; font-size:12px; font-weight:800; }
@@ -372,10 +398,10 @@ button.tendency-chip:hover, button.tendency-chip:focus-visible { border-color:#9
 .pool-pager button { padding:6px 9px; font-size:12px; min-height:32px; }
 .pool-pager strong { color:var(--ink); }
 .pos-name { font-weight:500; }
-.pos-QB { color:#ff7aa5; }
-.pos-RB { color:#66e4ad; }
-.pos-WR { color:#78b8ff; }
-.pos-TE { color:#ffc06b; }
+.pos-QB { color:#ff5c93; }
+.pos-RB { color:#52d8a7; }
+.pos-WR { color:#6ab2ff; }
+.pos-TE { color:#c084fc; }
 .market-pressure { border:1px solid rgba(148,163,184,.45); border-radius:8px; background:#f8fafc; margin:10px 0; padding:8px; }
 .market-pressure h4 { margin:0 0 7px; color:#475569; font-size:11px; font-weight:850; text-transform:uppercase; }
 .pressure-grid { display:grid; grid-template-columns:repeat(auto-fit, minmax(150px, 1fr)); gap:6px; }
@@ -1243,13 +1269,17 @@ button.auction-status-pill:disabled {
 	gap:7px;
 	min-width:0;
 }
-.auction-active-name {
-	font-size:18px;
-	font-weight:850;
-	line-height:1.12;
-	overflow-wrap:anywhere;
-}
-.auction-active-tier {
+	.auction-active-name {
+		font-size:18px;
+		font-weight:850;
+		line-height:1.12;
+		overflow-wrap:anywhere;
+	}
+	.auction-active-name.pos-QB { color:#ff5c93; }
+	.auction-active-name.pos-RB { color:#52d8a7; }
+	.auction-active-name.pos-WR { color:#6ab2ff; }
+	.auction-active-name.pos-TE { color:#c084fc; }
+	.auction-active-tier {
 	color:var(--muted);
 	font-size:15px;
 	font-weight:850;
@@ -1640,10 +1670,10 @@ button.auction-status-pill:disabled {
 <body>
 <main>
 <nav class="tabs" id="tabs"></nav>
-<div class="save-strip"><span id="saveStatus">Auto-save ready</span><button id="resetSavedState" type="button">Reset saved state</button></div>
-<section id="overview" class="panel active"><div class="grid"><div class="card"><h2>Players By Position</h2><div id="chartPos"></div></div><div class="card"><h2>Age Distribution</h2><div id="chartAge"></div></div><div class="card"><h2>Top Team Average PPR</h2><div id="chartTeam"></div><p class="small">Average uses each team's top 20 projected PPR values. Invalid team labels are excluded.</p></div><div class="card"><h2>Tier Drop-Offs</h2><p class="small tier-drop-note">These are cliffs after a tier ends. A $0 drop means the next tier starts in the same rounded auction-dollar bucket. Open a row to see the players in that tier.</p><div id="tierDropSummary" class="metric-grid"></div><div id="tierDropCharts" class="tier-drop-grid"></div></div></div></section>
+<div class="save-strip"><span id="saveStatus">Auto-save ready</span><div class="save-strip-actions"><label class="tier-source-control" for="tierSource">Tier basis<select id="tierSource"><option value="year1" selected>Waldman year 1 points</option><option value="clay">Mike Clay points</option></select></label><button id="resetSavedState" type="button">Reset saved state</button></div></div>
+<section id="overview" class="panel active"><div class="grid"><div class="card"><h2>Players By Position</h2><div id="chartPos"></div></div><div class="card"><h2>Age Distribution</h2><div id="chartAge"></div></div><div class="card"><h2>Top Team Average PPR</h2><div id="chartTeam"></div><p class="small">Average uses each team's top 20 projected PPR values. Invalid team labels are excluded.</p></div><div class="card"><h2>Tier Drop-Offs</h2><p class="small tier-drop-note">These are cliffs after a projection tier ends. Waldman year 1 points are the default basis; switch to Clay if you want to recalculate tiers from his projection set. Open a row to see the players in that tier.</p><div id="tierDropSummary" class="metric-grid"></div><div id="tierDropCharts" class="tier-drop-grid"></div></div></div></section>
 <section id="players" class="panel"><div class="toolbar"><input id="playerSearch" type="search" placeholder="Search players, teams, positions, comments"><select id="posFilter"><option value="">All positions</option></select><select id="teamFilter"><option value="">All teams</option></select><button id="resetPlayers">Reset</button></div><p class="small">Upside is the source ceiling score; Downside is the source miss-risk score. Higher numbers mean more of that trait. Auction values assume 12 teams, $200 budgets, super-super-flex depth, PPR, TE premium, and strategic 3-deep QB/RB/WR/TE targets. Bid+ means an analyst target signal; Bid++ means a stronger signal such as Harmon SUPER BUY or multiple target signals. Hover or click a Bid marker for the source.</p><div class="grid"><div class="card"><h2>Filtered Top Fpts</h2><div class="toolbar"><select id="filteredTopLimit"><option value="10">Top 10</option><option value="20" selected>Top 20</option><option value="50">Top 50</option><option value="100">Top 100</option></select></div><div id="chartFilteredPpr"></div></div><div class="card"><h2>Filtered Position Mix</h2><div id="chartFilteredPos"></div></div></div><div class="table-wrap"><table id="playersTable"></table></div></section>
-<section id="cheatsheets" class="panel"><div class="toolbar"><input id="cheatSearch" type="search" placeholder="Search cheatsheets"><select id="rankMode"><option value="waldman">Waldman ranks</option><option value="kyle">Kyle ranks</option><option value="fantasypros">FantasyPros ranks</option><option value="kluge">Dave Kluge ranks</option><option value="clay">Mike Clay ranks</option><option value="harmon">Harmon WR ranks</option><option value="combined">Combined rank</option><option value="compare">Consensus stats</option></select><select id="buildFilter"><option value="">All builds</option><option>Win-Now</option><option>Long Build</option></select><select id="cheatPosFilter"><option value="">All positions</option></select><select id="klugeCommentFilter"><option value="">All Kluge rows</option><option value="commented">Has comment only</option><option value="blank">Blank comment only</option></select><select id="harmonMarketFilter"><option value="">All Harmon markets</option></select><label class="age-range-filter">Age <span id="cheatAgeRangeLabel">20-50</span><span class="range-row"><input id="cheatAgeMin" type="range" min="20" max="50" value="20"><input id="cheatAgeMax" type="range" min="20" max="50" value="50"></span></label></div><p class="small" id="cheatModeNote">Waldman mode keeps workbook tier colors. Kyle mode uses the supplied rankings and tier shading. FantasyPros mode uses the imported 2026 dynasty ECR CSV.</p><div class="legend" id="tierLegend"></div><div class="legend" id="coverageLegend"></div><div class="table-wrap"><table id="cheatsTable"></table></div></section>
+<section id="cheatsheets" class="panel"><div class="toolbar"><input id="cheatSearch" type="search" placeholder="Search cheatsheets"><select id="rankMode"><option value="waldman">Waldman ranks</option><option value="kyle">Kyle ranks</option><option value="fantasypros">FantasyPros ranks</option><option value="kluge">Dave Kluge ranks</option><option value="clay">Mike Clay ranks</option><option value="harmon">Harmon WR ranks</option><option value="combined">Combined rank</option><option value="compare">Consensus stats</option></select><select id="buildFilter"><option value="">All builds</option><option>Win-Now</option><option>Long Build</option></select><select id="cheatPosFilter"><option value="">All positions</option></select><select id="klugeCommentFilter"><option value="">All Kluge rows</option><option value="commented">Has comment only</option><option value="blank">Blank comment only</option></select><select id="harmonMarketFilter"><option value="">All Harmon markets</option></select><label class="age-range-filter">Age <span id="cheatAgeRangeLabel">20-50</span><span class="range-row"><input id="cheatAgeMin" type="range" min="20" max="50" value="20"><input id="cheatAgeMax" type="range" min="20" max="50" value="50"></span></label></div><p class="small" id="cheatModeNote">Waldman mode keeps workbook tier colors. Kyle mode uses the supplied rankings and tier shading. FantasyPros mode uses the imported 2026 dynasty ECR CSV.</p><div class="small compare-notes" id="cheatCompareNotes" hidden></div><div class="legend" id="tierLegend"></div><div class="legend" id="coverageLegend"></div><div class="table-wrap"><table id="cheatsTable"></table></div></section>
 
 <section id="auctionBuilder" class="panel"><div class="card"><h2>Best Team Builder</h2><div class="toolbar"><label class="inline-control">Premium<select id="optimizerPremium"><option value="0">At bid</option><option value="0.05" selected>5% over</option><option value="0.1">10% over</option><option value="0.15">15% over</option></select></label><label class="inline-control">Build focus<select id="optimizerFocus"><option value="balanced" selected>Balanced</option><option value="qb">Better QBs</option><option value="rb">Better RBs</option><option value="wr">Better WRs</option><option value="te">Better TEs</option><option value="qb_wr">QB + WR</option><option value="qb_wr_te">QB + WR + TE</option><option value="rb_wr">RB + WR</option><option value="rb_te">RB + TE</option><option value="custom">Custom Mix</option></select></label><label class="inline-control">Preferred<select id="optimizerPreference"><option value="none" selected>Value only</option><option value="queue">My Want Queue</option><option value="waldman_win">Waldman Win Now</option><option value="waldman_long">Waldman Long-Term</option><option value="waldman">Waldman Overall</option><option value="harmon">Harmon Buy/Super Buy</option><option value="kyle">Kyle Suggestions</option><option value="fantasypros">FantasyPros Suggestions</option><option value="common">Common Preferred</option></select></label><label class="inline-control">Shape<select id="optimizerShape"><option value="stars" selected>Stars + values</option><option value="balanced">Balanced spend</option><option value="breakout">Young breakouts</option></select></label><label class="inline-control">Age cap<select id="optimizerAgeCap"><option value="">No cap</option><option value="29">29 or younger</option><option value="27">27 or younger</option><option value="25">25 or younger</option></select></label><label class="inline-control">Budget<input id="optimizerBudget" type="number" min="25" max="200" step="1" value="200"></label><button id="runOptimizer" type="button">Build team</button></div><div class="toolbar mix-toolbar"><label class="inline-control">QB mix<input id="optimizerMixQB" type="number" min="0.5" max="2" step="0.1" value="1"></label><label class="inline-control">RB mix<input id="optimizerMixRB" type="number" min="0.5" max="2" step="0.1" value="1"></label><label class="inline-control">WR mix<input id="optimizerMixWR" type="number" min="0.5" max="2" step="0.1" value="1"></label><label class="inline-control">TE mix<input id="optimizerMixTE" type="number" min="0.5" max="2" step="0.1" value="1"></label></div><p class="small">Builds a 25-player roster using tier-banded bid values plus the selected premium. Shape controls whether the optimizer chases premium stars, balances spend, or leans into younger mid-priced breakout profiles. Age cap excludes players with known ages above the selected limit. Players marked Avoid are excluded; My Want Queue boosts marked targets.</p><div class="auction-principles"><span><strong>Use values as anchors</strong> Raise or lower live targets when the room is paying more or less by position.</span><span><strong>Spend for elite tiers</strong> It is acceptable to beat value for a player you want if the roster build still works.</span><span><strong>Keep endgame leverage</strong> A few extra dollars matter when the room is stuck at $1 bids.</span><span><strong>Avoid flat mid-tier prices</strong> If 6th-10th round profiles are getting bid up, pivot to similar cheaper bets.</span></div><div id="optimizerSummary" class="metric-grid"></div><div id="optimizerByPosition" class="position-list"></div><div id="optimizerRoster" class="roster-slots"></div></div></section>
 <section id="mockAuction" class="panel"><div class="card"><div class="auction-card-head"><h2>Fast Auction</h2><p class="small auction-directions">Click a team header or summary to inspect that roster. Bot profiles can be changed in Team Summary. Sim buttons complete one or ten full nomination-and-sale cycles. The board scrolls horizontally so you can compare every team at once.</p></div><div class="toolbar"><button id="startMock" type="button">Start / Reset</button><button id="mockClockToggle" type="button">Start clock</button><span id="mockTimer" class="mock-timer">:30</span><label class="inline-control">Nom sec<input id="mockNominationSeconds" type="number" min="3" max="120" step="1" value="30"></label><label class="inline-control">Reset sec<input id="mockResetSeconds" type="number" min="3" max="120" step="1" value="10"></label><button id="mockAutoOne" type="button" title="Simulates one full nomination, bot bidding sequence, and sale award.">Sim 1 sale</button><button id="mockAutoTen" type="button" title="Repeats the full automated sale cycle ten times or until the draft cannot continue.">Sim 10 sales</button><button id="mockBotRound" type="button">Next nomination / bot bid</button><button id="mockPass" type="button">Pass</button><button id="mockBidPlus1" type="button">Bid +$1</button><button id="mockBidPlus5" type="button">Bid +$5</button><button id="mockBidValue" type="button">Bid to value</button><label class="inline-control">Bid<input id="mockCustomBid" type="number" min="1" max="200" step="1" value="1"></label><button id="mockBidCustom" type="button">Bid amount</button></div><div id="mockWantedRemainders" class="queue-tier-summary"></div><div id="mockCurrent" class="current-auction"></div><div id="mockDraftBoard" class="mock-draft-board"></div></div><div class="mock-draft-layout"><div class="mock-stack"><div class="card"><h2>Team Summary</h2><div id="mockTeams" class="mock-board"></div></div><div class="card"><h2>Nomination Pool</h2><div class="toolbar"><input id="mockPlayerSearch" type="search" placeholder="Search auction pool"><select id="mockPosFilter"><option value="">All positions</option></select><label class="inline-control"><input id="mockShowDrafted" type="checkbox">Show drafted</label></div><div class="table-wrap mock-player-list"><table id="mockPlayerTable"></table></div></div></div><div class="mock-side-panel"><div class="card"><h2>Selected Team</h2><div id="mockHumanTeam" class="metric-grid"></div><div id="mockHumanRoster" class="roster-slots"></div></div><div class="card"><h2>Results</h2><div id="mockResults" class="result-log"></div></div></div></div></section>
@@ -2592,7 +2622,7 @@ const state = { sorts: new Map(), cheatTierColor: '', optimizer:null, mock:null,
 let mockClockId = null, slowClockId = null;
 const DASHBOARD_STORAGE_KEY = 'rspDynastyDashboardState:v1';
 const DASHBOARD_STORAGE_VERSION = 1;
-const DASHBOARD_CONTROL_IDS = ['playerSearch','posFilter','teamFilter','playerQueueFilter','filteredTopLimit','rankMode','cheatSearch','buildFilter','cheatPosFilter','harmonMarketFilter','cheatAgeMin','cheatAgeMax','optimizerPremium','optimizerGoal','optimizerTierMax','optimizerFocus','optimizerPreference','optimizerShape','optimizerAgeCap','optimizerBudget','optimizerMixQB','optimizerMixRB','optimizerMixWR','optimizerMixTE', ...MARKET_CONTROL_IDS, 'mockPlayerSearch','mockPosFilter','mockQueueFilter','mockShowDrafted','mockNominationSeconds','mockResetSeconds','slowPlayerSearch','slowPosFilter','slowQueueFilter','slowShowDrafted','slowNominationCount','slowNominationMinutes','slowNominationUnit','slowBidMinutes','slowBidUnit','slowResetMinutes','slowResetUnit','ltPlayerSearch','ltPosFilter','ltQueueFilter','ltShowDrafted','teamY1Search','teamY1Team','teamY1Pos','teamY2Search','teamY2Team','teamY2Pos','teamClaySearch','teamClayTeam','teamClayPos','histSearch','histTeam', ...Object.keys(DEFAULT_SCORING)];
+const DASHBOARD_CONTROL_IDS = ['playerSearch','posFilter','teamFilter','playerQueueFilter','filteredTopLimit','rankMode','tierSource','cheatSearch','buildFilter','cheatPosFilter','harmonMarketFilter','cheatAgeMin','cheatAgeMax','optimizerPremium','optimizerGoal','optimizerTierMax','optimizerFocus','optimizerPreference','optimizerShape','optimizerAgeCap','optimizerBudget','optimizerMixQB','optimizerMixRB','optimizerMixWR','optimizerMixTE', ...MARKET_CONTROL_IDS, 'mockPlayerSearch','mockPosFilter','mockQueueFilter','mockShowDrafted','mockNominationSeconds','mockResetSeconds','slowPlayerSearch','slowPosFilter','slowQueueFilter','slowShowDrafted','slowNominationCount','slowNominationMinutes','slowNominationUnit','slowBidMinutes','slowBidUnit','slowResetMinutes','slowResetUnit','ltPlayerSearch','ltPosFilter','ltQueueFilter','ltShowDrafted','teamY1Search','teamY1Team','teamY1Pos','teamY2Search','teamY2Team','teamY2Pos','teamClaySearch','teamClayTeam','teamClayPos','histSearch','histTeam', ...Object.keys(DEFAULT_SCORING)];
 let autoSaveReady = false, isRestoringState = false, saveTimer = null;
 function rawFmt(v) { if (v === null || v === undefined || v === '') return ''; if (typeof v === 'number') return Number.isInteger(v) ? String(v) : v.toFixed(2).replace(/\.00$/, ''); return String(v); }
 function fmt(v, type) { if (v === null || v === undefined || v === '') return ''; const n = Number(v); if (type === 'money' && !Number.isNaN(n)) return `$${Math.round(n)}`; if (type === 'pct' && !Number.isNaN(n)) return `${(n*100).toFixed(1)}%`; if (type === 'int' && !Number.isNaN(n)) return String(Math.round(n)); if (!Number.isNaN(n) && typeof v === 'number') return Number.isInteger(v) ? String(v) : v.toFixed(type === 'rate' ? 2 : 1).replace(/\.0$/, ''); return String(v); }
@@ -2734,8 +2764,10 @@ function renderQueueSummary() {
 		const ids = queues[type] || [];
 		const body = ids.length ? ids.map(id => {
 			const row = lookup.get(id);
-			const label = row ? `${row.player} ${row.position}${row.team ? ' ' + row.team : ''}` : id;
-			return `<span class="queue-pill"><span>${escapeHtml(label)}</span><button type="button" data-queue-remove="${escapeHtml(id)}" title="Remove from ${escapeHtml(title)}">x</button></span>`;
+			if (row) {
+				return `<span class="queue-pill"><span class="${positionClass(row.position)}">${escapeHtml(row.player || id)}</span><span>${escapeHtml(`${row.position}${row.team ? ' ' + row.team : ''}`)}</span><button type="button" data-queue-remove="${escapeHtml(id)}" title="Remove from ${escapeHtml(title)}">x</button></span>`;
+			}
+			return `<span class="queue-pill"><span>${escapeHtml(id)}</span><button type="button" data-queue-remove="${escapeHtml(id)}" title="Remove from ${escapeHtml(title)}">x</button></span>`;
 		}).join('') : '<span class="small">No players marked.</span>';
 		return `<div class="queue-card ${type}"><h3>${escapeHtml(title)} (${ids.length})</h3><div class="queue-list">${body}</div></div>`;
 	}
@@ -2749,7 +2781,15 @@ function renderQueueSummary() {
 		scheduleAutoSave();
 	}));
 }
-function renderCell(r, key, type) { if (type === 'notes') return renderNotes(r); if (type === 'tag') return renderTag(r[key]); if (type === 'bid') return renderBidSignal(r); if (type === 'queue') return renderQueueControls(r); return escapeHtml(fmt(r[key], type)); }
+function renderCell(r, key, type) {
+	if (type === 'notes') return renderNotes(r);
+	if (type === 'tag') return renderTag(r[key]);
+	if (type === 'bid') return renderBidSignal(r);
+	if (type === 'queue') return renderQueueControls(r);
+	if (key === 'player') return playerNameSpan(r);
+	if (key === 'position') return `<span class="${positionClass(r?.position)}">${escapeHtml(fmt(r[key], type))}</span>`;
+	return escapeHtml(fmt(r[key], type));
+}
 function defaultSortFor(id, cols) { if (id === 'cheatsTable') { const mode = currentCheatMode(); if (mode === 'combined') return {key:'combined_rank', dir:1}; if (mode === 'compare') return {key:'consensus_score', dir:-1}; return {key:'rank', dir:1}; } return DEFAULT_SORTS[id] || { key: cols[0][0], dir: 1 }; }
 function primaryCheatRankKey(cols) { return ['rank', 'combined_rank', 'waldman_rank'].find(key => cols.some(col => col[0] === key)) || ''; }
 function cheatStickyInfo(id, cols) {
@@ -2833,6 +2873,7 @@ function applyControlState(controls={}) {
 		const el = document.getElementById(id);
 		if (!el) return;
 		if (el.type === 'checkbox') el.checked = Boolean(value);
+		else if (id === 'tierSource') el.value = value === 'clay' ? 'clay' : 'year1';
 		else el.value = value;
 	});
 }
@@ -3299,11 +3340,7 @@ function ensureQueueUi() {
 function readOptimizerGoal() { const value = document.getElementById('optimizerGoal')?.value || 'points'; return value === 'tiers' ? 'tiers' : 'points'; }
 function readOptimizerTierMax() { const value = Number(document.getElementById('optimizerTierMax')?.value || 2); return Math.max(1, Math.min(4, Number.isFinite(value) ? value : 2)); }
 function optimizerTierIndex(player) {
-	const direct = Number(player?.auction_tier_index);
-	if (Number.isFinite(direct) && direct > 0) return direct;
-	const match = String(player?.auction_tier || '').match(/T(\d+)/i);
-	const value = match ? Number(match[1]) : NaN;
-	return Number.isFinite(value) && value > 0 ? value : 9;
+	return Math.min(4, tierIndexForPlayer(player));
 }
 function optimizerTierLabel(max=readOptimizerTierMax()) { return max <= 1 ? 'Tier 1' : `Tiers 1-${max}`; }
 function readOptimizerFocus() { const key = document.getElementById('optimizerFocus')?.value || 'balanced'; return OPTIMIZER_FOCUS_CONFIG[key] ? key : 'balanced'; }
@@ -4029,7 +4066,7 @@ function renderOptimizerByPosition(result) {
 			const age = optimizerKnownAge(p), ageText = age !== null ? `Age ${rawFmt(age)} - ` : '';
 			const shape = p.shape_label ? ` - ${escapeHtml(p.shape_label)}` : '';
 			const meta = `${p.team ? escapeHtml(p.team) + ' - ' : ''}${ageText}${rawFmt(n(p.auction_points))} fpts${p.auction_tier ? ' - ' + escapeHtml(p.auction_tier) : ''}${pref}${shape}`;
-			return `<div class="position-player-row"><div><strong>${escapeHtml(p.player)}</strong><span>${meta}</span></div><div><strong>$${Math.round(n(p.buy_price))}</strong>${signal ? `<span>${signal}</span>` : ''}</div></div>`;
+			return `<div class="position-player-row"><div><strong class="${positionClass(p.position)}">${escapeHtml(p.player)}</strong><span>${meta}</span></div><div><strong>$${Math.round(n(p.buy_price))}</strong>${signal ? `<span>${signal}</span>` : ''}</div></div>`;
 		}).join('') : '<div class="position-player-row"><span>No players</span></div>';
 		return `<div class="position-group"><h3>${pos} (${rows.length}) - $${cost}</h3>${body}</div>`;
 	}).join('');
@@ -4061,7 +4098,7 @@ function renderOptimizerTierStacks(result) {
 		const pos = rosterCounts(topPlayers);
 		const active = result.goal === 'tiers' && Number(result.tierMax) === maxTier;
 		const topCost = topPlayers.reduce((sum, p) => sum + n(p.buy_price), 0);
-		const body = topPlayers.slice(0, 10).map(p => `<div class="position-player-row"><div><strong>${escapeHtml(p.player)}</strong><span>${escapeHtml(p.position)}${p.team ? ' ' + escapeHtml(p.team) : ''} - ${escapeHtml(p.auction_tier || '')} - ${rawFmt(n(p.auction_points))} fpts</span></div><div><strong>$${Math.round(n(p.buy_price))}</strong></div></div>`).join('') || '<div class="position-player-row"><span>No top-tier players fit this build.</span></div>';
+		const body = topPlayers.slice(0, 10).map(p => `<div class="position-player-row"><div><strong class="${positionClass(p.position)}">${escapeHtml(p.player)}</strong><span>${escapeHtml(p.position)}${p.team ? ' ' + escapeHtml(p.team) : ''} - ${escapeHtml(p.auction_tier || '')} - ${rawFmt(n(p.auction_points))} fpts</span></div><div><strong>$${Math.round(n(p.buy_price))}</strong></div></div>`).join('') || '<div class="position-player-row"><span>No top-tier players fit this build.</span></div>';
 		return `<div class="position-group tier-stack-card ${active ? 'active' : ''}"><h3>${escapeHtml(optimizerTierLabel(maxTier))} in current roster: ${topPlayers.length} players - $${topCost}</h3><div class="tier-stack-meta"><span class="tier-pill">T1 ${counts[1]}</span><span class="tier-pill">T2 ${counts[2]}</span><span class="tier-pill">T3 ${counts[3]}</span><span class="tier-pill">T4 ${counts[4]}</span><span class="tier-pill">QB ${pos.QB || 0}</span><span class="tier-pill">RB ${pos.RB || 0}</span><span class="tier-pill">WR ${pos.WR || 0}</span><span class="tier-pill">TE ${pos.TE || 0}</span></div>${body}</div>`;
 	}).join('');
 }
@@ -5990,6 +6027,91 @@ function renderSlowAuction(options={}) {
 }
 function filteredTopLimit() { const value = Number(document.getElementById('filteredTopLimit')?.value); return [10, 20, 50, 100].includes(value) ? value : 20; }
 function currentCheatMode() { return document.getElementById('rankMode')?.value || 'waldman'; }
+function selectedTierSource() {
+	const value = document.getElementById('tierSource')?.value || 'year1';
+	return value === 'clay' ? 'clay' : 'year1';
+}
+function tierSourceRows(source=selectedTierSource()) {
+	const scoring = scoringSettings();
+	const signature = `${source}|${Object.values(scoring).join('|')}`;
+	if (tierSourceRows.cache?.signature === signature) return tierSourceRows.cache.rows;
+	const base = source === 'clay' ? DATA.teamProjections.clay2026 : DATA.teamProjections.year1;
+	const rows = withCustomPoints(base || []).filter(r => r.player && r.position).map(r => ({...r, position:String(r.position || '').toUpperCase()}));
+	tierSourceRows.cache = { signature, rows };
+	return rows;
+}
+function pointTierSegments(points, maxTiers=5) {
+	const n = points.length;
+	if (!n) return [];
+	const gaps = points.slice(0, -1).map((value, index) => value - points[index + 1]);
+	const positiveGaps = gaps.filter(gap => gap > 0);
+	const sortedGaps = positiveGaps.slice().sort((a, b) => a - b);
+	const medianGap = sortedGaps.length ? sortedGaps[Math.floor(sortedGaps.length / 2)] : 0;
+	const threshold = Math.max(8, medianGap * 2.6);
+	const minTierSize = 2;
+	const segments = [];
+	let start = 0;
+	for (let i = 0; i < gaps.length; i++) {
+		const tierSize = i - start + 1;
+		if (tierSize >= minTierSize && gaps[i] >= threshold) {
+			segments.push([start + 1, i + 1]);
+			start = i + 1;
+		}
+	}
+	segments.push([start + 1, n]);
+	if (segments.length <= maxTiers) return segments;
+	const capped = segments.slice(0, maxTiers - 1);
+	capped.push([segments[maxTiers - 1][0], segments[segments.length - 1][1]]);
+	return capped;
+}
+function tierSourceGroups(source=selectedTierSource()) {
+	const scoring = scoringSettings();
+	const signature = `${source}|${Object.values(scoring).join('|')}`;
+	if (tierSourceGroups.cache?.signature === signature) return tierSourceGroups.cache;
+	const rows = tierSourceRows(source);
+	const byKey = new Map();
+	const byPosition = new Map(CHEAT_POSITION_ORDER.map(pos => [pos, []]));
+	CHEAT_POSITION_ORDER.forEach(pos => {
+		const posRows = rows
+			.filter(row => row.position === pos)
+			.slice()
+			.sort((a,b)=>n(b.fpts)-n(a.fpts) || String(a.player).localeCompare(String(b.player)));
+		if (!posRows.length) return;
+		const segments = pointTierSegments(posRows.map(row => n(row.fpts)), Math.min(5, posRows.length));
+		const groups = segments.map(([start, end], index) => {
+			const players = posRows.slice(start - 1, end).sort((a,b)=>n(b.fpts)-n(a.fpts) || String(a.player).localeCompare(String(b.player)));
+			players.forEach(player => byKey.set(rankKey(player), {tier:index + 1, points:n(player.fpts), position:pos, player}));
+			return {
+				pos,
+				tier:index + 1,
+				players,
+				count:players.length,
+				avgPoints:players.reduce((sum, player) => sum + n(player.fpts), 0) / players.length,
+				avgValue:players.reduce((sum, player) => sum + n(player.auction_value), 0) / players.length,
+				first:players[0],
+				last:players[players.length - 1],
+			};
+		});
+		byPosition.set(pos, groups);
+	});
+	tierSourceGroups.cache = { signature, byKey, byPosition };
+	return tierSourceGroups.cache;
+}
+function tierIndexForPlayer(player, source=selectedTierSource()) {
+	const entry = tierSourceGroups(source).byKey.get(rankKey(player));
+	if (entry) return entry.tier;
+	const direct = Number(player?.auction_tier_index);
+	if (Number.isFinite(direct) && direct > 0) return Math.min(5, Math.max(1, Math.round(direct)));
+	const match = String(player?.auction_tier || '').match(/T(\d+)/i);
+	const value = match ? Number(match[1]) : NaN;
+	return Number.isFinite(value) && value > 0 ? Math.min(5, value) : 5;
+}
+function tierPointsForPlayer(player, source=selectedTierSource()) {
+	const entry = tierSourceGroups(source).byKey.get(rankKey(player));
+	if (entry && Number.isFinite(Number(entry.points))) return Number(entry.points);
+	const fallback = Number(player?.auction_points ?? player?.ppr ?? player?.fpts);
+	return Number.isFinite(fallback) ? fallback : 0;
+}
 function selectedCheatPosition() { return document.getElementById('cheatPosFilter')?.value || ''; }
 function aggregateIncludesHarmon() { const mode = currentCheatMode(); return (mode === 'compare' || mode === 'combined') && selectedCheatPosition() === 'WR'; }
 function usesHarmonMarketFilter() { return currentCheatMode() === 'harmon' || aggregateIncludesHarmon(); }
@@ -6214,38 +6336,79 @@ function renderCheatCoverageLegend() {
 		return `<span class="coverage-item"><strong>${escapeHtml(group.label)}</strong><small>${escapeHtml(summary)}</small></span>`;
 	}).join('');
 }
-function updateCheatModeNote() { const note = document.getElementById('cheatModeNote'); if (!note) return; const mode = currentCheatMode(); const bidNote = ' Bid+ marks an analyst target; Bid++ marks Harmon SUPER BUY or multiple target signals.'; if (mode === 'harmon') note.textContent = 'Harmon ranks are WR-only. Market is an AND filter with selected action tags like SUPER BUY.' + bidNote; else if (mode === 'combined') note.textContent = 'Combined rank averages the available rankers after the position filters are applied. Harmon WR ranks are included when the position filter is WR and the Harmon Market filter is applied as an AND condition.' + bidNote; else if (mode === 'compare') note.textContent = 'Consensus stats normalize each ranker with z-scores, then summarize the player pool with mean, median, MAD, and spread so you can compare agreement instead of scanning source-by-source columns.' + bidNote; else if (mode === 'kluge') note.textContent = 'Dave Kluge ranks are imported by position and can participate in consensus stats and combined views.' + bidNote; else if (mode === 'clay') note.textContent = 'Mike Clay mode derives position ranks and tiers from ESPN 2026 projections using the active league scoring settings.' + bidNote; else if (mode === 'fantasypros') note.textContent = 'FantasyPros mode uses the imported 2026 dynasty ECR CSV with overall rank, position rank, tier, and ECR spread.' + bidNote; else if (mode === 'kyle') note.textContent = 'Kyle mode uses the supplied rankings and tier shading.' + bidNote; else note.textContent = 'Waldman mode keeps workbook tier colors.' + bidNote; }
+function updateCheatModeNote() {
+	const note = document.getElementById('cheatModeNote');
+	const compareNotes = document.getElementById('cheatCompareNotes');
+	if (!note) return;
+	const mode = currentCheatMode();
+	const bidNote = ' Bid+ marks an analyst target; Bid++ marks Harmon SUPER BUY or multiple target signals.';
+	const clearCompareNotes = () => {
+		if (!compareNotes) return;
+		compareNotes.hidden = true;
+		compareNotes.innerHTML = '';
+	};
+	if (mode === 'harmon') {
+		note.textContent = 'Harmon ranks are WR-only. Market is an AND filter with selected action tags like SUPER BUY.' + bidNote;
+		clearCompareNotes();
+		return;
+	}
+	if (mode === 'combined') {
+		note.textContent = 'Combined rank averages the available rankers after the position filters are applied. Harmon WR ranks are included when the position filter is WR and the Harmon Market filter is applied as an AND condition.' + bidNote;
+		clearCompareNotes();
+		return;
+	}
+	if (mode === 'compare') {
+		note.textContent = 'Consensus stats normalize each ranker with z-scores, then summarize the player pool with mean, median, MAD, range, and spread so you can compare agreement instead of scanning source-by-source columns.' + bidNote;
+		if (compareNotes) {
+			compareNotes.hidden = false;
+			compareNotes.innerHTML = `<strong>How to read the consensus columns:</strong> z_mean and z_median are standardized ranks; lower means a source is higher on the player than that source's positional average. Avg Rank and Median Rank are the raw rank summaries, with lower being better. MAD is the median absolute deviation, so smaller means tighter agreement. Range is worst minus best. Best is the strongest rank any source gave the player; Worst is the weakest. Spread is the standard-deviation label: Tight, Moderate, Wide, or Very wide.`;
+		}
+		return;
+	}
+	clearCompareNotes();
+	if (mode === 'kluge') note.textContent = 'Dave Kluge ranks are imported by position and can participate in consensus stats and combined views.' + bidNote;
+	else if (mode === 'clay') note.textContent = 'Mike Clay mode derives position ranks and tiers from ESPN 2026 projections using the active league scoring settings.' + bidNote;
+	else if (mode === 'fantasypros') note.textContent = 'FantasyPros mode uses the imported 2026 dynasty ECR CSV with overall rank, position rank, tier, and ECR spread.' + bidNote;
+	else if (mode === 'kyle') note.textContent = 'Kyle mode uses the supplied rankings and tier shading.' + bidNote;
+	else note.textContent = 'Waldman mode keeps workbook tier colors.' + bidNote;
+}
 function cheatRows() { const q=norm(document.getElementById('cheatSearch').value), build=document.getElementById('buildFilter').value, pos=document.getElementById('cheatPosFilter').value, market=usesHarmonMarketFilter() ? document.getElementById('harmonMarketFilter')?.value : '', klugeComment=selectedKlugeCommentFilter(), ageRange=selectedCheatAgeRange(), tierColor=state.cheatTierColor, mode=currentCheatMode(); let rows; if (mode === 'kyle') rows = kyleRows(); else if (mode === 'fantasypros') rows = fantasyProsRows(); else if (mode === 'kluge') rows = klugeRows(); else if (mode === 'clay') rows = clayRows(); else if (mode === 'harmon') rows = harmonRows(); else if (mode === 'combined') rows = combinedRows(); else if (mode === 'compare') rows = comparisonRows(); else rows = DATA.cheatsheets.filter(r => (!build || r.build===build)); return rows.map(withCheatMetadata).filter(r => tierMatches(r, tierColor) && ageMatches(r, ageRange) && (!market || r.market === market || r.harmon_market === market) && (!pos || r.position===pos) && (!(mode === 'kluge' && klugeComment) || (klugeComment === 'commented' ? !!String(r.commentary || '').trim() : !String(r.commentary || '').trim())) && (!q || norm(Object.values(r).join(' ')).includes(q))); }
 function bestCheatRows(rows) { const map = new Map(); rows.forEach(r => { const key = `${r.position}|${r.player}|${r.team}`; const cur = map.get(key); if (!cur || r.rank < cur.rank) map.set(key, r); }); return [...map.values()].sort((a,b)=>a.rank-b.rank); }
 function teamRows(which) { const base = DATA.teamProjections[which] || []; const pfx = { year1:'teamY1', year2:'teamY2', clay2026:'teamClay' }[which] || 'teamY1'; const q=norm(document.getElementById(`${pfx}Search`).value), team=document.getElementById(`${pfx}Team`).value, pos=document.getElementById(`${pfx}Pos`).value; return withCustomPoints(base.filter(r => (!team || r.team===team) && (!pos || r.position===pos) && (!q || norm(Object.values(r).join(' ')).includes(q)))); }
 function histRows() { const q=norm(document.getElementById('histSearch').value), team=document.getElementById('histTeam').value; return DATA.teamProjections.historical.filter(r => (!team || r.team===team) && (!q || norm(Object.values(r).join(' ')).includes(q))); }
 function renderCharts() { barChart('chartPos', DATA.summary.pos_counts, 'label', 'value', '#0f9f6e', 20, {compact:true}); barChart('chartAge', DATA.summary.age_buckets, 'label', 'value', '#d97706', 20, {compact:true}); barChart('chartTeam', DATA.summary.team_avg.map(r=>({label:r.team, value:r.avg})), 'label', 'value', '#7c3aed', 20, {compact:true}); }
 function tierDropGroupsForPosition(pos) {
-	const groups = new Map();
-	auctionPool().filter(r => r.position === pos).forEach(row => {
-		const tier = optimizerTierIndex(row);
-		if (!Number.isFinite(tier) || tier < 1 || tier > 8) return;
-		if (!groups.has(tier)) groups.set(tier, []);
-		groups.get(tier).push(row);
+	const source = selectedTierSource();
+	const rows = auctionPool().filter(r => r.position === pos).map(r => ({...r, tier_points:tierPointsForPlayer(r, source)})).sort((a,b)=>n(b.tier_points)-n(a.tier_points) || n(b.auction_value)-n(a.auction_value) || String(a.player).localeCompare(String(b.player)));
+	const tiers = new Map();
+	rows.forEach(row => {
+		const tier = tierIndexForPlayer(row, source);
+		if (!tiers.has(tier)) tiers.set(tier, []);
+		tiers.get(tier).push(row);
 	});
-	return [...groups.entries()].sort((a,b)=>a[0]-b[0]).map(([tier, players]) => {
-		const sorted = players.sort((a,b)=>n(b.auction_value)-n(a.auction_value) || n(b.auction_points)-n(a.auction_points));
+	const groups = [];
+	[...tiers.entries()].sort((a,b)=>a[0]-b[0]).forEach(([tier, players]) => {
+		const sorted = players.sort((a,b)=>n(b.tier_points)-n(a.tier_points) || n(b.auction_value)-n(a.auction_value) || String(a.player).localeCompare(String(b.player)));
 		const avgValue = sorted.reduce((sum, p) => sum + n(p.auction_value), 0) / sorted.length;
-		const avgPoints = sorted.reduce((sum, p) => sum + n(p.auction_points), 0) / sorted.length;
-		return {pos, tier, players:sorted, count:sorted.length, avgValue, avgPoints, last:sorted[sorted.length - 1]};
+		const avgPoints = sorted.reduce((sum, p) => sum + n(p.tier_points), 0) / sorted.length;
+		groups.push({pos, tier, players:sorted, count:sorted.length, avgValue, avgPoints, last:sorted[sorted.length - 1]});
 	});
+	return groups;
 }
 function tierDropRowsForPosition(pos) {
 	const groups = tierDropGroupsForPosition(pos);
 	return groups.map((group, index) => {
 		const next = groups[index + 1]?.players?.[0] || null;
-		const dropPoints = next ? Math.max(0, n(group.last.auction_points) - n(next.auction_points)) : 0;
+		const dropPoints = next ? Math.max(0, n(group.last.tier_points) - n(next.tier_points)) : 0;
 		const dropValue = next ? Math.max(0, n(group.last.auction_value) - n(next.auction_value)) : 0;
-		return {...group, next, dropPoints, dropValue, cliffScore:dropPoints + dropValue * 2};
+		return {...group, next, dropPoints, dropValue, cliffScore:dropPoints};
 	}).filter(row => row.next);
 }
 function tierDropPlayerList(players) {
-	return players.map(p => `<div class="tier-player"><span><strong>${escapeHtml(p.player)}</strong> ${p.team ? escapeHtml(p.team) : ''}</span><span>$${Math.round(n(p.auction_value))} - ${rawFmt(n(p.auction_points))} fpts</span></div>`).join('');
+	return players.map(p => `<div class="tier-player"><span><strong class="${positionClass(p.position)}">${escapeHtml(p.player)}</strong> ${p.team ? escapeHtml(p.team) : ''}</span><span>$${Math.round(n(p.auction_value))} - ${rawFmt(n(p.tier_points))} fpts</span></div>`).join('');
+}
+function tierDropPlayerLabel(player) {
+	return `<span class="${positionClass(player?.position)}">${escapeHtml(player?.player || '')}</span>`;
 }
 function tierDropSummaryMetric(row) {
 	const valueNote = row.dropValue ? `$${Math.round(row.dropValue)} price gap` : 'same price bucket';
@@ -6261,11 +6424,11 @@ function renderTierDropOffs() {
 	charts.innerHTML = positions.map(pos => {
 		const rows = rowsByPos[pos].slice(0, 6);
 		const body = rows.length ? rows.map(row => {
-			const from = `${row.last.player} to ${row.next.player}`;
+			const from = `${tierDropPlayerLabel(row.last)} to ${tierDropPlayerLabel(row.next)}`;
 			const meta = `Last T${row.tier} to first T${row.tier + 1} - ${row.count} players in T${row.tier}`;
 			const valueDrop = row.dropValue ? `$${Math.round(row.dropValue)} price gap` : 'same price bucket';
-			const nextLine = `Next tier starts: ${row.next.player} - $${Math.round(n(row.next.auction_value))} - ${rawFmt(n(row.next.auction_points))} fpts`;
-			return `<details class="tier-drop-row"><summary><div><span class="tier-drop-kicker">T${row.tier} -> T${row.tier + 1} cliff</span><strong>${escapeHtml(from)}</strong><span>${escapeHtml(meta)}</span></div><div class="tier-drop-score"><strong>${rawFmt(row.dropPoints)} pts</strong><span>point gap</span><strong>${escapeHtml(valueDrop)}</strong></div></summary><div class="tier-player-list">${tierDropPlayerList(row.players)}<div class="tier-next-start">${escapeHtml(nextLine)}</div></div></details>`;
+			const nextLine = `Next tier starts: ${tierDropPlayerLabel(row.next)} - $${Math.round(n(row.next.auction_value))} - ${rawFmt(n(row.next.auction_points))} fpts`;
+			return `<details class="tier-drop-row"><summary><div><span class="tier-drop-kicker">T${row.tier} -> T${row.tier + 1} cliff</span><strong>${from}</strong><span>${escapeHtml(meta)}</span></div><div class="tier-drop-score"><strong>${rawFmt(row.dropPoints)} pts</strong><span>point gap</span><strong>${escapeHtml(valueDrop)}</strong></div></summary><div class="tier-player-list">${tierDropPlayerList(row.players)}<div class="tier-next-start">${nextLine}</div></div></details>`;
 		}).join('') : '<div class="tier-drop-row"><span>No cliffs</span></div>';
 		return `<div class="tier-drop-card"><h3>${pos}</h3>${body}</div>`;
 	}).join('');
@@ -6312,6 +6475,7 @@ function init() {
 	['playerSearch','posFilter','teamFilter','playerQueueFilter','filteredTopLimit','cheatSearch','buildFilter','cheatPosFilter','harmonMarketFilter','cheatAgeMin','cheatAgeMax','teamY1Search','teamY1Team','teamY1Pos','teamY2Search','teamY2Team','teamY2Pos','teamClaySearch','teamClayTeam','teamClayPos','histSearch','histTeam'].forEach(id=>document.getElementById(id).addEventListener('input', renderCurrentTables));
 	['posFilter','teamFilter','playerQueueFilter','filteredTopLimit','buildFilter','cheatPosFilter','harmonMarketFilter','teamY1Team','teamY1Pos','teamY2Team','teamY2Pos','teamClayTeam','teamClayPos','histTeam'].forEach(id=>document.getElementById(id).addEventListener('change', renderCurrentTables));
 	document.getElementById('rankMode').addEventListener('change',()=>{ state.sorts.delete('cheatsTable'); state.cheatTierColor = ''; renderCurrentTables(); });
+	document.getElementById('tierSource').addEventListener('change',()=>{ state.optimizer = null; renderCurrentTables(); });
 	Object.keys(DEFAULT_SCORING).forEach(id=>document.getElementById(id).addEventListener('input',()=>{ playerCheatMeta.cache = null; auctionPriceBook.cache = null; state.optimizer = null; renderCurrentTables(); }));
 	document.getElementById('resetScoring').addEventListener('click',()=>{ Object.entries(DEFAULT_SCORING).forEach(([id,value])=>document.getElementById(id).value=value); state.sorts.set('teamY1Table', DEFAULT_SORTS.teamY1Table); state.sorts.set('teamY2Table', DEFAULT_SORTS.teamY2Table); state.sorts.set('teamClayTable', DEFAULT_SORTS.teamClayTable); playerCheatMeta.cache = null; auctionPriceBook.cache = null; state.optimizer = null; renderCurrentTables(); });
 	document.getElementById('resetPlayers').addEventListener('click',()=>{ document.getElementById('playerSearch').value=''; document.getElementById('posFilter').value=''; document.getElementById('teamFilter').value=''; document.getElementById('playerQueueFilter').value=''; renderCurrentTables(); });
