@@ -4001,7 +4001,7 @@ function auctionPostSummaryHtml(m) {
 	const topOver = rows.slice().sort((a,b)=>(b.paid-b.value)-(a.paid-a.value))[0];
 	const totalPaid = rows.reduce((sum, row) => sum + row.paid, 0), totalValue = rows.reduce((sum, row) => sum + row.value, 0);
 	const avg = totalValue ? Math.round((totalPaid / totalValue - 1) * 100) : 0;
-	return `<div class="auction-insight"><h4>Post-Auction Summary</h4><div class="auction-mini-list"><div class="auction-mini-row"><span><strong>Room total</strong><small>${rows.length} sales vs model value</small></span><b class="${avg > 0 ? 'over' : avg < 0 ? 'under' : 'fair'}">${avg > 0 ? '+' : ''}${avg}%</b></div><div class="auction-mini-row"><span><strong>${escapeHtml(topOver?.player?.player || topOver?.result?.player || 'Top overpay')}</strong><small>Largest premium so far</small></span><b class="over">+$${Math.max(0, topOver.paid - topOver.value)}</b></div><div class="auction-mini-row"><span><strong>${escapeHtml(bestValue?.player?.player || bestValue?.result?.player || 'Best value')}</strong><small>Best discount so far</small></span><b class="under">-$${Math.max(0, bestValue.value - bestValue.paid)}</b></div></div></div>`;
+	return `<div class="auction-insight"><h4>Post-Auction Summary</h4><div class="auction-mini-list"><div class="auction-mini-row"><span><strong>Room pricing</strong><small>${rows.length} completed sale${rows.length === 1 ? '' : 's'} against projected values</small></span><b class="${avg > 0 ? 'over' : avg < 0 ? 'under' : 'fair'}">${avg > 0 ? '+' : ''}${avg}%</b></div><div class="auction-mini-row"><span><strong>${escapeHtml(topOver?.player?.player || topOver?.result?.player || 'Top overpay')}</strong><small>Largest premium so far</small></span><b class="over">+$${Math.max(0, topOver.paid - topOver.value)}</b></div><div class="auction-mini-row"><span><strong>${escapeHtml(bestValue?.player?.player || bestValue?.result?.player || 'Best value')}</strong><small>Best discount so far</small></span><b class="under">-$${Math.max(0, bestValue.value - bestValue.paid)}</b></div></div></div>`;
 }
 function ensureAuctionRoomTools(rootId, afterId) {
 	let root = document.getElementById(rootId);
@@ -5013,7 +5013,7 @@ function dashboardParSheetBandSummary(sheet) {
 	if (!sheet?.bands) return '';
 	return PAR_POSITIONS.map(pos => {
 		const band = sheet.bands[pos] || defaultParBand(pos);
-		return `${pos} T${band.min}-${band.max}`;
+		return `${pos} build: tiers ${band.min}-${band.max}`;
 	}).join(' · ');
 }
 function parClampCount(value) {
@@ -5353,10 +5353,10 @@ function dashboardParStrategyScore(sheet, team, results=[], commitments=[]) {
 		const ratio = soldValue > 0 ? soldPaid / Math.max(1, soldValue) : 1;
 		const shortage = Math.max(0, need - remain);
 		score += Math.min(need, remain) * 10 + remain - shortage * 18 - Math.max(0, ratio - 1) * (5 + need * 2) + Math.max(0, 1 - ratio) * (4 + need * 2);
-		if (shortage > 0) reasons.push({weight:40 + shortage, text:`${pos} T${band.min}-T${band.max} is running thin`});
-		else if (ratio >= 1.12 && soldCount >= 2) reasons.push({weight:20, text:`${pos} T${band.min}-T${band.max} is overpriced`});
-		else if (ratio <= 0.92 && soldCount >= 2) reasons.push({weight:18, text:`${pos} T${band.min}-T${band.max} is discounted`});
-		else reasons.push({weight:10 + remain, text:`${pos} T${band.min}-T${band.max} still has ${remain} targets left`});
+		if (shortage > 0) reasons.push({weight:40 + shortage, text:`${pos} tiers ${band.min}-${band.max} are running thin`});
+		else if (ratio >= 1.12 && soldCount >= 2) reasons.push({weight:20, text:`${pos} tiers ${band.min}-${band.max} are overpriced`});
+		else if (ratio <= 0.92 && soldCount >= 2) reasons.push({weight:18, text:`${pos} tiers ${band.min}-${band.max} are discounted`});
+		else reasons.push({weight:10 + remain, text:`${pos} tiers ${band.min}-${band.max} still have ${remain} players left`});
 	});
 	return {score, reasons:reasons.sort((a,b)=>b.weight-a.weight).slice(0, 3).map(item => item.text)};
 }
