@@ -1628,7 +1628,7 @@ button.auction-status-pill:disabled {
 <div class="save-strip"><span id="saveStatus">Auto-save ready</span><button id="resetSavedState" type="button">Reset saved state</button></div>
 <section id="overview" class="panel active"><div class="grid"><div class="card"><h2>Players By Position</h2><div id="chartPos"></div></div><div class="card"><h2>Age Distribution</h2><div id="chartAge"></div></div><div class="card"><h2>Top Team Average PPR</h2><div id="chartTeam"></div><p class="small">Average uses each team's top 20 projected PPR values. Invalid team labels are excluded.</p></div><div class="card"><h2>Tier Drop-Offs</h2><p class="small tier-drop-note">These are cliffs after a tier ends. A $0 drop means the next tier starts in the same rounded auction-dollar bucket. Open a row to see the players in that tier.</p><div id="tierDropSummary" class="metric-grid"></div><div id="tierDropCharts" class="tier-drop-grid"></div></div></div></section>
 <section id="players" class="panel"><div class="toolbar"><input id="playerSearch" type="search" placeholder="Search players, teams, positions, comments"><select id="posFilter"><option value="">All positions</option></select><select id="teamFilter"><option value="">All teams</option></select><button id="resetPlayers">Reset</button></div><p class="small">Upside is the source ceiling score; Downside is the source miss-risk score. Higher numbers mean more of that trait. Auction values assume 12 teams, $200 budgets, super-super-flex depth, PPR, TE premium, and strategic 3-deep QB/RB/WR/TE targets. Bid+ means an analyst target signal; Bid++ means a stronger signal such as Harmon SUPER BUY or multiple target signals. Hover or click a Bid marker for the source.</p><div class="grid"><div class="card"><h2>Filtered Top Fpts</h2><div class="toolbar"><select id="filteredTopLimit"><option value="10">Top 10</option><option value="20" selected>Top 20</option><option value="50">Top 50</option><option value="100">Top 100</option></select></div><div id="chartFilteredPpr"></div></div><div class="card"><h2>Filtered Position Mix</h2><div id="chartFilteredPos"></div></div></div><div class="table-wrap"><table id="playersTable"></table></div></section>
-<section id="cheatsheets" class="panel"><div class="toolbar"><input id="cheatSearch" type="search" placeholder="Search cheatsheets"><select id="rankMode"><option value="waldman">Waldman ranks</option><option value="kyle">Kyle ranks</option><option value="fantasypros">FantasyPros ranks</option><option value="clay">Mike Clay ranks</option><option value="harmon">Harmon WR ranks</option><option value="combined">Combined rank</option><option value="compare">Differences</option></select><select id="buildFilter"><option value="">All builds</option><option>Win-Now</option><option>Long Build</option></select><select id="cheatPosFilter"><option value="">All positions</option></select><select id="harmonMarketFilter"><option value="">All Harmon markets</option></select><label class="age-range-filter">Age <span id="cheatAgeRangeLabel">20-50</span><span class="range-row"><input id="cheatAgeMin" type="range" min="20" max="50" value="20"><input id="cheatAgeMax" type="range" min="20" max="50" value="50"></span></label></div><p class="small" id="cheatModeNote">Waldman mode keeps workbook tier colors. Kyle mode uses the supplied rankings and tier shading. FantasyPros mode uses the imported 2026 dynasty ECR CSV.</p><div class="legend" id="tierLegend"></div><div class="table-wrap"><table id="cheatsTable"></table></div></section>
+<section id="cheatsheets" class="panel"><div class="toolbar"><input id="cheatSearch" type="search" placeholder="Search cheatsheets"><select id="rankMode"><option value="waldman">Waldman ranks</option><option value="kyle">Kyle ranks</option><option value="fantasypros">FantasyPros ranks</option><option value="clay">Mike Clay ranks</option><option value="harmon">Harmon WR ranks</option><option value="combined">Combined rank</option><option value="compare">Consensus stats</option></select><select id="buildFilter"><option value="">All builds</option><option>Win-Now</option><option>Long Build</option></select><select id="cheatPosFilter"><option value="">All positions</option></select><select id="harmonMarketFilter"><option value="">All Harmon markets</option></select><label class="age-range-filter">Age <span id="cheatAgeRangeLabel">20-50</span><span class="range-row"><input id="cheatAgeMin" type="range" min="20" max="50" value="20"><input id="cheatAgeMax" type="range" min="20" max="50" value="50"></span></label></div><p class="small" id="cheatModeNote">Waldman mode keeps workbook tier colors. Kyle mode uses the supplied rankings and tier shading. FantasyPros mode uses the imported 2026 dynasty ECR CSV.</p><div class="legend" id="tierLegend"></div><div class="table-wrap"><table id="cheatsTable"></table></div></section>
 
 <section id="auctionBuilder" class="panel"><div class="card"><h2>Best Team Builder</h2><div class="toolbar"><label class="inline-control">Premium<select id="optimizerPremium"><option value="0">At bid</option><option value="0.05" selected>5% over</option><option value="0.1">10% over</option><option value="0.15">15% over</option></select></label><label class="inline-control">Build focus<select id="optimizerFocus"><option value="balanced" selected>Balanced</option><option value="qb">Better QBs</option><option value="rb">Better RBs</option><option value="wr">Better WRs</option><option value="te">Better TEs</option><option value="qb_wr">QB + WR</option><option value="qb_wr_te">QB + WR + TE</option><option value="rb_wr">RB + WR</option><option value="rb_te">RB + TE</option><option value="custom">Custom Mix</option></select></label><label class="inline-control">Preferred<select id="optimizerPreference"><option value="none" selected>Value only</option><option value="queue">My Want Queue</option><option value="waldman_win">Waldman Win Now</option><option value="waldman_long">Waldman Long-Term</option><option value="waldman">Waldman Overall</option><option value="harmon">Harmon Buy/Super Buy</option><option value="kyle">Kyle Suggestions</option><option value="fantasypros">FantasyPros Suggestions</option><option value="common">Common Preferred</option></select></label><label class="inline-control">Shape<select id="optimizerShape"><option value="stars" selected>Stars + values</option><option value="balanced">Balanced spend</option><option value="breakout">Young breakouts</option></select></label><label class="inline-control">Age cap<select id="optimizerAgeCap"><option value="">No cap</option><option value="29">29 or younger</option><option value="27">27 or younger</option><option value="25">25 or younger</option></select></label><label class="inline-control">Budget<input id="optimizerBudget" type="number" min="25" max="200" step="1" value="200"></label><button id="runOptimizer" type="button">Build team</button></div><div class="toolbar mix-toolbar"><label class="inline-control">QB mix<input id="optimizerMixQB" type="number" min="0.5" max="2" step="0.1" value="1"></label><label class="inline-control">RB mix<input id="optimizerMixRB" type="number" min="0.5" max="2" step="0.1" value="1"></label><label class="inline-control">WR mix<input id="optimizerMixWR" type="number" min="0.5" max="2" step="0.1" value="1"></label><label class="inline-control">TE mix<input id="optimizerMixTE" type="number" min="0.5" max="2" step="0.1" value="1"></label></div><p class="small">Builds a 25-player roster using tier-banded bid values plus the selected premium. Shape controls whether the optimizer chases premium stars, balances spend, or leans into younger mid-priced breakout profiles. Age cap excludes players with known ages above the selected limit. Players marked Avoid are excluded; My Want Queue boosts marked targets.</p><div class="auction-principles"><span><strong>Use values as anchors</strong> Raise or lower live targets when the room is paying more or less by position.</span><span><strong>Spend for elite tiers</strong> It is acceptable to beat value for a player you want if the roster build still works.</span><span><strong>Keep endgame leverage</strong> A few extra dollars matter when the room is stuck at $1 bids.</span><span><strong>Avoid flat mid-tier prices</strong> If 6th-10th round profiles are getting bid up, pivot to similar cheaper bets.</span></div><div id="optimizerSummary" class="metric-grid"></div><div id="optimizerByPosition" class="position-list"></div><div id="optimizerRoster" class="roster-slots"></div></div></section>
 <section id="mockAuction" class="panel"><div class="card"><div class="auction-card-head"><h2>Fast Auction</h2><p class="small auction-directions">Click a team header or summary to inspect that roster. Bot profiles can be changed in Team Summary. Sim buttons complete one or ten full nomination-and-sale cycles. The board scrolls horizontally so you can compare every team at once.</p></div><div class="toolbar"><button id="startMock" type="button">Start / Reset</button><button id="mockClockToggle" type="button">Start clock</button><span id="mockTimer" class="mock-timer">:30</span><label class="inline-control">Nom sec<input id="mockNominationSeconds" type="number" min="3" max="120" step="1" value="30"></label><label class="inline-control">Reset sec<input id="mockResetSeconds" type="number" min="3" max="120" step="1" value="10"></label><button id="mockAutoOne" type="button" title="Simulates one full nomination, bot bidding sequence, and sale award.">Sim 1 sale</button><button id="mockAutoTen" type="button" title="Repeats the full automated sale cycle ten times or until the draft cannot continue.">Sim 10 sales</button><button id="mockBotRound" type="button">Next nomination / bot bid</button><button id="mockPass" type="button">Pass</button><button id="mockBidPlus1" type="button">Bid +$1</button><button id="mockBidPlus5" type="button">Bid +$5</button><button id="mockBidValue" type="button">Bid to value</button><label class="inline-control">Bid<input id="mockCustomBid" type="number" min="1" max="200" step="1" value="1"></label><button id="mockBidCustom" type="button">Bid amount</button></div><div id="mockWantedRemainders" class="queue-tier-summary"></div><div id="mockCurrent" class="current-auction"></div><div id="mockDraftBoard" class="mock-draft-board"></div></div><div class="mock-draft-layout"><div class="mock-stack"><div class="card"><h2>Team Summary</h2><div id="mockTeams" class="mock-board"></div></div><div class="card"><h2>Nomination Pool</h2><div class="toolbar"><input id="mockPlayerSearch" type="search" placeholder="Search auction pool"><select id="mockPosFilter"><option value="">All positions</option></select><label class="inline-control"><input id="mockShowDrafted" type="checkbox">Show drafted</label></div><div class="table-wrap mock-player-list"><table id="mockPlayerTable"></table></div></div></div><div class="mock-side-panel"><div class="card"><h2>Selected Team</h2><div id="mockHumanTeam" class="metric-grid"></div><div id="mockHumanRoster" class="roster-slots"></div></div><div class="card"><h2>Results</h2><div id="mockResults" class="result-log"></div></div></div></div></section>
@@ -2225,7 +2225,7 @@ function renderQueueSummary() {
 	}));
 }
 function renderCell(r, key, type) { if (type === 'notes') return renderNotes(r); if (type === 'tag') return renderTag(r[key]); if (type === 'bid') return renderBidSignal(r); if (type === 'queue') return renderQueueControls(r); return escapeHtml(fmt(r[key], type)); }
-function defaultSortFor(id, cols) { if (id === 'cheatsTable') { const mode = currentCheatMode(); if (mode === 'combined') return {key:'combined_rank', dir:1}; if (mode === 'compare') return {key:'abs_delta', dir:-1}; return {key:'rank', dir:1}; } return DEFAULT_SORTS[id] || { key: cols[0][0], dir: 1 }; }
+function defaultSortFor(id, cols) { if (id === 'cheatsTable') { const mode = currentCheatMode(); if (mode === 'combined') return {key:'combined_rank', dir:1}; if (mode === 'compare') return {key:'consensus_score', dir:-1}; return {key:'rank', dir:1}; } return DEFAULT_SORTS[id] || { key: cols[0][0], dir: 1 }; }
 function primaryCheatRankKey(cols) { return ['rank', 'combined_rank', 'waldman_rank'].find(key => cols.some(col => col[0] === key)) || ''; }
 function cheatStickyInfo(id, cols) {
 	if (id !== 'cheatsTable') return null;
@@ -5504,22 +5504,112 @@ function clayRows() {
 	});
 }
 function harmonRows() { return HARMON_RANKS.map(r => ({...r, build:'Harmon', rank_set:'Harmon', notes:'', note_details:[], commentary:r.commentary || ''})); }
+function finiteRankValue(row, source) {
+	if (!row) return null;
+	const value = source === 'fantasypros' ? fantasyProsPositionRank(row) : Number(row.rank);
+	return Number.isFinite(value) ? value : null;
+}
+function meanOf(values) {
+	const nums = values.filter(Number.isFinite);
+	return nums.length ? nums.reduce((sum, value) => sum + value, 0) / nums.length : null;
+}
+function medianOf(values) {
+	const nums = values.filter(Number.isFinite).sort((a, b) => a - b);
+	if (!nums.length) return null;
+	const mid = Math.floor(nums.length / 2);
+	return nums.length % 2 ? nums[mid] : (nums[mid - 1] + nums[mid]) / 2;
+}
+function stddevOf(values) {
+	const nums = values.filter(Number.isFinite);
+	if (nums.length < 2) return null;
+	const mean = meanOf(nums);
+	if (!Number.isFinite(mean)) return null;
+	const variance = nums.reduce((sum, value) => sum + ((value - mean) ** 2), 0) / nums.length;
+	return Math.sqrt(variance);
+}
+function madOf(values) {
+	const nums = values.filter(Number.isFinite);
+	const med = medianOf(nums);
+	if (!nums.length || !Number.isFinite(med)) return null;
+	return medianOf(nums.map(value => Math.abs(value - med)));
+}
+function rankSpreadLabel(value) {
+	const spread = Number(value);
+	if (!Number.isFinite(spread)) return '';
+	if (spread <= 1.5) return 'Tight';
+	if (spread <= 4) return 'Moderate';
+	if (spread <= 8) return 'Wide';
+	return 'Very wide';
+}
+function sourceStatsByPosition(rows, source) {
+	const byPosition = new Map();
+	rows.forEach(row => {
+		const position = String(row?.position || '').toUpperCase();
+		const rank = finiteRankValue(row, source);
+		if (!position || !Number.isFinite(rank)) return;
+		if (!byPosition.has(position)) byPosition.set(position, []);
+		byPosition.get(position).push(rank);
+	});
+	const stats = new Map();
+	byPosition.forEach((values, position) => {
+		const mean = meanOf(values);
+		const stddev = stddevOf(values);
+		stats.set(position, { mean, stddev: Number.isFinite(stddev) && stddev > 0 ? stddev : null });
+	});
+	return stats;
+}
 function bestByRankKey(rows, rankField='rank') { const map = new Map(); rows.forEach(r => { const key = rankKey(r); const cur = map.get(key); if (!cur || Number(r[rankField]) < Number(cur[rankField])) map.set(key, r); }); return map; }
 function rankSimilarity(delta, hasBoth) { if (!hasBoth) return 'Only one rank'; const d = Math.abs(Number(delta)); if (d <= 3) return 'Very close'; if (d <= 8) return 'Similar'; if (d <= 15) return 'Different'; return 'Major gap'; }
 function fantasyProsPositionRank(row) { const match = String(row?.pos_rank ?? '').match(/\d+/); const value = match ? Number(match[0]) : Number(row?.rank); return Number.isFinite(value) ? value : ''; }
 function rankDelta(a, b) { return Number.isFinite(Number(a)) && Number.isFinite(Number(b)) ? Number(a) - Number(b) : ''; }
 function comparisonRows() {
 	const includeHarmon = aggregateIncludesHarmon();
-	const wMap = bestByRankKey(waldmanCompareRows()), kMap = bestByRankKey(kyleRows()), fMap = bestByRankKey(fantasyProsRows()), cMap = bestByRankKey(clayRows());
-	const hMap = includeHarmon ? bestByRankKey(harmonRows()) : new Map();
+	const wRows = waldmanCompareRows(), kRows = kyleRows(), fRows = fantasyProsRows(), cRows = clayRows();
+	const hRows = includeHarmon ? harmonRows() : [];
+	const wMap = bestByRankKey(wRows), kMap = bestByRankKey(kRows), fMap = bestByRankKey(fRows), cMap = bestByRankKey(cRows);
+	const hMap = includeHarmon ? bestByRankKey(hRows) : new Map();
+	const sourceStats = {
+		waldman: sourceStatsByPosition(wRows, 'waldman'),
+		kyle: sourceStatsByPosition(kRows, 'kyle'),
+		fantasypros: sourceStatsByPosition(fRows, 'fantasypros'),
+		clay: sourceStatsByPosition(cRows, 'clay'),
+		harmon: includeHarmon ? sourceStatsByPosition(hRows, 'harmon') : new Map(),
+	};
 	const keys = [...new Set([...wMap.keys(), ...kMap.keys(), ...fMap.keys(), ...cMap.keys(), ...hMap.keys()])];
 	return keys.map(key => {
 		const w=wMap.get(key), k=kMap.get(key), f=fMap.get(key), c=cMap.get(key), h=hMap.get(key), ref=h||k||f||c||w, fp=fantasyProsPositionRank(f);
-		const kw = rankDelta(k?.rank, w?.rank), fw = rankDelta(fp, w?.rank), fk = rankDelta(fp, k?.rank);
-		const cw = rankDelta(c?.rank, w?.rank), ck = rankDelta(c?.rank, k?.rank), cf = rankDelta(c?.rank, fp);
-		const hw = rankDelta(h?.rank, w?.rank), hk = rankDelta(h?.rank, k?.rank), hf = rankDelta(h?.rank, fp), hc = rankDelta(h?.rank, c?.rank);
-		const gaps = [kw, fw, fk, cw, ck, cf, hw, hk, hf, hc].filter(v => v !== '').map(v => Math.abs(Number(v)));
-		const maxGap = gaps.length ? Math.max(...gaps) : '';
+		const ranks = [
+			finiteRankValue(w, 'waldman'),
+			finiteRankValue(k, 'kyle'),
+			finiteRankValue(f, 'fantasypros'),
+			finiteRankValue(c, 'clay'),
+			includeHarmon ? finiteRankValue(h, 'harmon') : null,
+		].filter(Number.isFinite);
+		const zScores = [];
+		[
+			['waldman', w],
+			['kyle', k],
+			['fantasypros', f],
+			['clay', c],
+			['harmon', h],
+		].forEach(([source, row]) => {
+			if (!row) return;
+			const rank = finiteRankValue(row, source);
+			const stats = sourceStats[source]?.get(String(row.position || '').toUpperCase());
+			if (!Number.isFinite(rank) || !stats || !Number.isFinite(stats.mean) || !Number.isFinite(stats.stddev) || stats.stddev === 0) return;
+			zScores.push((rank - stats.mean) / stats.stddev);
+		});
+		const rankMean = meanOf(ranks);
+		const rankMedian = medianOf(ranks);
+		const rankStdDev = stddevOf(ranks);
+		const rankMad = madOf(ranks);
+		const bestRank = ranks.length ? Math.min(...ranks) : '';
+		const worstRank = ranks.length ? Math.max(...ranks) : '';
+		const rankRange = ranks.length ? worstRank - bestRank : '';
+		const zMean = meanOf(zScores);
+		const zMedian = medianOf(zScores);
+		const zStdDev = stddevOf(zScores);
+		const consensusScore = Number.isFinite(zMean) ? -(zMean + (Number.isFinite(zStdDev) ? zStdDev * 0.25 : 0)) : '';
 		return {
 			position:ref.position,
 			player:h?.player || k?.player || f?.player || c?.player || w?.player || '',
@@ -5531,10 +5621,12 @@ function comparisonRows() {
 			clay_rank:c?.rank ?? '', clay_overall_rank:c?.clay_overall_rank ?? '', clay_tier:c?.tier ?? '', clay_fpts:c?.clay_fpts ?? '',
 			waldman_rank:w?.rank ?? '', waldman_overall_rank:w?.waldman_overall_rank ?? '',
 			tier_color:h?.tier_color || k?.tier_color || f?.tier_color || c?.tier_color || '',
-			kyle_vs_waldman:kw, fantasypros_vs_waldman:fw, fantasypros_vs_kyle:fk,
-			clay_vs_waldman:cw, clay_vs_kyle:ck, clay_vs_fantasypros:cf,
-			harmon_vs_waldman:hw, harmon_vs_kyle:hk, harmon_vs_fantasypros:hf, harmon_vs_clay:hc,
-			rank_delta:kw, abs_delta:maxGap, similarity:rankSimilarity(maxGap, gaps.length > 0),
+			kyle_vs_waldman:rankDelta(k?.rank, w?.rank), fantasypros_vs_waldman:rankDelta(fp, w?.rank), fantasypros_vs_kyle:rankDelta(fp, k?.rank),
+			clay_vs_waldman:rankDelta(c?.rank, w?.rank), clay_vs_kyle:rankDelta(c?.rank, k?.rank), clay_vs_fantasypros:rankDelta(c?.rank, fp),
+			harmon_vs_waldman:rankDelta(h?.rank, w?.rank), harmon_vs_kyle:rankDelta(h?.rank, k?.rank), harmon_vs_fantasypros:rankDelta(h?.rank, fp), harmon_vs_clay:rankDelta(h?.rank, c?.rank),
+			rank_count:ranks.length, rank_mean:rankMean, rank_median:rankMedian, rank_stddev:rankStdDev, rank_mad:rankMad, rank_range:rankRange, best_rank:bestRank, worst_rank:worstRank,
+			z_mean:zMean, z_median:zMedian, z_stddev:zStdDev, consensus_score:consensusScore, agreement:rankSpreadLabel(rankStdDev),
+			rank_delta:Number.isFinite(Number(rankDelta(k?.rank, w?.rank))) ? rankDelta(k?.rank, w?.rank) : '', abs_delta:Number.isFinite(Number(rankRange)) ? rankRange : '', similarity:rankSpreadLabel(rankStdDev),
 			notes:w?.notes || '', note_details:w?.note_details || [], commentary:w?.commentary || c?.commentary || ''
 		};
 	});
@@ -5551,7 +5643,7 @@ function combinedRows() {
 }
 function updateCheatControls() { const waldman = currentCheatMode() === 'waldman'; const build = document.getElementById('buildFilter'); const market = document.getElementById('harmonMarketFilter'); if (build) build.disabled = !waldman; if (market) market.disabled = !usesHarmonMarketFilter(); }
 function updateCheatAgeRangeLabel() { const label = document.getElementById('cheatAgeRangeLabel'); if (!label) return; const range = selectedCheatAgeRange(); label.textContent = `${range.min}-${range.max}`; }
-function updateCheatModeNote() { const note = document.getElementById('cheatModeNote'); if (!note) return; const mode = currentCheatMode(); const bidNote = ' Bid+ marks an analyst target; Bid++ marks Harmon SUPER BUY or multiple target signals.'; if (mode === 'harmon') note.textContent = 'Harmon ranks are WR-only. Market is an AND filter with selected action tags like SUPER BUY.' + bidNote; else if (mode === 'combined' || mode === 'compare') note.textContent = 'Combined and Differences include Waldman, Kyle, FantasyPros, and Mike Clay position ranks. ' + (aggregateIncludesHarmon() ? 'Harmon WR ranks are also included because the position filter is WR. The Harmon Market filter is applied as an AND condition.' : 'Harmon ranks are WR-only; choose WR in the position filter to include Harmon too.') + bidNote; else if (mode === 'clay') note.textContent = 'Mike Clay mode derives position ranks and tiers from ESPN 2026 projections using the active league scoring settings.' + bidNote; else if (mode === 'fantasypros') note.textContent = 'FantasyPros mode uses the imported 2026 dynasty ECR CSV with overall rank, position rank, tier, and ECR spread.' + bidNote; else if (mode === 'kyle') note.textContent = 'Kyle mode uses the supplied rankings and tier shading.' + bidNote; else note.textContent = 'Waldman mode keeps workbook tier colors.' + bidNote; }
+function updateCheatModeNote() { const note = document.getElementById('cheatModeNote'); if (!note) return; const mode = currentCheatMode(); const bidNote = ' Bid+ marks an analyst target; Bid++ marks Harmon SUPER BUY or multiple target signals.'; if (mode === 'harmon') note.textContent = 'Harmon ranks are WR-only. Market is an AND filter with selected action tags like SUPER BUY.' + bidNote; else if (mode === 'combined') note.textContent = 'Combined rank averages the available rankers after the position filters are applied. Harmon WR ranks are included when the position filter is WR and the Harmon Market filter is applied as an AND condition.' + bidNote; else if (mode === 'compare') note.textContent = 'Consensus stats normalize each ranker with z-scores, then summarize the player pool with mean, median, MAD, and spread so you can compare agreement instead of scanning source-by-source columns.' + bidNote; else if (mode === 'clay') note.textContent = 'Mike Clay mode derives position ranks and tiers from ESPN 2026 projections using the active league scoring settings.' + bidNote; else if (mode === 'fantasypros') note.textContent = 'FantasyPros mode uses the imported 2026 dynasty ECR CSV with overall rank, position rank, tier, and ECR spread.' + bidNote; else if (mode === 'kyle') note.textContent = 'Kyle mode uses the supplied rankings and tier shading.' + bidNote; else note.textContent = 'Waldman mode keeps workbook tier colors.' + bidNote; }
 function cheatRows() { const q=norm(document.getElementById('cheatSearch').value), build=document.getElementById('buildFilter').value, pos=document.getElementById('cheatPosFilter').value, market=usesHarmonMarketFilter() ? document.getElementById('harmonMarketFilter')?.value : '', ageRange=selectedCheatAgeRange(), tierColor=state.cheatTierColor, mode=currentCheatMode(); let rows; if (mode === 'kyle') rows = kyleRows(); else if (mode === 'fantasypros') rows = fantasyProsRows(); else if (mode === 'clay') rows = clayRows(); else if (mode === 'harmon') rows = harmonRows(); else if (mode === 'combined') rows = combinedRows(); else if (mode === 'compare') rows = comparisonRows(); else rows = DATA.cheatsheets.filter(r => (!build || r.build===build)); return rows.map(withCheatMetadata).filter(r => tierMatches(r, tierColor) && ageMatches(r, ageRange) && (!market || r.market === market || r.harmon_market === market) && (!pos || r.position===pos) && (!q || norm(Object.values(r).join(' ')).includes(q))); }
 function bestCheatRows(rows) { const map = new Map(); rows.forEach(r => { const key = `${r.position}|${r.player}|${r.team}`; const cur = map.get(key); if (!cur || r.rank < cur.rank) map.set(key, r); }); return [...map.values()].sort((a,b)=>a.rank-b.rank); }
 function teamRows(which) { const base = DATA.teamProjections[which] || []; const pfx = { year1:'teamY1', year2:'teamY2', clay2026:'teamClay' }[which] || 'teamY1'; const q=norm(document.getElementById(`${pfx}Search`).value), team=document.getElementById(`${pfx}Team`).value, pos=document.getElementById(`${pfx}Pos`).value; return withCustomPoints(base.filter(r => (!team || r.team===team) && (!pos || r.position===pos) && (!q || norm(Object.values(r).join(' ')).includes(q)))); }
@@ -5615,9 +5707,9 @@ const clayCheatCols = [['position','Pos'],['rank','Clay Pos','int'],['clay_overa
 const harmonCheatCols = [['position','Pos'],['rank','Harmon Rank','int'],['player','Player'],['queue_sort','Queue','queue'],['team','Team'],['age','Age'],['draft','Draft'],['auction_tier','Price Tier'],['auction_value','Auction','money'],['bid_signal','Bid','bid'],['action','Action','tag'],['market','Market','tag'],['delta','Gap'],['market_rank','Market Rank'],['commentary','Commentary']];
 const combinedCheatCols = [['position','Pos'],['combined_rank','Combined','rate'],['player','Player'],['queue_sort','Queue','queue'],['team','Team'],['auction_tier','Price Tier'],['auction_value','Auction','money'],['bid_signal','Bid','bid'],['kyle_rank','Kyle Pos','int'],['kyle_tier','Kyle Tier'],['fantasypros_rank','FP Pos','int'],['fantasypros_tier','FP Tier'],['clay_rank','Clay Pos','int'],['clay_tier','Clay Tier'],['waldman_rank','Waldman Pos','int'],['kyle_vs_waldman','K-W','int'],['fantasypros_vs_waldman','FP-W','int'],['clay_vs_waldman','Clay-W','int'],['similarity','Similarity'],['notes','Notes','notes'],['commentary','Commentary']];
 const combinedWithHarmonCols = [['position','Pos'],['combined_rank','Combined','rate'],['player','Player'],['queue_sort','Queue','queue'],['team','Team'],['auction_tier','Price Tier'],['auction_value','Auction','money'],['bid_signal','Bid','bid'],['harmon_rank','Harmon','int'],['harmon_action','H Action','tag'],['harmon_market','H Market','tag'],['kyle_rank','Kyle Pos','int'],['kyle_tier','Kyle Tier'],['fantasypros_rank','FP Pos','int'],['fantasypros_tier','FP Tier'],['clay_rank','Clay Pos','int'],['clay_tier','Clay Tier'],['waldman_rank','Waldman Pos','int'],['harmon_vs_waldman','H-W','int'],['kyle_vs_waldman','K-W','int'],['fantasypros_vs_waldman','FP-W','int'],['clay_vs_waldman','Clay-W','int'],['harmon_vs_clay','H-Clay','int'],['similarity','Similarity'],['notes','Notes','notes'],['commentary','Commentary']];
-const compareCheatCols = [['position','Pos'],['player','Player'],['queue_sort','Queue','queue'],['team','Team'],['auction_tier','Price Tier'],['auction_value','Auction','money'],['bid_signal','Bid','bid'],['harmon_rank','Harmon','int'],['harmon_action','H Action','tag'],['harmon_market','H Market','tag'],['harmon_delta','H Market Gap'],['harmon_market_rank','H Mkt #'],['waldman_rank','Waldman Pos','int'],['kyle_rank','Kyle Pos','int'],['kyle_tier','Kyle Tier'],['fantasypros_rank','FP Pos','int'],['fantasypros_tier','FP Tier'],['clay_rank','Clay Pos','int'],['clay_tier','Clay Tier'],['harmon_vs_waldman','H-W','int'],['kyle_vs_waldman','K-W','int'],['fantasypros_vs_waldman','FP-W','int'],['clay_vs_waldman','Clay-W','int'],['harmon_vs_kyle','H-K','int'],['harmon_vs_fantasypros','H-FP','int'],['harmon_vs_clay','H-Clay','int'],['fantasypros_vs_kyle','FP-K','int'],['clay_vs_kyle','Clay-K','int'],['clay_vs_fantasypros','Clay-FP','int'],['abs_delta','Max Gap','int'],['similarity','Similarity'],['notes','Waldman Notes','notes'],['commentary','Waldman Commentary']];
-const compareWithoutHarmonCols = [['position','Pos'],['player','Player'],['queue_sort','Queue','queue'],['team','Team'],['auction_tier','Price Tier'],['auction_value','Auction','money'],['bid_signal','Bid','bid'],['waldman_rank','Waldman Pos','int'],['kyle_rank','Kyle Pos','int'],['kyle_tier','Kyle Tier'],['fantasypros_rank','FP Pos','int'],['fantasypros_tier','FP Tier'],['clay_rank','Clay Pos','int'],['clay_tier','Clay Tier'],['kyle_vs_waldman','K-W','int'],['fantasypros_vs_waldman','FP-W','int'],['clay_vs_waldman','Clay-W','int'],['fantasypros_vs_kyle','FP-K','int'],['clay_vs_kyle','Clay-K','int'],['clay_vs_fantasypros','Clay-FP','int'],['abs_delta','Max Gap','int'],['similarity','Similarity'],['notes','Waldman Notes','notes'],['commentary','Waldman Commentary']];
-function cheatColsForMode() { const mode = currentCheatMode(); if (mode === 'kyle') return kyleCheatCols; if (mode === 'fantasypros') return fantasyProsCheatCols; if (mode === 'clay') return clayCheatCols; if (mode === 'harmon') return harmonCheatCols; if (mode === 'combined') return aggregateIncludesHarmon() ? combinedWithHarmonCols : combinedCheatCols; if (mode === 'compare') return aggregateIncludesHarmon() ? compareCheatCols : compareWithoutHarmonCols; return waldmanCheatCols; }
+const compareCheatCols = [['position','Pos'],['player','Player'],['team','Team'],['age','Age','int'],['rank_count','Sources','int'],['consensus_score','Consensus','rate'],['z_mean','Z Mean','rate'],['z_median','Z Median','rate'],['z_stddev','Z Std Dev','rate'],['rank_mean','Avg Rank','rate'],['rank_median','Median','rate'],['rank_stddev','Rank Std Dev','rate'],['rank_mad','MAD','rate'],['rank_range','Range','int'],['best_rank','Best','int'],['worst_rank','Worst','int'],['agreement','Spread'],['auction_tier','Price Tier'],['auction_value','Auction','money'],['bid_signal','Bid','bid'],['notes','Notes','notes'],['commentary','Commentary']];
+const compareWithoutHarmonCols = compareCheatCols;
+function cheatColsForMode() { const mode = currentCheatMode(); if (mode === 'kyle') return kyleCheatCols; if (mode === 'fantasypros') return fantasyProsCheatCols; if (mode === 'clay') return clayCheatCols; if (mode === 'harmon') return harmonCheatCols; if (mode === 'combined') return aggregateIncludesHarmon() ? combinedWithHarmonCols : combinedCheatCols; if (mode === 'compare') return compareCheatCols; return waldmanCheatCols; }
 const projectionCols = [['player','Player'],['fpts','Fpts'],['team','Team'],['position','Pos'],['age','Age','int'],['games','G','int'],['pass_att','Pass Att','int'],['pass_comp','Pass Comp','int'],['pass_pct','Pass %','pct'],['pass_yards','Pass Yds','int'],['pass_ypa','Pass Y/A','rate'],['pass_td','Pass TD','int'],['interceptions','INT','int'],['rush_att','Rush Att','int'],['rush_yards','Rush Yds','int'],['rush_ypa','Rush Y/A','rate'],['rush_td','Rush TD','int'],['targets','Targets','int'],['receptions','Rec','int'],['catch_pct','Catch %','pct'],['rec_yards','Rec Yds','int'],['rec_ypr','Yds/Rec','rate'],['rec_td','Rec TD','int'],['ppr_fpts','PPR'],['half_ppr','Half PPR'],['adjusted','Adjusted']];
 const historyCols = [['team','Team'],['team_name','Team Name'],['pass_att','Pass Att','int'],['pass_comp','Pass Comp','int'],['pass_yards','Pass Yds','int'],['pass_td','Pass TD','int'],['rec_targets','Targets','int'],['receptions','Rec','int'],['rec_yards','Rec Yds','int'],['rec_td','Rec TD','int'],['rush_att','Rush Att','int'],['rush_yards','Rush Yds','int'],['rush_td','Rush TD','int'],['run_pct','Run %','pct'],['pass_pct','Pass %','pct']];
 function renderCurrentTables() { const pr=playerRows(); renderTable('playersTable', pr, playerCols); renderQueueSummary(); const scoredPlayers = withPlayerChartScore(pr); barChart('chartFilteredPpr', [...scoredPlayers].sort((a,b)=>cmp(a,b,'chart_fpts',-1)).map(r=>({...r,label:`${r.player} (${r.position}${r.team ? ' '+r.team : ''})`})), 'label', 'chart_fpts', '#2563eb', filteredTopLimit()); countChart('chartFilteredPos', pr, 'position', '#0f9f6e'); updateCheatControls(); updateCheatModeNote(); updateCheatAgeRangeLabel(); renderTierLegend(); renderTierDropOffs(); const cr=cheatRows(); renderTable('cheatsTable', cr, cheatColsForMode()); renderTable('teamY1Table', teamRows('year1'), projectionCols); renderTable('teamY2Table', teamRows('year2'), projectionCols); renderTable('teamClayTable', teamRows('clay2026'), projectionCols); renderTable('historyTable', histRows(), historyCols); renderOptimizer(state.optimizer || buildOptimizedTeam()); renderMockAuction(); renderSlowAuction(); scheduleAutoSave(); }
