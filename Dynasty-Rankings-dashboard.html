@@ -1279,6 +1279,17 @@ button.auction-status-pill:disabled {
 	.auction-active-name.pos-RB { color:#52d8a7; }
 	.auction-active-name.pos-WR { color:#6ab2ff; }
 	.auction-active-name.pos-TE { color:#c084fc; }
+.auction-active-meta {
+	display:flex;
+	flex-wrap:wrap;
+	align-items:center;
+	gap:6px;
+	margin-top:4px;
+	color:var(--muted);
+	font-size:14px;
+	font-weight:850;
+	line-height:1.15;
+}
 	.auction-active-tier {
 	color:var(--muted);
 	font-size:15px;
@@ -1330,6 +1341,19 @@ button.auction-status-pill:disabled {
 	color:var(--muted);
 	font-size:13px;
 	font-weight:850;
+}
+.auction-active-band-row {
+	display:flex;
+	align-items:center;
+	justify-content:space-between;
+	gap:10px;
+	width:100%;
+}
+.auction-active-bid-count {
+	color:var(--muted);
+	font-size:13px;
+	font-weight:800;
+	white-space:nowrap;
 }
 .auction-active-controls {
 	display:grid;
@@ -1557,6 +1581,10 @@ button.auction-status-pill:disabled {
 .auction-active-name {
 	font-size:17px;
 }
+.auction-active-meta {
+	font-size:13px;
+	margin-top:3px;
+}
 .auction-active-tier {
 	font-size:14px;
 }
@@ -1664,6 +1692,154 @@ button.auction-status-pill:disabled {
 #mockAuction .mock-board-grid > *,
 #slowAuction .mock-board-grid > * {
 	border-color:rgba(52,66,98,.28) !important;
+}
+@media (max-width: 620px) {
+	#mockCurrent,
+	#slowLots {
+		overscroll-behavior:contain;
+		-webkit-overflow-scrolling:touch;
+		touch-action:pan-y;
+		scroll-behavior:auto;
+	}
+	#slowAuction .slow-lot-grid {
+		max-height:min(62vh, 560px) !important;
+		overflow:auto !important;
+		padding-right:2px;
+	}
+	#slowAuction .slow-lot.auction-active-card {
+		content-visibility:visible;
+		contain-intrinsic-size:auto;
+	}
+	.auction-active-top {
+		grid-template-columns:minmax(0, 1fr) auto !important;
+		gap:8px;
+		align-items:start;
+	}
+	.auction-active-player {
+		min-width:0;
+	}
+	.auction-active-name-row {
+		flex-wrap:nowrap;
+		align-items:flex-start;
+		gap:6px;
+	}
+	.auction-active-name {
+		flex:1 1 auto;
+		min-width:0;
+	}
+	.auction-active-badges {
+		flex:0 0 auto;
+		align-self:flex-start;
+	}
+	.auction-active-meta {
+		gap:4px;
+		font-size:12px;
+	}
+	.auction-active-bid {
+		justify-items:end !important;
+		align-content:start;
+		text-align:right !important;
+		min-width:88px;
+	}
+	.auction-active-bid strong {
+		font-size:22px;
+	}
+	.auction-active-band {
+		font-size:11px;
+	}
+	.auction-active-band-row {
+		gap:8px;
+	}
+	.auction-active-bid-count {
+		font-size:11px;
+	}
+	.auction-active-controls {
+		grid-template-columns:minmax(112px, .8fr) minmax(0, 1.2fr) !important;
+		gap:6px;
+		align-items:end;
+	}
+	.auction-active-controls .slow-actions {
+		gap:6px;
+	}
+	.auction-active-controls .slow-actions button,
+	.auction-active-controls .slow-lot-controls button {
+		min-height:32px;
+		padding:5px 8px;
+		font-size:13px;
+	}
+	.auction-active-controls .slow-lot-controls {
+		grid-template-columns:minmax(0, 1fr) auto !important;
+		gap:6px;
+		align-items:end;
+	}
+	.auction-active-controls .slow-lot-controls label {
+		gap:3px;
+		font-size:10px;
+		font-weight:850;
+		letter-spacing:.06em;
+		text-transform:uppercase;
+	}
+	.auction-active-controls .slow-lot-controls input {
+		min-height:32px;
+		padding:5px 8px;
+		font-size:13px;
+	}
+	.auction-advice-row {
+		grid-template-columns:repeat(2, minmax(0, 1fr)) !important;
+		gap:6px;
+		margin-top:8px;
+	}
+	.auction-advice-card {
+		min-height:0;
+		padding:7px 8px;
+	}
+	.auction-advice-card b {
+		margin-bottom:4px;
+		font-size:11px;
+		letter-spacing:.04em;
+	}
+	.auction-advice-card ul {
+		padding-left:14px;
+		font-size:11px;
+		line-height:1.2;
+	}
+	.auction-advice-card li {
+		margin:1px 0;
+	}
+	#mockAuction > .card:first-of-type {
+		padding:8px 9px;
+	}
+	#mockAuction > .card:first-of-type .auction-card-head {
+		margin-bottom:6px;
+	}
+	#mockAuction > .card:first-of-type .auction-card-head h2 {
+		margin-bottom:4px;
+		font-size:18px;
+	}
+	#mockAuction > .card:first-of-type .auction-directions {
+		display:none;
+	}
+	#mockAuction > .card:first-of-type .toolbar {
+		gap:6px;
+		padding:6px;
+		margin-bottom:6px;
+	}
+	#mockAuction > .card:first-of-type .toolbar button,
+	#mockAuction > .card:first-of-type .toolbar input,
+	#mockAuction > .card:first-of-type .toolbar select {
+		min-height:31px;
+		padding:5px 8px;
+		font-size:12px;
+	}
+	#mockAuction > .card:first-of-type .mock-timer {
+		min-width:62px;
+		padding:5px 10px;
+		font-size:12px;
+	}
+	#mockAuction > .card:first-of-type .inline-control {
+		gap:4px;
+		font-size:10px;
+	}
 }
 </style>
 </head>
@@ -4000,15 +4176,16 @@ function auctionActiveBidCardHtml({player, currentBid=0, highName='-', highIsHum
 	const tier = player.auction_tier || player.position || '';
 	const badges = `${queueBadgeHtml(player)}${renderBidSignal(player) || ''}`;
 	const timeClass = auctionTimerClass(timeSeconds);
-	const bidLine = bidCount ? `${bidCount} bids - High: ${highName || '-'}` : `High: ${highName || '-'}`;
-	const band = `${auctionValueBandText(strategy)}${strategy?.recommended ? ` - Max $${Math.round(strategy.recommended)}` : ''}`;
+	const bidLeader = highName || '-';
+	const band = auctionValueBandText(strategy);
 	return `<div class="auction-active-card ${className}" ${attrs}>
 		<div class="auction-active-top">
 			<div class="auction-active-player">
-				<div class="auction-active-name-row"><strong class="auction-active-name ${positionClass(player.position)}">${escapeHtml(player.player || displayPlayer(player))}</strong><span class="auction-active-tier">${escapeHtml(tier)}</span><span class="auction-active-badges">${badges}</span></div>
+				<div class="auction-active-name-row"><strong class="auction-active-name ${positionClass(player.position)}">${escapeHtml(player.player || displayPlayer(player))}</strong><span class="auction-active-badges">${badges}</span></div>
+				<div class="auction-active-meta"><span class="auction-active-tier">${escapeHtml(tier)}</span></div>
 				${timeText ? `<div class="auction-active-timer ${timeClass}" data-active-timer>${escapeHtml(timeText)}</div>` : ''}
 			</div>
-			<div class="auction-active-bid ${highIsHuman ? 'human-winning' : ''}"><div><strong>$${Math.round(n(currentBid))}</strong> <span>${escapeHtml(bidLine)}</span></div><span class="auction-active-band">${escapeHtml(band)}</span></div>
+			<div class="auction-active-bid ${highIsHuman ? 'human-winning' : ''}"><div><strong>$${Math.round(n(currentBid))}</strong> <span>${escapeHtml(bidLeader)}</span></div><div class="auction-active-band-row">${bidCount ? `<span class="auction-active-bid-count">${escapeHtml(`${bidCount} bids`)}</span>` : '<span></span>'}<span class="auction-active-band">${escapeHtml(band)}</span></div></div>
 		</div>
 		${controls || ''}
 		${auctionAdviceBlocksHtml({player, strategy, teams, currentBid, maxBidForTeam, ownTeam, committed, amount:Math.max(Math.round(n(currentBid)) + 1, strategy?.nextBid || 1)})}
@@ -5874,23 +6051,21 @@ function captureAuctionScroll(root) {
 }
 function restoreAuctionScroll(root, snapshot) {
 	if (!snapshot) return;
+	const shouldRestoreWindow = !root || root.scrollHeight <= root.clientHeight + 2;
 	const apply = () => {
 		if (root) {
 			root.scrollTop = Math.min(snapshot.rootTop, Math.max(0, root.scrollHeight - root.clientHeight));
 			root.scrollLeft = Math.min(snapshot.rootLeft, Math.max(0, root.scrollWidth - root.clientWidth));
 		}
-		window.scrollTo(snapshot.windowX, snapshot.windowY);
+		if (shouldRestoreWindow) window.scrollTo(snapshot.windowX, snapshot.windowY);
 	};
 	apply();
-	requestAnimationFrame(() => {
-		apply();
-		setTimeout(apply, 0);
-		setTimeout(apply, 60);
-	});
+	requestAnimationFrame(apply);
 }
 function withAuctionScrollPreserved(rootId, action) {
 	const root = document.getElementById(rootId);
 	const snapshot = captureAuctionScroll(root);
+	document.activeElement?.blur?.();
 	action?.();
 	document.activeElement?.blur?.();
 	restoreAuctionScroll(document.getElementById(rootId) || root, snapshot);
