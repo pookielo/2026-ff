@@ -292,6 +292,13 @@ button.tendency-chip:hover, button.tendency-chip:focus-visible { border-color:#9
 .par-sheet-head { display:flex; align-items:flex-start; justify-content:space-between; gap:10px; padding:10px; background:#eef2f7; }
 .par-sheet-head strong { display:block; }
 .par-sheet-head span { color:var(--muted); font-size:12px; }
+.par-sheet-meta { display:flex; flex-direction:column; gap:8px; min-width:0; }
+.par-sheet-summary { display:flex; flex-wrap:wrap; gap:6px 12px; align-items:center; }
+.par-sheet-chip-row { display:flex; flex-wrap:wrap; gap:6px; align-items:center; }
+.par-sheet-chip-label { color:var(--muted); font-size:11px; font-weight:850; text-transform:uppercase; letter-spacing:0.04em; }
+.par-sheet-chip { display:inline-flex; align-items:center; min-height:24px; padding:3px 9px; border-radius:999px; border:1px solid rgba(94,209,197,.38); background:rgba(94,209,197,.12); color:#dffcf8; font-size:12px; font-weight:700; }
+.par-sheet-chip.subtle { border-color:rgba(96,165,250,.36); background:rgba(96,165,250,.1); color:#dbeafe; }
+.par-sheet-chip.muted { border-color:rgba(167,139,250,.34); background:rgba(167,139,250,.1); color:#e9ddff; }
 .par-table { display:grid; }
 .par-row { display:grid; grid-template-columns:48px minmax(72px, .7fr) minmax(78px, .9fr) repeat(4, minmax(54px, 1fr)); gap:8px; align-items:center; min-width:600px; padding:8px 10px; border-top:1px solid #e2e8f0; font-size:12px; }
 .par-row.header { color:var(--muted); font-weight:850; text-transform:uppercase; background:#f8fafc; }
@@ -5280,7 +5287,7 @@ function dashboardEffectiveSheetSpend(sheet, results=[]) {
 		const next = Math.max(0, Math.round(base * (1 + ratioDelta)));
 		adjusted[pos] = next;
 		const dollarDelta = next - base;
-		if (Math.abs(dollarDelta) >= 2) reasons.push(`${pos} ${dollarDelta > 0 ? `+$${dollarDelta}` : `-$${Math.abs(dollarDelta)}`} from room pricing`);
+		if (Math.abs(dollarDelta) >= 2) reasons.push(dollarDelta > 0 ? `${pos} discounted: add $${dollarDelta}` : `${pos} overpriced: trim $${Math.abs(dollarDelta)}`);
 	});
 	return { spend: parNormalizeDollars(adjusted, total), reasons, pricing };
 }
@@ -5546,6 +5553,10 @@ function renderParSheet(root, team, commitments=[], context={}) {
 	const targetDollars = strategy.mode === 'auto' ? parNormalizeDollars(strategyState.activeEffectiveSpend || activeSheet.spend || suggestedDollars) : parTargetDollars(suggestedDollars);
 	const totalTargetCount = PAR_POSITIONS.reduce((sum, pos) => sum + targetCounts[pos], 0);
 	const totalTargetSpend = PAR_POSITIONS.reduce((sum, pos) => sum + targetDollars[pos], 0);
+	const sheetSummary = dashboardParSheetBandSummary(activeSheet);
+	const strategyChips = (strategyState.recommendation?.reasons || []).map(item => `<span class="par-sheet-chip">${escapeHtml(item)}</span>`).join('');
+	const pricingChips = (strategyState.activeSpendReasons || []).map(item => `<span class="par-sheet-chip subtle">${escapeHtml(item)}</span>`).join('');
+	const switchChips = (strategyState.switchNotes || []).map(item => `<span class="par-sheet-chip muted">${escapeHtml(item)}</span>`).join('');
 	const rows = PAR_POSITIONS.map(pos => {
 		const targetCount = targetCounts[pos] || 0, idealValue = suggestedDollars[pos] || 0, target = targetDollars[pos] || 0, spent = Math.round(spentTotals[pos] || 0), committed = Math.round(committedTotals[pos] || 0), actual = spent + committed, delta = actual - target;
 		const deltaClass = delta > 0 ? 'over' : delta < 0 ? 'under' : 'even';
@@ -5554,7 +5565,7 @@ function renderParSheet(root, team, commitments=[], context={}) {
 		const dip = activeSheet.dips[pos] || defaultParDip(pos);
 		return `<div class="par-row"><strong>${pos}</strong><input type="number" min="0" max="${AUCTION_CONFIG.rosterSpots}" step="1" value="${targetCount}" data-par-count="${pos}" title="Target ${pos} player count"><input type="number" min="0" max="${AUCTION_CONFIG.budget}" step="1" value="${target}" data-par-input="${pos}" title="Total planned ${pos} spend"><span>$${idealValue}</span><span>$${spent}</span><span>$${committed}</span><span class="par-delta ${deltaClass}">${deltaText}</span></div><div class="par-row"><span></span><label><span class="small">Band start</span><input type="number" min="1" max="5" step="1" value="${band.min}" data-par-band-min="${pos}"></label><label><span class="small">Band end</span><input type="number" min="1" max="5" step="1" value="${band.max}" data-par-band-max="${pos}"></label><label><span class="small">Dip $</span><input type="number" min="0" max="25" step="1" value="${dip.threshold}" data-par-dip="${pos}"></label><span class="small">${escapeHtml(`${pos} T${band.min}-T${band.max}`)}</span><span class="small">${dip.enabled ? `T1 dip at -$${dip.threshold}` : 'Dip off'}</span></div>${renderParTierRow(pos, target, targetCount, ideal.players, team, commitments)}`;
 	}).join('');
-	root.innerHTML = `<div class="par-sheet-head"><div><strong>Par Sheet</strong><span>${escapeHtml(strategy.mode === 'manual' ? `Locked to ${activeSheet.name}` : `Auto on ${activeSheet.name}`)}. ${escapeHtml(dashboardParSheetSummaryText(activeSheet))}${strategyState.recommendation?.reasons?.length ? ` | ${escapeHtml(strategyState.recommendation.reasons.join(' · '))}` : ''}${strategyState.activeSpendReasons?.length ? ` | ${escapeHtml(strategyState.activeSpendReasons.join(' · '))}` : ''}${strategyState.switchNotes?.length ? ` | ${escapeHtml(strategyState.switchNotes.join(' · '))}` : ''}</span></div><button type="button" class="par-reset" data-par-reset>Reset</button></div><div class="save-strip-actions" style="margin:0 0 10px 0;"><button type="button" data-par-mode="auto" ${strategy.mode === 'auto' ? 'disabled' : ''}>Auto</button><button type="button" data-par-mode="manual" ${strategy.mode === 'manual' ? 'disabled' : ''}>Manual</button>${PAR_SHEET_IDS.map(id => `<button type="button" data-par-sheet="${id}" ${activeDashboardParSheetId() === id ? 'disabled' : ''} title="${escapeHtml(dashboardParSheetSummaryText(strategy.sheets[id]))}">${escapeHtml(strategy.sheets[id].name)}${strategyState.recommendation?.sheetId === id ? ' *' : ''}</button>`).join('')}</div><div class="par-table"><div class="par-row header"><span>Pos</span><span>Target #</span><span>Target $</span><span>Suggest</span><span>Spent</span><span>Live</span><span>+/-</span></div>${rows}</div>`;
+	root.innerHTML = `<div class="par-sheet-head"><div class="par-sheet-meta"><strong>Par Sheet</strong><div class="par-sheet-summary"><span>${escapeHtml(strategy.mode === 'manual' ? `Locked to ${activeSheet.name}` : `Auto on ${activeSheet.name}`)}</span><span>${escapeHtml(activeSheet.description || '')}</span><span>${escapeHtml(sheetSummary)}</span></div>${strategyChips ? `<div class="par-sheet-chip-row"><span class="par-sheet-chip-label">Strategy</span>${strategyChips}</div>` : ''}${pricingChips ? `<div class="par-sheet-chip-row"><span class="par-sheet-chip-label">Room pricing</span>${pricingChips}</div>` : ''}${switchChips ? `<div class="par-sheet-chip-row"><span class="par-sheet-chip-label">Switch gate</span>${switchChips}</div>` : ''}</div><button type="button" class="par-reset" data-par-reset>Reset</button></div><div class="save-strip-actions" style="margin:0 0 10px 0;"><button type="button" data-par-mode="auto" ${strategy.mode === 'auto' ? 'disabled' : ''}>Auto</button><button type="button" data-par-mode="manual" ${strategy.mode === 'manual' ? 'disabled' : ''}>Manual</button>${PAR_SHEET_IDS.map(id => `<button type="button" data-par-sheet="${id}" ${activeDashboardParSheetId() === id ? 'disabled' : ''} title="${escapeHtml(dashboardParSheetSummaryText(strategy.sheets[id]))}">${escapeHtml(strategy.sheets[id].name)}${strategyState.recommendation?.sheetId === id ? ' *' : ''}</button>`).join('')}</div><div class="par-table"><div class="par-row header"><span>Pos</span><span>Target #</span><span>Target $</span><span>Suggest</span><span>Spent</span><span>Live</span><span>+/-</span></div>${rows}</div>`;
 	root.querySelectorAll('[data-par-count]').forEach(input => input.addEventListener('change', () => {
 		const pos = input.dataset.parCount, value = parClampCount(input.value);
 		const currentCounts = Object.fromEntries(PAR_POSITIONS.map(p => [p, p === pos ? value : Number(root.querySelector(`[data-par-count="${p}"]`)?.value)]));
