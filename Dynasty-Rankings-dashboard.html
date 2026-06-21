@@ -133,6 +133,12 @@ svg { width:100%; max-width:100%; min-width:0; height:auto; display:block; }
 .current-auction .metric { background:#f8fafc; color:var(--ink); }
 .current-auction .metric span { color:#475569; }
 .current-auction .metric strong { color:var(--ink); overflow-wrap:anywhere; }
+.player-name-with-logo { display:inline-flex; align-items:center; gap:8px; min-width:0; }
+.team-logo { width:18px; height:18px; object-fit:contain; flex:0 0 auto; border-radius:4px; }
+.auction-active-name-wrap { display:flex; align-items:center; gap:8px; min-width:0; }
+.auction-active-name-wrap .auction-active-name { min-width:0; }
+.result-player-wrap { display:flex; align-items:center; gap:8px; min-width:0; }
+.result-player-wrap strong { min-width:0; }
 .winning-bid { display:flex; align-items:flex-end; justify-content:space-between; gap:12px; border:1px solid rgba(255,255,255,.2); border-radius:8px; background:rgba(255,255,255,.08); padding:12px; margin:12px 0; }
 .winning-bid span { display:block; color:#cbd5e1; font-size:12px; font-weight:850; text-transform:uppercase; }
 .winning-bid strong { display:block; margin-top:2px; font-size:clamp(32px, 7vw, 38px); line-height:1; }
@@ -2035,7 +2041,7 @@ function klugeTierFor(position, rank) {
 	return ranges[ranges.length - 1][1];
 }
 const KLUGE_COMMENTARY = {
-	'QB|Caleb Williams': 'The arrow is pointing up for Williams, who proved that on-field magic from college can translate to the next level. He\'ll need to learn to play better in structure, but a top-6 finish in a new offense, elite pedigree, and rushing upside give him both a desirable floor and ceiling. Click here for more of my recent thoughts on Caleb Williams, and what he needs to do to ascend to superstardom.',
+	'QB|Caleb Williams': 'The arrow is pointing up for Williams, who proved that on-field magic from college can translate to the next level. He\'ll need to learn to play better in structure, but a top-6 finish in a new offense, elite pedigree, and rushing upside give him both a desirable floor and ceiling.',
 	'QB|Drake Maye': "We\'re really splitting hairs between Williams, Daniels, and Maye. This ranking may seem like a knock against Maye. It isn\'t. A preference for Williams\' system and Daniels\' elite rushing just tips the scales ever-so-slightly in their favor.",
 	'QB|Brock Purdy': "Purdy was fantasy's QB5 last year. Early-career concerns about his shelf life and being a product of Kyle Shanahan's offense should have been put to rest by his $265 million extension — but dynasty markets haven't adjusted for whatever reason.",
 	'QB|C.J. Stroud': "Stroud won't ever recapture the value he had after his rookie season, but he's a young, highly-drafted QB on a team trending upward. The lack of rushing is the major knock, but he should have a lengthy NFL career as a starter.",
@@ -2073,44 +2079,44 @@ const KLUGE_COMMENTARY = {
 };
 const KLUGE_SECTION_SUMMARIES = {
 	RB: [
-		{min: 1, max: 2, text: 'Elite backs with rare combination of youth, production, and value insulation.'},
-		{min: 3, max: 4, text: 'Premium young bets with top-end draft capital and clear paths to dynasty value spikes.'},
-		{min: 5, max: 10, text: 'Established starters who still have age and production on their side, even if the window is narrowing.'},
-		{min: 11, max: 11, text: 'A uniquely tricky rookie case: the draft capital matters, but the profile is still unsettled.'},
-		{min: 12, max: 18, text: 'Young backs with room to gain value, either because of profile, injury recovery, or open paths to volume.'},
-		{min: 19, max: 24, text: 'Riskier backs that carry more downside, but still offer buy-low paths if the market is too aggressive.'},
-		{min: 25, max: 32, text: 'Younger committee backs whose value is more about age and projection than current role stability.'},
-		{min: 33, max: 33, text: 'Henry is an outlier: older than the tier around him, but still too productive to dismiss.'},
-		{min: 34, max: 39, text: 'Developmental rookies who need a lot to break right, but have enough upside to merit roster spots.'},
-		{min: 40, max: 49, text: 'Veterans with usable roles now, but limited insulation if their current production slips.'},
-		{min: 50, max: 59, text: 'Second-year backs with some upside, though most are still fighting for more meaningful workloads.'},
-		{min: 60, max: 74, text: 'Cheap veterans whose value depends on injuries ahead of them, but who can matter if opportunity opens.'},
-		{min: 75, max: 77, text: 'Worth a very cheap flier because the draft capital and talent still leave a path to usefulness.'},
-		{min: 78, max: 83, text: 'Aging veterans whose best fantasy seasons are probably behind them, but who can still help contenders in the short term.'},
-		{min: 84, max: 98, text: 'Late rookies who are unlikely to matter soon, but can stay on the radar in very deep formats.'},
-		{min: 99, max: 103, text: 'Extremely cheap second-year bets with almost no insulation, but enough uncertainty to keep them interesting.'},
-		{min: 104, max: 109, text: 'Very deep-league handcuffs and emergency stashes, mostly one injury away from relevance.'},
-		{min: 110, max: 122, text: 'Names to remember only in deep formats; these are mostly speculative or fringe roster players.'},
-		{min: 123, max: 139, text: 'Faded veterans who have largely moved out of fantasy relevance.'},
+		{min: 1, max: 2, text: 'Elite young cornerstone backs with top-five production, full workload ability, and the strongest dynasty insulation at the position.'},
+		{min: 3, max: 4, text: 'The could-be elites: premium young backs whose draft capital and ceiling give them realistic paths into the top tier.'},
+		{min: 5, max: 10, text: 'Productive starters still in strong age windows, with enough talent and role security to keep gaining or holding value.'},
+		{min: 11, max: 11, text: 'A one-off rookie case where Round 1 draft capital matters, but the profile and likely role still carry real uncertainty.'},
+		{min: 12, max: 18, text: 'Young Year 2 bets and productive Day 3 backs who can still climb if health, role, or efficiency break the right way.'},
+		{min: 19, max: 24, text: 'Older or riskier productive backs who can still help, but whose dynasty value could fall quickly after one bad season or injury.'},
+		{min: 25, max: 32, text: 'Younger backs with upside paths through talent, athleticism, or possible volume growth, even if the current role is not locked in.'},
+		{min: 33, max: 33, text: 'Derrick Henry sits alone as the age-defying outlier: historically old for the position, but still too productive to dismiss.'},
+		{min: 34, max: 39, text: 'Rookies with imperfect profiles or uncertain landing spots, but enough draft capital or situational upside to matter if things break right.'},
+		{min: 40, max: 49, text: 'Veterans who can still be useful on contenders, though most are closer to short-term production bets than stable dynasty assets.'},
+		{min: 50, max: 59, text: 'Volatile Year 2 backs whose values depend more on future opportunity than current security, making them useful but fragile bets.'},
+		{min: 60, max: 74, text: 'Cheap veterans and injury-away backs who could matter quickly, but usually need a depth-chart change to become useful.'},
+		{min: 75, max: 77, text: 'Very cheap personal-conviction darts: low-insulation players worth a tiny buy only because there is still some plausible upside path.'},
+		{min: 78, max: 83, text: 'Aging backs on the farewell-tour arc who can still help contenders in the short run, but whose long-term value is almost gone.'},
+		{min: 84, max: 98, text: 'Late rookies who probably will not matter soon, but still have enough uncertainty or athletic upside to stay on deep-league watchlists.'},
+		{min: 99, max: 103, text: 'Extremely cheap Year 2 fliers with very little insulation and just enough talent or uncertainty to justify a deep stash.'},
+		{min: 104, max: 109, text: 'Very deep-league waiver stashes who are mostly one injury away from relevance and otherwise remain fringe roster bets.'},
+		{min: 110, max: 122, text: 'Remember-these-guys territory: familiar names with limited trade value and only thin cases for renewed fantasy relevance.'},
+		{min: 123, max: 139, text: 'Veterans who have faded out of meaningful dynasty relevance and are mostly cut candidates outside the deepest formats.'},
 	],
 	TE: [
-		{min: 1, max: 2, text: 'The elite tight end tier: young, productive anchors you can build around.'},
-		{min: 3, max: 5, text: 'Strong year-two and rookie bets with real long-term upside and enough draft capital to matter.'},
-		{min: 6, max: 8, text: 'Young producers whose values could still climb if health and usage cooperate.'},
-		{min: 9, max: 10, text: 'Top-tier rookies whose profiles and draft slots keep the upside intact.'},
-		{min: 11, max: 13, text: 'Talented young starters who are close to the next value tier if the ceiling shows up.'},
-		{min: 14, max: 17, text: 'Veteran tight ends at or near the age apex, still useful but with shrinking insulation.'},
-		{min: 18, max: 22, text: 'Second-year breakout bets and athletic bets who could gain value quickly.'},
-		{min: 23, max: 25, text: 'Young TE2 options with upside, usually coming from opportunity more than proven production.'},
-		{min: 26, max: 30, text: 'Useful veterans who can still produce, but mostly belong on contender rosters.'},
-		{min: 31, max: 37, text: 'Rookies and developmental prospects worth stashing in deeper formats.'},
-		{min: 38, max: 41, text: 'Athletic projects whose best path to relevance is volume and mismatch usage.'},
-		{min: 42, max: 44, text: 'Veterans whose fantasy utility is mostly tied to short-term opportunity or contingency.'},
-		{min: 45, max: 50, text: 'Pure contingent streamers who need injuries or role changes to matter.'},
-		{min: 51, max: 56, text: 'Players whose upside is fading and who are mostly hanging on to roster spots.'},
-		{min: 57, max: 63, text: 'Former fantasy names whose best days are behind them, but who can still pop in the right spot.'},
-		{min: 64, max: 71, text: 'Deep-league stashes with enough youth or athleticism to keep watch on.'},
-		{min: 72, max: 80, text: 'Taxi-squad type rookies and long shots, useful mainly in the deepest formats.'},
+		{min: 1, max: 2, text: 'The elite tier: young, productive anchor tight ends with premium profiles and the cleanest long-term value cases.'},
+		{min: 3, max: 5, text: 'Year 2 budding stars with draft capital, youth, and early production that can still push them much higher.'},
+		{min: 6, max: 8, text: 'Young tight ends who can still gain value quickly if health and usage cooperate, even after uneven early-career stretches.'},
+		{min: 9, max: 10, text: 'Top-tier rookie bets with strong draft capital or athletic traits, though their short-term roles may still be murky.'},
+		{min: 11, max: 13, text: 'Approaching-their-prime tight ends with talent and flashes, but still waiting on truly difference-making ceilings.'},
+		{min: 14, max: 17, text: 'Older proven producers near or past the age apex, still useful but carrying much less insulation than the younger tiers.'},
+		{min: 18, max: 22, text: 'Strong Year 2 and breakout-profile bets who can jump in value fast if their routes, usage, or health improve.'},
+		{min: 23, max: 25, text: 'Young TE2 types with upside, usually driven by role and athletic promise more than already-bankable production.'},
+		{min: 26, max: 30, text: 'Useful veterans who can still deliver fantasy weeks, but are primarily fits for contender builds.'},
+		{min: 31, max: 37, text: 'Rookies to watch: developmental tight ends with enough pass-catching profile or draft capital to deserve deeper stashes.'},
+		{min: 38, max: 41, text: 'Athleticism bets whose appeal is mostly tied to traits, movement skills, and the possibility of a better usage outcome.'},
+		{min: 42, max: 44, text: 'Veterans with uncertain runway left, useful mostly when a contender needs immediate production more than insulation.'},
+		{min: 45, max: 50, text: 'Contingent streamers who need injuries or role changes ahead of them before they become viable fantasy options.'},
+		{min: 51, max: 56, text: 'Losing-patience names: still young enough to roster in deep leagues, but the breakout case is getting harder to defend.'},
+		{min: 57, max: 63, text: 'Older recognizable names whose best seasons are behind them, even if they can still spike in the right spot.'},
+		{min: 64, max: 71, text: 'Deep-league stash territory: younger or situational tight ends worth monitoring, but not players to get attached to.'},
+		{min: 72, max: 80, text: 'Taxi-candidate long shots: mostly rookies or developmental players who belong only on the deepest benches for now.'},
 	],
 };
 function klugeCommentaryFor(row) {
@@ -3369,7 +3375,26 @@ function auctionPool() {
 }
 function displayPlayer(row) { return `${row.player} (${row.position}${row.team ? ' ' + row.team : ''})`; }
 function positionClass(pos) { return ['QB','RB','WR','TE'].includes(pos) ? `pos-name pos-${pos}` : 'pos-name'; }
-function playerNameSpan(row) { return `<span class="${positionClass(row?.position)}">${escapeHtml(row?.player || '')}</span>`; }
+const TEAM_LOGO_CODES = {
+	ARI:'ari', ATL:'atl', BAL:'bal', BUF:'buf', CAR:'car', CHI:'chi', CIN:'cin', CLE:'cle', DAL:'dal', DEN:'den',
+	DET:'det', GB:'gb', HOU:'hou', IND:'ind', JAX:'jax', KC:'kc', LAC:'lac', LAR:'lar', LV:'lv', MIA:'mia',
+	MIN:'min', NE:'ne', NO:'no', NYG:'nyg', NYJ:'nyj', PHI:'phi', PIT:'pit', SEA:'sea', SF:'sf', TB:'tb',
+	TEN:'ten', WAS:'wsh', WSH:'wsh'
+};
+function teamLogoUrl(team) {
+	const code = TEAM_LOGO_CODES[String(team || '').toUpperCase()];
+	return code ? `https://a.espncdn.com/i/teamlogos/nfl/500/${code}.png` : '';
+}
+function teamLogoHtml(team, alt='', className='team-logo') {
+	const url = teamLogoUrl(team);
+	if (!url) return '';
+	return `<img class="${escapeHtml(className)}" src="${escapeHtml(url)}" alt="${escapeHtml(alt || team || '')}" loading="lazy" decoding="async" referrerpolicy="no-referrer">`;
+}
+function playerNameSpan(row) {
+	const name = escapeHtml(row?.player || '');
+	const logo = teamLogoHtml(row?.team, `${row?.team || ''} logo`);
+	return `<span class="player-name-with-logo">${logo}<span class="${positionClass(row?.position)}">${name}</span></span>`;
+}
 function adjustedAuctionPrice(row, premium) { return Math.max(1, Math.ceil(n(row.auction_value) * (1 + premium))); }
 function readOptimizerPremium() { const value = Number(document.getElementById('optimizerPremium')?.value ?? 0.05); return Number.isFinite(value) ? value : 0.05; }
 function readOptimizerBudget() { const value = Number(document.getElementById('optimizerBudget')?.value ?? AUCTION_CONFIG.budget); return Math.max(AUCTION_CONFIG.rosterSpots, Math.min(AUCTION_CONFIG.budget, Number.isFinite(value) ? value : AUCTION_CONFIG.budget)); }
@@ -4238,10 +4263,11 @@ function auctionActiveBidCardHtml({player, currentBid=0, highName='-', highIsHum
 	const timeClass = auctionTimerClass(timeSeconds);
 	const bidLeader = highName || '-';
 	const band = auctionValueBandText(strategy);
+	const logo = teamLogoHtml(player.team, `${player.team || ''} logo`);
 	return `<div class="auction-active-card ${className}" ${attrs}>
 		<div class="auction-active-top">
 			<div class="auction-active-player">
-				<div class="auction-active-name-row"><strong class="auction-active-name ${positionClass(player.position)}">${escapeHtml(player.player || displayPlayer(player))}</strong><span class="auction-active-badges">${badges}</span></div>
+				<div class="auction-active-name-row"><span class="auction-active-name-wrap">${logo}<strong class="auction-active-name ${positionClass(player.position)}">${escapeHtml(player.player || displayPlayer(player))}</strong></span><span class="auction-active-badges">${badges}</span></div>
 				<div class="auction-active-meta"><span class="auction-active-tier">${escapeHtml(tier)}</span></div>
 				${timeText ? `<div class="auction-active-timer ${timeClass}" data-active-timer>${escapeHtml(timeText)}</div>` : ''}
 			</div>
@@ -5752,7 +5778,7 @@ function auctionResultHtml(result) {
 	const tier = result.auction_tier || player?.auction_tier || '';
 	const humanWin = auctionResultIsHuman(result);
 	const winPill = humanWin ? '<span class="result-win-pill">You won</span>' : '';
-	return `<div class="result-item result-rich ${humanWin ? 'human-win' : ''}"><div class="result-main"><strong class="${positionClass(result.position)}">${escapeHtml(result.player)}</strong><span>${escapeHtml(result.position)}${result.team ? ' ' + escapeHtml(result.team) : ''} · ${escapeHtml(result.buyer || '')}${result.slot ? ' · ' + escapeHtml(result.slot) : ''}</span></div><div class="result-price"><strong>$${paid}</strong>${winPill}<span class="${deltaClass}">${escapeHtml(pctTextValue)}</span></div><div class="result-stats"><span>${escapeHtml(deltaText)}</span><span>${value ? `$${value} value` : 'no value match'}</span><span>${escapeHtml(bidText)}</span>${tier ? `<span>${escapeHtml(tier)}</span>` : ''}</div></div>`;
+	return `<div class="result-item result-rich ${humanWin ? 'human-win' : ''}"><div class="result-main"><span class="result-player-wrap">${teamLogoHtml(result.team, `${result.team || ''} logo`)}<strong class="${positionClass(result.position)}">${escapeHtml(result.player)}</strong></span><span>${escapeHtml(result.position)}${result.team ? ' ' + escapeHtml(result.team) : ''} · ${escapeHtml(result.buyer || '')}${result.slot ? ' · ' + escapeHtml(result.slot) : ''}</span></div><div class="result-price"><strong>$${paid}</strong>${winPill}<span class="${deltaClass}">${escapeHtml(pctTextValue)}</span></div><div class="result-stats"><span>${escapeHtml(deltaText)}</span><span>${value ? `$${value} value` : 'no value match'}</span><span>${escapeHtml(bidText)}</span>${tier ? `<span>${escapeHtml(tier)}</span>` : ''}</div></div>`;
 }
 function renderMockResults(m) {
 	const root = document.getElementById('mockResults'); if (!root) return;
