@@ -4995,6 +4995,52 @@ const DEFAULT_PAR_TARGETS = { QB:4, RB:6, WR:9, TE:6 };
 const DEFAULT_PAR_SPEND = { QB:50, RB:50, WR:70, TE:30 };
 const DEFAULT_PAR_BANDS = { QB:{min:2,max:3}, RB:{min:3,max:4}, WR:{min:1,max:3}, TE:{min:2,max:3} };
 const DEFAULT_PAR_DIPS = Object.fromEntries(PAR_POSITIONS.map(pos => [pos, {enabled:true, threshold:5, maxBuys:1}]));
+const PAR_SHEET_PRESET_VERSION = 2;
+const PREVIOUS_PAR_SHEET_PRESETS = {
+	base: {
+		targets: { QB:4, RB:6, WR:9, TE:6 },
+		spend: { QB:60, RB:35, WR:65, TE:40 },
+		bands: { QB:{min:1,max:3}, RB:{min:2,max:4}, WR:{min:1,max:3}, TE:{min:1,max:3} }
+	},
+	pivotA: {
+		targets: { QB:4, RB:6, WR:9, TE:6 },
+		spend: { QB:65, RB:30, WR:65, TE:40 },
+		bands: { QB:{min:1,max:2}, RB:{min:2,max:3}, WR:{min:1,max:2}, TE:{min:1,max:2} }
+	},
+	pivotB: {
+		targets: { QB:4, RB:6, WR:9, TE:6 },
+		spend: { QB:50, RB:40, WR:70, TE:40 },
+		bands: { QB:{min:2,max:4}, RB:{min:3,max:5}, WR:{min:2,max:4}, TE:{min:2,max:4} }
+	}
+};
+const PAR_SHEET_PRESETS = {
+	base: {
+		name: 'Base',
+		description: 'Balanced premium core',
+		targets: { QB:4, RB:6, WR:9, TE:6 },
+		spend: { QB:58, RB:26, WR:76, TE:40 },
+		bands: { QB:{min:1,max:3}, RB:{min:3,max:4}, WR:{min:1,max:3}, TE:{min:2,max:3} }
+	},
+	pivotA: {
+		name: 'Pivot A',
+		description: 'Elite discount attack',
+		targets: { QB:4, RB:6, WR:9, TE:6 },
+		spend: { QB:64, RB:20, WR:82, TE:34 },
+		bands: { QB:{min:1,max:2}, RB:{min:3,max:4}, WR:{min:1,max:2}, TE:{min:1,max:2} }
+	},
+	pivotB: {
+		name: 'Pivot B',
+		description: 'Value and depth fallback',
+		targets: { QB:4, RB:6, WR:9, TE:6 },
+		spend: { QB:50, RB:34, WR:72, TE:44 },
+		bands: { QB:{min:2,max:4}, RB:{min:3,max:5}, WR:{min:2,max:4}, TE:{min:2,max:3} }
+	}
+};
+const LEGACY_PAR_PRESET = {
+	targets: {...DEFAULT_PAR_TARGETS},
+	spend: {...DEFAULT_PAR_SPEND},
+	bands: { QB:{...DEFAULT_PAR_BANDS.QB}, RB:{...DEFAULT_PAR_BANDS.RB}, WR:{...DEFAULT_PAR_BANDS.WR}, TE:{...DEFAULT_PAR_BANDS.TE} }
+};
 const PAR_FILL_ORDER = ['WR','RB','TE','QB'];
 const PAR_TIER_BUCKETS = [
 	{key:'T1', label:'Tier 1'},
@@ -5006,15 +5052,34 @@ const PAR_SHEET_IDS = ['base','pivotA','pivotB'];
 function deepClone(value) { return JSON.parse(JSON.stringify(value)); }
 function parTierBandClamp(value, fallback=1) { return Math.max(1, Math.min(5, Math.round(n(value || fallback) || fallback))); }
 function parBucketNumber(bucket) { if (bucket === 'Depth') return 5; const match = String(bucket || '').match(/T(\d+)/i); return match ? Number(match[1]) : 5; }
-function defaultParSheetName(id) { return id === 'base' ? 'Base' : id === 'pivotA' ? 'Pivot A' : 'Pivot B'; }
+function defaultParSheetName(id) { return (PAR_SHEET_PRESETS[id] || PAR_SHEET_PRESETS.base).name; }
 function defaultParBand(pos) { return {...(DEFAULT_PAR_BANDS[pos] || {min:1,max:5})}; }
 function defaultParDip(pos) { return {...(DEFAULT_PAR_DIPS[pos] || {enabled:true, threshold:5, maxBuys:1})}; }
+function defaultParSheetDescription(id) { return (PAR_SHEET_PRESETS[id] || PAR_SHEET_PRESETS.base).description || ''; }
 function dashboardParSheetBandSummary(sheet) {
 	if (!sheet?.bands) return '';
 	return PAR_POSITIONS.map(pos => {
 		const band = sheet.bands[pos] || defaultParBand(pos);
 		return `${pos} build: tiers ${band.min}-${band.max}`;
 	}).join(' · ');
+}
+function dashboardParSheetSummaryText(sheet) {
+	if (!sheet) return '';
+	return [sheet.description || '', dashboardParSheetBandSummary(sheet)].filter(Boolean).join(' | ');
+}
+function dashboardParSheetPreset(id) { return PAR_SHEET_PRESETS[id] || PAR_SHEET_PRESETS.base; }
+function dashboardSamePosMap(left={}, right={}, valueCmp) { return PAR_POSITIONS.every(pos => valueCmp(left[pos], right[pos], pos)); }
+function dashboardIsLegacySheetConfig(sheet) {
+	if (!sheet) return false;
+	return dashboardSamePosMap(sheet.targets || {}, LEGACY_PAR_PRESET.targets, (a,b)=>Number(a) === Number(b)) &&
+		dashboardSamePosMap(sheet.spend || {}, LEGACY_PAR_PRESET.spend, (a,b)=>Number(a) === Number(b)) &&
+		dashboardSamePosMap(sheet.bands || {}, LEGACY_PAR_PRESET.bands, (a,b)=>Number(a?.min) === Number(b?.min) && Number(a?.max) === Number(b?.max));
+}
+function dashboardMatchesPresetConfig(sheet, preset) {
+	if (!sheet || !preset) return false;
+	return dashboardSamePosMap(sheet.targets || {}, preset.targets, (a,b)=>Number(a) === Number(b)) &&
+		dashboardSamePosMap(sheet.spend || {}, preset.spend, (a,b)=>Number(a) === Number(b)) &&
+		dashboardSamePosMap(sheet.bands || {}, preset.bands, (a,b)=>Number(a?.min) === Number(b?.min) && Number(a?.max) === Number(b?.max));
 }
 function parClampCount(value) {
 	const count = Math.round(Number(value));
@@ -5064,7 +5129,8 @@ function dashboardGenerateTierPlanForPosition(pos, targetCount, targetSpend, ban
 	};
 }
 function createDashboardParSheet(id) {
-	const sheet = { id, name:defaultParSheetName(id), targets:{...DEFAULT_PAR_TARGETS}, spend:{...DEFAULT_PAR_SPEND}, bands:Object.fromEntries(PAR_POSITIONS.map(pos => [pos, defaultParBand(pos)])), tierDollars:{}, tierCounts:{}, dips:Object.fromEntries(PAR_POSITIONS.map(pos => [pos, defaultParDip(pos)])) };
+	const preset = dashboardParSheetPreset(id);
+	const sheet = { id, name:defaultParSheetName(id), description:defaultParSheetDescription(id), presetVersion:PAR_SHEET_PRESET_VERSION, targets:{...preset.targets}, spend:{...preset.spend}, bands:Object.fromEntries(PAR_POSITIONS.map(pos => [pos, {...(preset.bands?.[pos] || defaultParBand(pos))}])), tierDollars:{}, tierCounts:{}, dips:Object.fromEntries(PAR_POSITIONS.map(pos => [pos, defaultParDip(pos)])) };
 	PAR_POSITIONS.forEach(pos => {
 		const plan = dashboardGenerateTierPlanForPosition(pos, sheet.targets[pos], sheet.spend[pos], sheet.bands[pos]);
 		sheet.tierDollars[pos] = Object.fromEntries(Object.entries(plan).map(([key, value]) => [key, value.spend]));
@@ -5077,11 +5143,22 @@ function ensureDashboardParStrategy() {
 	if (!state.parStrategy.sheets || typeof state.parStrategy.sheets !== 'object') state.parStrategy.sheets = {};
 	PAR_SHEET_IDS.forEach(id => {
 		if (!state.parStrategy.sheets[id]) state.parStrategy.sheets[id] = createDashboardParSheet(id);
-		const sheet = state.parStrategy.sheets[id];
+		let sheet = state.parStrategy.sheets[id];
+		if (dashboardIsLegacySheetConfig(sheet) || (!sheet.presetVersion && dashboardMatchesPresetConfig(sheet, PREVIOUS_PAR_SHEET_PRESETS[id]))) {
+			const migrated = createDashboardParSheet(id);
+			migrated.tierDollars = {...migrated.tierDollars, ...(sheet.tierDollars || {})};
+			migrated.tierCounts = {...migrated.tierCounts, ...(sheet.tierCounts || {})};
+			migrated.dips = {...migrated.dips, ...(sheet.dips || {})};
+			state.parStrategy.sheets[id] = migrated;
+			sheet = migrated;
+		}
+		const preset = dashboardParSheetPreset(id);
 		sheet.id = id;
 		sheet.name = String(sheet.name || defaultParSheetName(id));
-		sheet.targets = {...DEFAULT_PAR_TARGETS, ...(sheet.targets || {})};
-		sheet.spend = {...DEFAULT_PAR_SPEND, ...(sheet.spend || {})};
+		sheet.description = String(sheet.description || defaultParSheetDescription(id));
+		sheet.presetVersion = Number(sheet.presetVersion || PAR_SHEET_PRESET_VERSION);
+		sheet.targets = {...preset.targets, ...(sheet.targets || {})};
+		sheet.spend = {...preset.spend, ...(sheet.spend || {})};
 		sheet.bands = Object.fromEntries(PAR_POSITIONS.map(pos => {
 			const raw = sheet.bands?.[pos] || defaultParBand(pos);
 			return [pos, {min:parTierBandClamp(raw.min, defaultParBand(pos).min), max:parTierBandClamp(raw.max, defaultParBand(pos).max)}];
@@ -5170,6 +5247,42 @@ function parNormalizeDollars(values={}, lockedPos='') {
 function parSuggestedDollars(targetCounts={}, idealPlayers=[]) {
 	const raw = Object.fromEntries(PAR_POSITIONS.map(pos => [pos, parSuggestedTotal(pos, targetCounts[pos] || 0, idealPlayers)]));
 	return parNormalizeDollars(raw);
+}
+function dashboardRoomPricingByPos(results=[]) {
+	const byPos = Object.fromEntries(PAR_POSITIONS.map(pos => [pos, {sales:0, paid:0, value:0, ratio:1}]));
+	(results || []).forEach(row => {
+		const player = auctionPool().find(item => item.id === row.playerId) || (row.player ? correctedPlayerRow(row.player) : null);
+		const pos = String(player?.position || row.position || '').toUpperCase();
+		if (!player || !byPos[pos]) return;
+		byPos[pos].sales += 1;
+		byPos[pos].paid += n(row.paid ?? row.amount);
+		byPos[pos].value += n(player.auction_value);
+	});
+	PAR_POSITIONS.forEach(pos => {
+		const item = byPos[pos];
+		item.ratio = item.value > 0 ? item.paid / Math.max(1, item.value) : 1;
+	});
+	return byPos;
+}
+function dashboardEffectiveSheetSpend(sheet, results=[]) {
+	const pricing = dashboardRoomPricingByPos(results);
+	const total = PAR_POSITIONS.reduce((sum, pos) => sum + Math.max(0, Math.round(n(sheet?.spend?.[pos]))), 0) || AUCTION_CONFIG.budget;
+	const adjusted = {};
+	const reasons = [];
+	PAR_POSITIONS.forEach(pos => {
+		const base = Math.max(0, Math.round(n(sheet?.spend?.[pos])));
+		const market = pricing[pos] || {sales:0, ratio:1};
+		if (market.sales < 2) {
+			adjusted[pos] = base;
+			return;
+		}
+		const ratioDelta = Math.max(-0.12, Math.min(0.12, (1 - market.ratio) * 0.35));
+		const next = Math.max(0, Math.round(base * (1 + ratioDelta)));
+		adjusted[pos] = next;
+		const dollarDelta = next - base;
+		if (Math.abs(dollarDelta) >= 2) reasons.push(`${pos} ${dollarDelta > 0 ? `+$${dollarDelta}` : `-$${Math.abs(dollarDelta)}`} from room pricing`);
+	});
+	return { spend: parNormalizeDollars(adjusted, total), reasons, pricing };
 }
 function parTargetDollars(suggestedDollars={}) {
 	const sheet = activeDashboardParSheet();
@@ -5310,6 +5423,7 @@ function dashboardParStrategySignature(team, results=[], commitments=[]) {
 }
 function dashboardParStrategyScore(sheet, team, results=[], commitments=[]) {
 	const rosterCountsByPos = rosterCounts(team?.roster || []);
+	const effectiveSpend = dashboardEffectiveSheetSpend(sheet, results);
 	const sold = new Map(), remaining = new Map();
 	(results || []).forEach(row => {
 		const player = auctionPool().find(item => item.id === row.playerId) || (row.player ? correctedPlayerRow(row.player) : null);
@@ -5353,21 +5467,57 @@ function dashboardParStrategyScore(sheet, team, results=[], commitments=[]) {
 		const ratio = soldValue > 0 ? soldPaid / Math.max(1, soldValue) : 1;
 		const shortage = Math.max(0, need - remain);
 		score += Math.min(need, remain) * 10 + remain - shortage * 18 - Math.max(0, ratio - 1) * (5 + need * 2) + Math.max(0, 1 - ratio) * (4 + need * 2);
+		if ((effectiveSpend.spend[pos] || 0) !== Math.round(n(sheet.spend[pos]))) {
+			score += ((effectiveSpend.spend[pos] || 0) - Math.round(n(sheet.spend[pos]))) * 0.18;
+		}
 		if (shortage > 0) reasons.push({weight:40 + shortage, text:`${pos} tiers ${band.min}-${band.max} are running thin`});
 		else if (ratio >= 1.12 && soldCount >= 2) reasons.push({weight:20, text:`${pos} tiers ${band.min}-${band.max} are overpriced`});
 		else if (ratio <= 0.92 && soldCount >= 2) reasons.push({weight:18, text:`${pos} tiers ${band.min}-${band.max} are discounted`});
 		else reasons.push({weight:10 + remain, text:`${pos} tiers ${band.min}-${band.max} still have ${remain} players left`});
 	});
-	return {score, reasons:reasons.sort((a,b)=>b.weight-a.weight).slice(0, 3).map(item => item.text)};
+	return {score, reasons:reasons.sort((a,b)=>b.weight-a.weight).slice(0, 3).map(item => item.text), effectiveSpend:effectiveSpend.spend, spendReasons:effectiveSpend.reasons};
+}
+function dashboardParAutoSwitchDecision(current, best, team, results=[], commitments=[]) {
+	if (!best || !current || best.id === current.id) return {shouldSwitch:false, threshold:Infinity, notes:[]};
+	const completedSales = (results || []).length;
+	const rostered = (team?.roster || []).length;
+	const rosterProgress = AUCTION_CONFIG.rosterSpots > 0 ? rostered / AUCTION_CONFIG.rosterSpots : 0;
+	let threshold = 8;
+	if (completedSales < 6) threshold += 6;
+	else if (completedSales < 12) threshold += 3;
+	else if (completedSales < 24) threshold += 1;
+	if (rosterProgress >= 0.4) threshold -= 1;
+	if (rosterProgress >= 0.65) threshold -= 2;
+	const notes = [];
+	if (completedSales < 12) notes.push(`early room: ${completedSales} completed sale${completedSales === 1 ? '' : 's'}`);
+	else notes.push(`${completedSales} completed sales`);
+	if (team) {
+		const sourceTeams = state.leagueTycoon?.teams?.length ? state.leagueTycoon.teams : (state.mock?.teams?.length ? state.mock.teams : []);
+		if (sourceTeams.length) {
+			const maxFn = state.leagueTycoon?.teams?.length ? leagueTycoonTeamMaxBid : mockTeamMaxBid;
+			const above = teamsAboveMaxBidInfo(sourceTeams, team, maxFn).count;
+			if (above >= Math.max(6, Math.ceil(sourceTeams.length / 2))) {
+				threshold += 1;
+				notes.push(`hold value: ${above} teams still above your max`);
+			} else if (above <= 2) {
+				threshold -= 1;
+				notes.push(`max-bid leverage: only ${above} team${above === 1 ? '' : 's'} above your max`);
+			}
+		}
+	}
+	threshold = Math.max(4, threshold);
+	return {shouldSwitch:(best.score - current.score) >= threshold, threshold, notes};
 }
 function dashboardParStrategyState(team, results=[], commitments=[]) {
 	const strategy = ensureDashboardParStrategy(), signature = dashboardParStrategySignature(team, results, commitments);
 	if (strategy.cache?.signature === signature) return strategy.cache.value;
 	const scored = PAR_SHEET_IDS.map(id => ({id, ...dashboardParStrategyScore(strategy.sheets[id], team, results, commitments)})).sort((a,b)=>b.score-a.score);
 	const currentId = activeDashboardParSheetId(), current = scored.find(item => item.id === currentId) || scored[0], best = scored[0];
-	if (strategy.mode === 'auto' && best && current && best.id !== current.id && best.score - current.score >= 8) strategy.activeSheetId = best.id;
-	strategy.recommendation = best ? {sheetId:best.id, reasons:best.reasons, score:best.score} : null;
-	const value = {scored, recommendation:strategy.recommendation, activeSheetId:activeDashboardParSheetId(), mode:strategy.mode};
+	const switchDecision = strategy.mode === 'auto' ? dashboardParAutoSwitchDecision(current, best, team, results, commitments) : {shouldSwitch:false, threshold:Infinity, notes:[]};
+	if (strategy.mode === 'auto' && best) strategy.activeSheetId = switchDecision.shouldSwitch ? best.id : current.id;
+	const active = scored.find(item => item.id === activeDashboardParSheetId()) || best;
+	strategy.recommendation = best ? {sheetId:best.id, reasons:best.reasons, spendReasons:best.spendReasons, score:best.score, switchNotes:switchDecision.notes, switchThreshold:Number.isFinite(switchDecision.threshold) ? switchDecision.threshold : null, autoSwitching:!!switchDecision.shouldSwitch} : null;
+	const value = {scored, recommendation:strategy.recommendation, activeSheetId:activeDashboardParSheetId(), mode:strategy.mode, activeEffectiveSpend:active?.effectiveSpend || activeDashboardParSheet().spend, activeSpendReasons:active?.spendReasons || [], switchNotes:switchDecision.notes, switchThreshold:Number.isFinite(switchDecision.threshold) ? switchDecision.threshold : null, autoSwitching:!!switchDecision.shouldSwitch};
 	strategy.cache = {signature, value};
 	return value;
 }
@@ -5393,7 +5543,7 @@ function renderParSheet(root, team, commitments=[], context={}) {
 	const committedTotals = parPositionTotals(commitments.map(item => ({...item.player, paid:item.currentBid})), 'paid');
 	const targetCounts = parTargetCounts(idealCounts);
 	const suggestedDollars = parSuggestedDollars(targetCounts, ideal.players);
-	const targetDollars = parTargetDollars(suggestedDollars);
+	const targetDollars = strategy.mode === 'auto' ? parNormalizeDollars(strategyState.activeEffectiveSpend || activeSheet.spend || suggestedDollars) : parTargetDollars(suggestedDollars);
 	const totalTargetCount = PAR_POSITIONS.reduce((sum, pos) => sum + targetCounts[pos], 0);
 	const totalTargetSpend = PAR_POSITIONS.reduce((sum, pos) => sum + targetDollars[pos], 0);
 	const rows = PAR_POSITIONS.map(pos => {
@@ -5404,7 +5554,7 @@ function renderParSheet(root, team, commitments=[], context={}) {
 		const dip = activeSheet.dips[pos] || defaultParDip(pos);
 		return `<div class="par-row"><strong>${pos}</strong><input type="number" min="0" max="${AUCTION_CONFIG.rosterSpots}" step="1" value="${targetCount}" data-par-count="${pos}" title="Target ${pos} player count"><input type="number" min="0" max="${AUCTION_CONFIG.budget}" step="1" value="${target}" data-par-input="${pos}" title="Total planned ${pos} spend"><span>$${idealValue}</span><span>$${spent}</span><span>$${committed}</span><span class="par-delta ${deltaClass}">${deltaText}</span></div><div class="par-row"><span></span><label><span class="small">Band start</span><input type="number" min="1" max="5" step="1" value="${band.min}" data-par-band-min="${pos}"></label><label><span class="small">Band end</span><input type="number" min="1" max="5" step="1" value="${band.max}" data-par-band-max="${pos}"></label><label><span class="small">Dip $</span><input type="number" min="0" max="25" step="1" value="${dip.threshold}" data-par-dip="${pos}"></label><span class="small">${escapeHtml(`${pos} T${band.min}-T${band.max}`)}</span><span class="small">${dip.enabled ? `T1 dip at -$${dip.threshold}` : 'Dip off'}</span></div>${renderParTierRow(pos, target, targetCount, ideal.players, team, commitments)}`;
 	}).join('');
-	root.innerHTML = `<div class="par-sheet-head"><div><strong>Par Sheet</strong><span>${escapeHtml(strategy.mode === 'manual' ? `Locked to ${activeSheet.name}` : `Auto on ${activeSheet.name}`)}. ${escapeHtml(dashboardParSheetBandSummary(activeSheet))}${strategyState.recommendation?.reasons?.length ? ` | ${escapeHtml(strategyState.recommendation.reasons.join(' · '))}` : ''}</span></div><button type="button" class="par-reset" data-par-reset>Reset</button></div><div class="save-strip-actions" style="margin:0 0 10px 0;"><button type="button" data-par-mode="auto" ${strategy.mode === 'auto' ? 'disabled' : ''}>Auto</button><button type="button" data-par-mode="manual" ${strategy.mode === 'manual' ? 'disabled' : ''}>Manual</button>${PAR_SHEET_IDS.map(id => `<button type="button" data-par-sheet="${id}" ${activeDashboardParSheetId() === id ? 'disabled' : ''} title="${escapeHtml(dashboardParSheetBandSummary(strategy.sheets[id]))}">${escapeHtml(strategy.sheets[id].name)}${strategyState.recommendation?.sheetId === id ? ' *' : ''}</button>`).join('')}</div><div class="par-table"><div class="par-row header"><span>Pos</span><span>Target #</span><span>Target $</span><span>Suggest</span><span>Spent</span><span>Live</span><span>+/-</span></div>${rows}</div>`;
+	root.innerHTML = `<div class="par-sheet-head"><div><strong>Par Sheet</strong><span>${escapeHtml(strategy.mode === 'manual' ? `Locked to ${activeSheet.name}` : `Auto on ${activeSheet.name}`)}. ${escapeHtml(dashboardParSheetSummaryText(activeSheet))}${strategyState.recommendation?.reasons?.length ? ` | ${escapeHtml(strategyState.recommendation.reasons.join(' · '))}` : ''}${strategyState.activeSpendReasons?.length ? ` | ${escapeHtml(strategyState.activeSpendReasons.join(' · '))}` : ''}${strategyState.switchNotes?.length ? ` | ${escapeHtml(strategyState.switchNotes.join(' · '))}` : ''}</span></div><button type="button" class="par-reset" data-par-reset>Reset</button></div><div class="save-strip-actions" style="margin:0 0 10px 0;"><button type="button" data-par-mode="auto" ${strategy.mode === 'auto' ? 'disabled' : ''}>Auto</button><button type="button" data-par-mode="manual" ${strategy.mode === 'manual' ? 'disabled' : ''}>Manual</button>${PAR_SHEET_IDS.map(id => `<button type="button" data-par-sheet="${id}" ${activeDashboardParSheetId() === id ? 'disabled' : ''} title="${escapeHtml(dashboardParSheetSummaryText(strategy.sheets[id]))}">${escapeHtml(strategy.sheets[id].name)}${strategyState.recommendation?.sheetId === id ? ' *' : ''}</button>`).join('')}</div><div class="par-table"><div class="par-row header"><span>Pos</span><span>Target #</span><span>Target $</span><span>Suggest</span><span>Spent</span><span>Live</span><span>+/-</span></div>${rows}</div>`;
 	root.querySelectorAll('[data-par-count]').forEach(input => input.addEventListener('change', () => {
 		const pos = input.dataset.parCount, value = parClampCount(input.value);
 		const currentCounts = Object.fromEntries(PAR_POSITIONS.map(p => [p, p === pos ? value : Number(root.querySelector(`[data-par-count="${p}"]`)?.value)]));
@@ -5453,15 +5603,19 @@ function renderParSheet(root, team, commitments=[], context={}) {
 	root.querySelectorAll('[data-par-mode]').forEach(btn => btn.addEventListener('click', () => {
 		strategy.mode = btn.dataset.parMode === 'manual' ? 'manual' : 'auto';
 		if (strategy.mode === 'manual') strategy.manualSheetId = activeDashboardParSheetId();
-		else strategy.manualSheetId = '';
+		else {
+			strategy.activeSheetId = activeDashboardParSheetId();
+			strategy.manualSheetId = '';
+		}
 		strategy.cache = null;
 		renderMockAuction(); renderSlowAuction(); renderLeagueTycoon(); scheduleAutoSave();
 	}));
 	root.querySelectorAll('[data-par-sheet]').forEach(btn => btn.addEventListener('click', () => {
 		const id = btn.dataset.parSheet;
 		if (!PAR_SHEET_IDS.includes(id)) return;
-		if (strategy.mode === 'manual') strategy.manualSheetId = id;
-		else strategy.activeSheetId = id;
+		strategy.mode = 'manual';
+		strategy.manualSheetId = id;
+		strategy.activeSheetId = id;
 		strategy.cache = null;
 		renderMockAuction(); renderSlowAuction(); renderLeagueTycoon(); scheduleAutoSave();
 	}));
