@@ -207,18 +207,26 @@ svg { width:100%; max-width:100%; min-width:0; height:auto; display:block; }
 }
 .strategy-guide-chip.subtle { border-color:rgba(96,165,250,.34); background:rgba(96,165,250,.1); color:#dbeafe; }
 .strategy-guide-section { padding:12px; }
-.strategy-guide-section h3 { font-size:18px; margin-bottom:8px; }
-.strategy-guide-section-body { display:grid; gap:10px; color:#dbe4f0; }
-.strategy-guide-section-body p { margin:0; line-height:1.5; }
-.strategy-guide-section-body ul, .strategy-guide-section-body ol { margin:0; padding-left:18px; display:grid; gap:5px; color:#dbe4f0; }
-.strategy-guide-section-body li { line-height:1.45; }
-.strategy-guide-section-body hr { width:100%; border:none; border-top:1px solid rgba(148,163,184,.24); margin:2px 0; }
+.strategy-guide-section h3 { font-size:18px; margin:0 0 14px; }
+.strategy-guide-section-body { display:grid; gap:14px; color:#dbe4f0; }
+.strategy-guide-section-body p { margin:0; line-height:1.58; }
+.strategy-guide-section-body p.strategy-guide-lead {
+	margin-top:10px;
+	margin-bottom:4px;
+	line-height:1.5;
+}
+.strategy-guide-section-body ul, .strategy-guide-section-body ol { margin:2px 0 0; padding-left:24px; display:grid; gap:12px; color:#dbe4f0; }
+.strategy-guide-section-body li { line-height:1.52; }
+.strategy-guide-section-body hr { width:100%; border:none; border-top:1px solid rgba(148,163,184,.24); margin:6px 0; }
 .strategy-signal-card { margin:10px 0 12px; padding:12px; }
+.auction-insight-grid .strategy-signal-card { margin:0; }
 .strategy-signal-head { display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:8px; margin-bottom:8px; }
 .strategy-signal-head h3 { margin:0; font-size:16px; }
-.strategy-signal-summary { margin:0; color:#dbe4f0; line-height:1.45; }
-.strategy-signal-list { margin:8px 0 0; padding-left:18px; display:grid; gap:5px; color:#dbe4f0; }
-.strategy-signal-list li { line-height:1.4; }
+.strategy-signal-summary { margin:10px 0 0; color:#dbe4f0; line-height:1.38; font-size:13px; }
+.strategy-signal-list { margin:12px 0 0; padding-left:18px; display:grid; gap:6px; color:#dbe4f0; font-size:13px; }
+.strategy-signal-list li { line-height:1.35; }
+.strategy-signal-card .strategy-guide-chip-row { margin-bottom:6px; }
+.strategy-signal-card .strategy-link-row { margin-top:12px; }
 .strategy-signal-link { min-height:26px; padding:4px 10px; font-size:12px; }
 .mix-toolbar { margin-top:-4px; padding-top:0; }
 .mix-toolbar .inline-control input { width:72px; }
@@ -2044,7 +2052,7 @@ button.auction-status-pill:disabled {
 
 <section id="auctionBuilder" class="panel"><div class="card"><h2>Best Team Builder</h2><div class="toolbar"><label class="inline-control">Premium<select id="optimizerPremium"><option value="0">At bid</option><option value="0.05" selected>5% over</option><option value="0.1">10% over</option><option value="0.15">15% over</option></select></label><label class="inline-control">Build focus<select id="optimizerFocus"><option value="balanced" selected>Balanced</option><option value="qb">Better QBs</option><option value="rb">Better RBs</option><option value="wr">Better WRs</option><option value="te">Better TEs</option><option value="qb_wr">QB + WR</option><option value="qb_wr_te">QB + WR + TE</option><option value="rb_wr">RB + WR</option><option value="rb_te">RB + TE</option><option value="custom">Custom Mix</option></select></label><label class="inline-control">Preferred<select id="optimizerPreference"><option value="none" selected>Value only</option><option value="queue">My Want Queue</option><option value="waldman_win">Waldman Win Now</option><option value="waldman_long">Waldman Long-Term</option><option value="waldman">Waldman Overall</option><option value="harmon">Harmon Buy/Super Buy</option><option value="kyle">Kyle Suggestions</option><option value="fantasypros">FantasyPros Suggestions</option><option value="common">Common Preferred</option></select></label><label class="inline-control">Shape<select id="optimizerShape"><option value="stars" selected>Stars + values</option><option value="balanced">Balanced spend</option><option value="breakout">Young breakouts</option></select></label><label class="inline-control">Age cap<select id="optimizerAgeCap"><option value="">No cap</option><option value="29">29 or younger</option><option value="27">27 or younger</option><option value="25">25 or younger</option></select></label><label class="inline-control">Budget<input id="optimizerBudget" type="number" min="25" max="200" step="1" value="200"></label><button id="runOptimizer" type="button">Build team</button></div><div class="toolbar mix-toolbar"><label class="inline-control">QB mix<input id="optimizerMixQB" type="number" min="0.5" max="2" step="0.1" value="1"></label><label class="inline-control">RB mix<input id="optimizerMixRB" type="number" min="0.5" max="2" step="0.1" value="1"></label><label class="inline-control">WR mix<input id="optimizerMixWR" type="number" min="0.5" max="2" step="0.1" value="1"></label><label class="inline-control">TE mix<input id="optimizerMixTE" type="number" min="0.5" max="2" step="0.1" value="1"></label></div><p class="small">Builds a 25-player roster using tier-banded bid values plus the selected premium. Shape controls whether the optimizer chases premium stars, balances spend, or leans into younger mid-priced breakout profiles. Age cap excludes players with known ages above the selected limit. Players marked Avoid are excluded; My Want Queue boosts marked targets.</p><div class="auction-principles"><span><strong>Use values as anchors</strong> Raise or lower live targets when the room is paying more or less by position.</span><span><strong>Spend for elite tiers</strong> It is acceptable to beat value for a player you want if the roster build still works.</span><span><strong>Keep endgame leverage</strong> A few extra dollars matter when the room is stuck at $1 bids.</span><span><strong>Avoid flat mid-tier prices</strong> If 6th-10th round profiles are getting bid up, pivot to similar cheaper bets.</span></div><div id="optimizerSummary" class="metric-grid"></div><div id="optimizerByPosition" class="position-list"></div><div id="optimizerRoster" class="roster-slots"></div></div></section>
 <section id="mockAuction" class="panel"><div class="card"><div class="auction-card-head"><h2>Fast Auction</h2><p class="small auction-directions">Click a team header or summary to inspect that roster. Bot profiles can be changed in Team Summary. Sim buttons complete one or ten full nomination-and-sale cycles. The board scrolls horizontally so you can compare every team at once.</p></div><div class="toolbar"><button id="startMock" type="button">Start / Reset</button><button id="mockTimer" class="mock-timer" type="button" title="Start clock" aria-pressed="false">:30</button><label class="inline-control">Nom sec<input id="mockNominationSeconds" type="number" min="3" max="120" step="1" value="30"></label><label class="inline-control">Reset sec<input id="mockResetSeconds" type="number" min="3" max="120" step="1" value="10"></label><button id="mockAutoOne" type="button" title="Simulates one full nomination, bot bidding sequence, and sale award.">Sim 1 sale</button><button id="mockAutoTen" type="button" title="Repeats the full automated sale cycle ten times or until the draft cannot continue.">Sim 10 sales</button><button id="mockBotRound" type="button">Next nomination / bot bid</button><button id="mockPass" type="button">Pass</button></div><div id="mockWantedRemainders" class="queue-tier-summary"></div><div id="mockCurrent" class="current-auction"></div><div id="mockDraftBoard" class="mock-draft-board"></div></div><div class="mock-draft-layout"><div class="mock-stack"><div class="card"><h2>Team Summary</h2><div id="mockTeams" class="mock-board"></div></div><div class="card"><h2>Nomination Pool</h2><div class="toolbar"><input id="mockPlayerSearch" type="search" placeholder="Search auction pool"><select id="mockPosFilter"><option value="">All positions</option></select><label class="inline-control"><input id="mockShowDrafted" type="checkbox">Show drafted</label></div><div class="table-wrap mock-player-list"><table id="mockPlayerTable"></table></div></div></div><div class="mock-side-panel"><div class="card"><h2>Selected Team</h2><div id="mockHumanTeam" class="metric-grid"></div><div id="mockHumanRoster" class="roster-slots"></div></div><div class="card"><h2>Results</h2><div id="mockResults" class="result-log"></div></div></div></div></section>
-<section id="slowAuction" class="panel"><div class="card"><h2>Slow Auction</h2><div class="toolbar"><button id="startSlow" type="button">Start / Reset</button><button id="slowFillNominations" type="button">Fill nominations</button><button id="slowClockToggle" class="mock-timer" type="button" title="Start clock">Clock paused</button><label class="inline-control">Active bids<input id="slowNominationCount" type="number" min="20" max="50" step="1" value="30"></label><label class="inline-control">Nom<input id="slowNominationMinutes" type="number" min="1" max="86400" step="1" value="30"><select id="slowNominationUnit"><option value="seconds">sec</option><option value="minutes" selected>min</option><option value="hours">hr</option></select></label><label class="inline-control">Bid<input id="slowBidMinutes" type="number" min="1" max="86400" step="1" value="720"><select id="slowBidUnit"><option value="seconds">sec</option><option value="minutes" selected>min</option><option value="hours">hr</option></select></label><label class="inline-control">Reset<input id="slowResetMinutes" type="number" min="1" max="86400" step="1" value="30"><select id="slowResetUnit"><option value="seconds">sec</option><option value="minutes" selected>min</option><option value="hours">hr</option></select></label><button id="slowBotBids" type="button">Bot bid round</button><button id="slowAdvanceFive" type="button">Advance 5 min</button><button id="slowResolveExpired" type="button">Resolve expired</button></div><div id="slowSummary" class="metric-grid"></div><div id="slowNominationOrder" class="nomination-order"></div></div><div class="slow-auction-layout"><div class="mock-stack"><div class="card"><h2>Active Bids</h2><div id="slowLotFilters"></div><div id="slowLots" class="slow-lot-grid"></div></div><div class="card"><h2>Results</h2><div id="slowResults" class="result-log"></div></div><div class="card"><h2>Nomination Pool</h2><div class="toolbar"><input id="slowPlayerSearch" type="search" placeholder="Search slow auction pool"><select id="slowPosFilter"><option value="">All positions</option></select><label class="inline-control"><input id="slowShowDrafted" type="checkbox">Show drafted</label></div><div class="table-wrap slow-pool-list"><table id="slowPlayerTable"></table></div></div></div><div class="mock-side-panel"><div class="card"><h2>Team Summary</h2><div id="slowTeams" class="mock-board"></div></div><div class="card"><h2>Selected Team</h2><div id="slowHumanTeam" class="metric-grid"></div><div id="slowHumanRoster" class="roster-slots"></div></div></div></div></section>
+<section id="slowAuction" class="panel"><div class="card"><h2>Slow Auction</h2><div class="toolbar"><button id="startSlow" type="button">Start / Reset</button><button id="slowFillNominations" type="button">Fill nominations</button><button id="slowClockToggle" class="mock-timer" type="button" title="Start clock">Clock paused</button><label class="inline-control">Active bids<input id="slowNominationCount" type="number" min="20" max="50" step="1" value="30"></label><label class="inline-control">Nom<input id="slowNominationMinutes" type="number" min="1" max="86400" step="1" value="30"><select id="slowNominationUnit"><option value="seconds" selected>sec</option><option value="minutes">min</option><option value="hours">hr</option></select></label><label class="inline-control">Bid<input id="slowBidMinutes" type="number" min="1" max="86400" step="1" value="90"><select id="slowBidUnit"><option value="seconds" selected>sec</option><option value="minutes">min</option><option value="hours">hr</option></select></label><label class="inline-control">Reset<input id="slowResetMinutes" type="number" min="1" max="86400" step="1" value="20"><select id="slowResetUnit"><option value="seconds" selected>sec</option><option value="minutes">min</option><option value="hours">hr</option></select></label><button id="slowBotBids" type="button">Bot bid round</button><button id="slowAdvanceFive" type="button">Advance 5 min</button><button id="slowResolveExpired" type="button">Resolve expired</button></div><div id="slowSummary" class="metric-grid"></div><div id="slowNominationOrder" class="nomination-order"></div></div><div class="slow-auction-layout"><div class="mock-stack"><div class="card"><h2>Active Bids</h2><div id="slowWantedRemainders" class="queue-tier-summary"></div><div id="slowLotFilters"></div><div id="slowLots" class="slow-lot-grid"></div></div><div class="card"><h2>Results</h2><div id="slowResults" class="result-log"></div></div><div class="card"><h2>Nomination Pool</h2><div class="toolbar"><input id="slowPlayerSearch" type="search" placeholder="Search slow auction pool"><select id="slowPosFilter"><option value="">All positions</option></select><label class="inline-control"><input id="slowShowDrafted" type="checkbox">Show drafted</label></div><div class="table-wrap slow-pool-list"><table id="slowPlayerTable"></table></div></div></div><div class="mock-side-panel"><div class="card"><h2>Team Summary</h2><div id="slowTeams" class="mock-board"></div></div><div class="card"><h2>Selected Team</h2><div id="slowHumanTeam" class="metric-grid"></div><div id="slowHumanRoster" class="roster-slots"></div></div></div></div></section>
 <section id="parSheets" class="panel"><div class="card"><h2>Par Sheets</h2><p class="small">Build slot-by-slot roster plans here. Each slot targets a position and tier, defaults to the current auction model's tier-average price, and can be manually overridden. Auto mode can switch among your auto-eligible sheets during drafts, and manual mode locks the active sheet.</p><div id="parSheetsRoot"></div></div><div class="card"><h2>Tier Drop-Offs</h2><p class="small tier-drop-note">These are cliffs after a projection tier ends. Waldman year 1 points are the default basis; switch to Clay if you want to recalculate tiers from his projection set. Open a row to see the players in that tier.</p><div id="tierDropSummary" class="metric-grid"></div><div id="tierDropCharts" class="tier-drop-grid"></div></div></section>
 <section id="strategyGuide" class="panel"><div id="strategyGuideRoot"></div></section>
 
@@ -2114,7 +2122,7 @@ const OBSERVED_WR_PRICE_OVERRIDES = {
 };
 const DEFAULT_NOMINATION_SECONDS = 30;
 const DEFAULT_BID_RESET_SECONDS = 10;
-const DEFAULT_SLOW_TIMER_MINUTES = { nomination:30, bid:720, reset:30 };
+const DEFAULT_SLOW_TIMER_MINUTES = { nomination:0.5, bid:1.5, reset:1/3 };
 const SLOW_TIMER_LIMITS_SECONDS = { min:5, max:86400 };
 const NOMINATION_POOL_PAGE_SIZE = 25;
 const SLOW_POOL_PAGE_SIZE = NOMINATION_POOL_PAGE_SIZE;
@@ -3054,6 +3062,7 @@ function strategyGuideRenderBlock(lines=[]) {
 			continue;
 		}
 		const parts = [line.trim()];
+		const isLead = /^\*\*.+?\*\*/.test(line.trim());
 		i += 1;
 		while (i < lines.length) {
 			const next = String(lines[i] || '').trim();
@@ -3061,7 +3070,7 @@ function strategyGuideRenderBlock(lines=[]) {
 			parts.push(next);
 			i += 1;
 		}
-		html.push(`<p>${strategyGuideInlineHtml(parts.join(' '))}</p>`);
+		html.push(`<p${isLead ? ' class="strategy-guide-lead"' : ''}>${strategyGuideInlineHtml(parts.join(' '))}</p>`);
 	}
 	return html.join('');
 }
@@ -4275,7 +4284,7 @@ function auctionStrategySignals(m, activeIds=new Set(), options={}) {
 		bullets.push(`This current auction is above your recommended max. Let the room overpay and preserve flexibility.`);
 		links.set('strategy-6-mindset-discipline-and-common-mistakes-to-avoid', 'Discipline');
 	} else if (currentStrategy?.status === 'target') {
-		bullets.push(`The current player is still inside your bid plan. Move quickly if this player fits your active build.`);
+		bullets.push(`${displayPlayer(player)} is still inside your bid plan. Move quickly if that player fits your active build.`);
 		links.set('strategy-3-bidding-strategy', 'Bidding');
 	}
 	const human = team || (m?.teams || [])[0];
@@ -4292,8 +4301,8 @@ function auctionStrategySignals(m, activeIds=new Set(), options={}) {
 }
 function auctionStrategySignalsHtml(m, activeIds=new Set(), options={}) {
 	const data = auctionStrategySignals(m, activeIds, options);
-	return `<div class="card strategy-signal-card">
-		<div class="strategy-signal-head"><h3>Strategy Signals</h3><button type="button" class="strategy-signal-link" data-strategy-open="strategyGuide">Open guide</button></div>
+	return `<div class="auction-insight strategy-signal-card">
+		<div class="strategy-signal-head"><h4>Strategy Signals</h4><button type="button" class="strategy-signal-link" data-strategy-open="strategyGuide">Open guide</button></div>
 		<div class="strategy-guide-chip-row">${data.chips.map(chip => `<span class="strategy-guide-chip subtle">${escapeHtml(chip)}</span>`).join('')}</div>
 		<p class="strategy-signal-summary">${escapeHtml(data.summary)}</p>
 		<ul class="strategy-signal-list">${data.bullets.map(item => `<li>${escapeHtml(item)}</li>`).join('')}</ul>
@@ -4367,7 +4376,8 @@ function renderAuctionRoomTools(rootId, afterId, m, options={}) {
 	const root = ensureAuctionRoomTools(rootId, afterId);
 	if (!root) return;
 	const activeIds = options.activeIds || new Set();
-	root.innerHTML = `<div class="auction-insight-grid">${auctionMarketSummaryHtml(m)}${auctionTierScarcityHtml(m, activeIds)}${auctionNominationAdvisorHtml(m, activeIds)}${auctionEndgameLeverageHtml(m, options.maxBidForTeam)}${auctionPostSummaryHtml(m)}</div>`;
+	root.innerHTML = `<div class="auction-insight-grid">${auctionStrategySignalsHtml(m, activeIds, options)}${auctionMarketSummaryHtml(m)}${auctionTierScarcityHtml(m, activeIds)}${auctionNominationAdvisorHtml(m, activeIds)}${auctionEndgameLeverageHtml(m, options.maxBidForTeam)}${auctionPostSummaryHtml(m)}</div>`;
+	bindStrategySignalLinks(root);
 }
 function teamNeedSummary(team) {
 	const roster = team?.roster || [];
@@ -4536,12 +4546,23 @@ function auctionPlayerIsPriority(player) {
 const AUCTION_ACTIVE_FILTERS = [
 	['all', 'Active', ''],
 	['ending', 'Ending', 'warn'],
+	['deal', 'Deals', 'good'],
+	['premium', 'Premium', 'bad'],
 	['winning', 'Winning', 'good'],
 	['target', 'Want / Bid++', 'target'],
 	['blocked', "Can't bid", 'bad']
 ];
 function validAuctionActiveFilter(filter) {
 	return AUCTION_ACTIVE_FILTERS.some(([key]) => key === filter) ? filter : 'all';
+}
+function auctionPriceFilterFlags(player=null, currentBid=0) {
+	const value = Math.max(0, Math.round(n(player?.auction_value)));
+	const current = Math.max(0, Math.round(n(currentBid)));
+	if (!value) return {deal:false, premium:false};
+	return {
+		deal:current < value,
+		premium:current > value
+	};
 }
 function auctionActiveFilterMatches(filter, item={}) {
 	const active = validAuctionActiveFilter(filter);
@@ -4552,11 +4573,13 @@ function auctionActiveStats(items=[]) {
 	return items.reduce((acc, item) => {
 		acc.total += 1;
 		if (item.ending) acc.ending += 1;
+		if (item.deal) acc.deal += 1;
+		if (item.premium) acc.premium += 1;
 		if (item.winning) acc.winning += 1;
 		if (item.target) acc.target += 1;
 		if (item.blocked) acc.blocked += 1;
 		return acc;
-	}, {total:0, ending:0, winning:0, target:0, blocked:0});
+	}, {total:0, ending:0, deal:0, premium:0, winning:0, target:0, blocked:0});
 }
 function auctionStatusStripHtml(stats={}, activeFilter='all') {
 	const active = validAuctionActiveFilter(activeFilter);
@@ -4625,12 +4648,7 @@ function bindStrategySignalLinks(root) {
 	root?.querySelectorAll('[data-strategy-open]').forEach(btn => btn.addEventListener('click', () => setActivePanel('strategyGuide')));
 	root?.querySelectorAll('[data-strategy-jump]').forEach(btn => btn.addEventListener('click', () => strategyGuideJump(btn.dataset.strategyJump || '')));
 }
-function renderMockStrategySignals(m) {
-	const root = ensureAuctionStrategySignalsPanel('mockStrategySignals', 'mockRoomTools');
-	if (!root) return;
-	root.innerHTML = auctionStrategySignalsHtml(m, m.current ? new Set([m.current.id]) : new Set(), {player:m.current, team:m.teams[0], currentBid:m.currentBid, maxBidForTeam:team => mockTeamMaxBid(team)});
-	bindStrategySignalLinks(root);
-}
+function renderMockStrategySignals(m) {}
 function ensureSlowStrategyPanel() {
 	let root = document.getElementById('slowStrategy');
 	if (root) return root;
@@ -4648,13 +4666,7 @@ function renderSlowStrategy(m) {
 	const lot = slowSelectedLot(), team = m.teams[0], strategy = lot ? auctionStrategy(lot.player, team, lot.currentBid, slowTeamMaxBid(team, lot.id), slowTeamCommitted(team, lot.id)) : null;
 	root.innerHTML = strategyHtml(strategy, lot?.player);
 }
-function renderSlowStrategySignals(m) {
-	const root = ensureAuctionStrategySignalsPanel('slowStrategySignals', 'slowRoomTools');
-	if (!root) return;
-	const lot = slowSelectedLot();
-	root.innerHTML = auctionStrategySignalsHtml(m, slowActivePlayerIds(m), {player:lot?.player, team:m.teams[0], currentBid:lot?.currentBid || 0, maxBidForTeam:team => slowTeamMaxBid(team, lot?.id)});
-	bindStrategySignalLinks(root);
-}
+function renderSlowStrategySignals(m) {}
 function optimizerMixLabel(mix={}) { return ['QB','RB','WR','TE'].map(pos => `${pos} ${rawFmt(clampMix(Number(mix[pos] ?? 1)))}`).join(' / '); }
 function renderRosterSlot(item, priceKey='buy_price') {
 	if (!item.player) return `<div class="roster-slot"><strong>${escapeHtml(item.slot)}</strong><span class="small">Open</span></div>`;
@@ -5201,11 +5213,14 @@ function renderMockCurrent(m) {
 	const strategy = auctionStrategy(m.current, m.teams[0], m.currentBid, humanMaxAllowed);
 	const bidCount = Math.max(1, m.events.filter(event => event.lotId === m.currentLotId && event.type === 'bid').length);
 	const tooExpensive = m.highBidder !== 0 && humanMaxAllowed <= m.currentBid;
+	const priceFlags = auctionPriceFilterFlags(m.current, m.currentBid);
 	const maxAmount = Math.min(humanMaxAllowed, Math.max(m.currentBid + 1, strategy?.recommended ? Math.round(n(strategy.recommended)) : humanMaxAllowed));
 	const controls = `<div class="auction-active-controls"><div class="slow-actions"><button type="button" data-mock-bid="${m.currentBid + 1}">+$1</button><button type="button" data-mock-bid="${m.currentBid + 5}">+$5</button></div><div class="slow-lot-controls"><label>Max<input type="number" min="${m.currentBid + 1}" max="${humanMaxAllowed}" step="1" value="${maxAmount}" data-mock-max-input></label><button type="button" data-mock-set-max>Set max</button></div></div>`;
 	const filter = validAuctionActiveFilter(state.mockActiveFilter);
 	const item = {
 		ending:m.timerRemaining < 600,
+		deal:priceFlags.deal,
+		premium:priceFlags.premium,
 		winning:m.highBidder === 0,
 		target:auctionPlayerIsPriority(m.current),
 		blocked:tooExpensive
@@ -6180,7 +6195,7 @@ function renderMockAuction() {
 	if (!document.getElementById('mockAuction')) return;
 	const m = ensureMockState();
 	ensureAuctionResponsiveLayout();
-	renderMockTimer(m); renderWantedTierRemainders('mockWantedRemainders', m.drafted); renderMockCurrent(m); renderAuctionRoomTools('mockRoomTools', 'mockCurrent', m, {activeIds:m.current ? new Set([m.current.id]) : new Set(), maxBidForTeam:team => mockTeamMaxBid(team)}); renderMockStrategySignals(m); renderMockDraftBoard(m); renderMockTeams(m); renderMockSelectedTeam(m); renderMockResults(m); renderAuctionTendencies('mockTendencies', m, 'Fast Auction Tendencies'); renderMockPlayerTable(m); scheduleAutoSave();
+renderMockTimer(m); renderWantedTierRemainders('mockWantedRemainders', m.drafted); renderMockCurrent(m); renderAuctionRoomTools('mockRoomTools', 'mockCurrent', m, {activeIds:m.current ? new Set([m.current.id]) : new Set(), player:m.current, team:m.teams[0], currentBid:m.currentBid, maxBidForTeam:team => mockTeamMaxBid(team)}); renderMockStrategySignals(m); renderMockDraftBoard(m); renderMockTeams(m); renderMockSelectedTeam(m); renderMockResults(m); renderAuctionTendencies('mockTendencies', m, 'Fast Auction Tendencies'); renderMockPlayerTable(m); scheduleAutoSave();
 	ensureAuctionResponsiveLayout();
 }
 function ensureLeagueTycoonPanel() {
@@ -6934,10 +6949,13 @@ function renderSlowLots(m) {
 	const scrollSnapshot = captureAuctionScroll(root);
 	const lotItems = m.lots.map(lot => {
 		const humanMaxAllowed = slowTeamMaxBid(m.teams[0], lot.id);
+		const priceFlags = auctionPriceFilterFlags(lot.player, lot.currentBid);
 		return {
 			lot,
 			humanMaxAllowed,
 			ending:lot.timeRemaining < 600,
+			deal:priceFlags.deal,
+			premium:priceFlags.premium,
 			winning:lot.highBidder === 0,
 			target:auctionPlayerIsPriority(lot.player),
 			blocked:lot.highBidder !== 0 && humanMaxAllowed <= lot.currentBid
@@ -7067,7 +7085,7 @@ function renderSlowAuction(options={}) {
 	const scrollRoot = document.getElementById('slowLots');
 	const scrollSnapshot = options.preserveScroll ? captureAuctionScroll(scrollRoot) : null;
 	ensureAuctionResponsiveLayout();
-	renderSlowTopbar(m); renderSlowSummary(m); renderAuctionRoomTools('slowRoomTools', 'slowSummary', m, {activeIds:slowActivePlayerIds(m), maxBidForTeam:team => slowTeamMaxBid(team)}); renderSlowStrategySignals(m); renderSlowDraftBoard(m); renderSlowLots(m); renderSlowTeams(m); renderSlowSelectedTeam(m); renderSlowResults(m); renderAuctionTendencies('slowTendencies', m, 'Slow Auction Tendencies'); renderSlowPlayerTable(m); scheduleAutoSave();
+renderSlowTopbar(m); renderSlowSummary(m); renderWantedTierRemainders('slowWantedRemainders', m.drafted); renderAuctionRoomTools('slowRoomTools', 'slowSummary', m, {activeIds:slowActivePlayerIds(m), player:slowSelectedLot()?.player || null, team:m.teams[0], currentBid:slowSelectedLot()?.currentBid || 0, maxBidForTeam:team => slowTeamMaxBid(team)}); renderSlowStrategySignals(m); renderSlowDraftBoard(m); renderSlowLots(m); renderSlowTeams(m); renderSlowSelectedTeam(m); renderSlowResults(m); renderAuctionTendencies('slowTendencies', m, 'Slow Auction Tendencies'); renderSlowPlayerTable(m); scheduleAutoSave();
 	ensureAuctionResponsiveLayout();
 	if (scrollSnapshot) restoreAuctionScroll(scrollRoot || document.getElementById('slowLots'), scrollSnapshot);
 }
