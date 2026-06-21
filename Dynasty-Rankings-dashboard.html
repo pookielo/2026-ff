@@ -371,6 +371,8 @@ button.tendency-chip:hover, button.tendency-chip:focus-visible { border-color:#9
 .par-slot-preview-grid { display:grid; grid-template-columns:repeat(auto-fit, minmax(220px, 1fr)); gap:6px; }
 .par-slot-preview-item { display:grid; grid-template-columns:minmax(0, 1fr) auto; gap:8px; border:1px solid var(--line); border-radius:7px; background:var(--panel); padding:6px 8px; font-size:12px; }
 .par-slot-preview-item strong { display:block; }
+.par-slot-preview-item strong.pos-name,
+.par-slot-title strong.pos-name { font-weight:700; }
 .par-slot-preview-item span { color:var(--muted); }
 .par-slot-preview-item .par-slot-preview-meta { display:grid; gap:2px; }
 .par-slot-preview-item .par-slot-preview-range { color:var(--muted); font-size:11px; }
@@ -4421,7 +4423,8 @@ function optimizerMixLabel(mix={}) { return ['QB','RB','WR','TE'].map(pos => `${
 function renderRosterSlot(item, priceKey='buy_price') {
 	if (!item.player) return `<div class="roster-slot"><strong>${escapeHtml(item.slot)}</strong><span class="small">Open</span></div>`;
 	const p = item.player, price = p[priceKey] ?? p.paid ?? p.auction_value;
-	const tier = p.auction_tier ? ` - ${escapeHtml(p.auction_tier)}` : '';
+	const tierLabel = auctionSourceTierLabel(p);
+	const tier = tierLabel ? ` - ${escapeHtml(tierLabel)}` : '';
 	const age = optimizerKnownAge(p), ageText = age !== null ? ` - Age ${rawFmt(age)}` : '';
 	return `<div class="roster-slot"><strong>${escapeHtml(item.slot)}</strong><div class="player-name ${positionClass(p.position)}">${escapeHtml(p.player)}</div><span class="small">${escapeHtml(p.position)}${p.team ? ' ' + escapeHtml(p.team) : ''} - $${Math.round(price)} - ${rawFmt(n(p.auction_points))} fpts${tier}${ageText}</span></div>`;
 }
@@ -4435,7 +4438,8 @@ function renderOptimizerByPosition(result) {
 			const pref = p.preference_label ? ` - ${escapeHtml(p.preference_label)}` : '';
 			const age = optimizerKnownAge(p), ageText = age !== null ? `Age ${rawFmt(age)} - ` : '';
 			const shape = p.shape_label ? ` - ${escapeHtml(p.shape_label)}` : '';
-			const meta = `${p.team ? escapeHtml(p.team) + ' - ' : ''}${ageText}${rawFmt(n(p.auction_points))} fpts${p.auction_tier ? ' - ' + escapeHtml(p.auction_tier) : ''}${pref}${shape}`;
+			const tierLabel = auctionSourceTierLabel(p);
+			const meta = `${p.team ? escapeHtml(p.team) + ' - ' : ''}${ageText}${rawFmt(n(p.auction_points))} fpts${tierLabel ? ' - ' + escapeHtml(tierLabel) : ''}${pref}${shape}`;
 			return `<div class="position-player-row"><div><strong class="${positionClass(p.position)}">${escapeHtml(p.player)}</strong><span>${meta}</span></div><div><strong>$${Math.round(n(p.buy_price))}</strong>${signal ? `<span>${signal}</span>` : ''}</div></div>`;
 		}).join('') : '<div class="position-player-row"><span>No players</span></div>';
 		return `<div class="position-group"><h3>${pos} (${rows.length}) - $${cost}</h3>${body}</div>`;
@@ -4468,7 +4472,7 @@ function renderOptimizerTierStacks(result) {
 		const pos = rosterCounts(topPlayers);
 		const active = result.goal === 'tiers' && Number(result.tierMax) === maxTier;
 		const topCost = topPlayers.reduce((sum, p) => sum + n(p.buy_price), 0);
-		const body = topPlayers.slice(0, 10).map(p => `<div class="position-player-row"><div><strong class="${positionClass(p.position)}">${escapeHtml(p.player)}</strong><span>${escapeHtml(p.position)}${p.team ? ' ' + escapeHtml(p.team) : ''} - ${escapeHtml(p.auction_tier || '')} - ${rawFmt(n(p.auction_points))} fpts</span></div><div><strong>$${Math.round(n(p.buy_price))}</strong></div></div>`).join('') || '<div class="position-player-row"><span>No top-tier players fit this build.</span></div>';
+		const body = topPlayers.slice(0, 10).map(p => `<div class="position-player-row"><div><strong class="${positionClass(p.position)}">${escapeHtml(p.player)}</strong><span>${escapeHtml(p.position)}${p.team ? ' ' + escapeHtml(p.team) : ''} - ${escapeHtml(auctionSourceTierLabel(p))} - ${rawFmt(n(p.auction_points))} fpts</span></div><div><strong>$${Math.round(n(p.buy_price))}</strong></div></div>`).join('') || '<div class="position-player-row"><span>No top-tier players fit this build.</span></div>';
 		return `<div class="position-group tier-stack-card ${active ? 'active' : ''}"><h3>${escapeHtml(optimizerTierLabel(maxTier))} in current roster: ${topPlayers.length} players - $${topCost}</h3><div class="tier-stack-meta"><span class="tier-pill">T1 ${counts[1]}</span><span class="tier-pill">T2 ${counts[2]}</span><span class="tier-pill">T3 ${counts[3]}</span><span class="tier-pill">T4 ${counts[4]}</span><span class="tier-pill">QB ${pos.QB || 0}</span><span class="tier-pill">RB ${pos.RB || 0}</span><span class="tier-pill">WR ${pos.WR || 0}</span><span class="tier-pill">TE ${pos.TE || 0}</span></div>${body}</div>`;
 	}).join('');
 }
@@ -5522,6 +5526,13 @@ function auctionSourceTierLabel(player, source=selectedTierSource()) {
 	if (Number.isFinite(tier) && tier > 0) return `${position} T${tier}`;
 	return player?.auction_tier || position;
 }
+function auctionBucketTierLabel(player) {
+	const position = String(player?.position || '').toUpperCase();
+	const tier = auctionDisplayTierIndex(player);
+	if (!position) return player?.auction_tier || player?.position || '';
+	if (Number.isFinite(tier) && tier > 0) return `${position} T${tier}`;
+	return player?.auction_tier || position;
+}
 function slotParDemandCounts(sheet) {
 	const demand = new Map();
 	(sheet?.slots || []).forEach(slot => {
@@ -5822,7 +5833,7 @@ function renderMockDraftBoard(m) {
 	const slotNames = assignRosterSlots([]).map(s => s.slot);
 	const teamSlots = m.teams.map(team => ({team, slots:assignRosterSlots(team.roster)}));
 	const heads = `<div class="mock-slot-head">Slot</div>${m.teams.map(team => `<button type="button" class="mock-team-head ${m.selectedTeamId === team.id ? 'active' : ''}" data-team-id="${team.id}"><strong>${escapeHtml(team.name)}</strong><div class="budget-line">$${team.budget} left - max $${mockTeamMaxBid(team)}</div></button>`).join('')}`;
-	const rows = slotNames.map((slot, idx) => `<div class="mock-slot-label">${escapeHtml(slot)}</div>${teamSlots.map(({team, slots}) => { const player = slots[idx]?.player; if (!player) return `<div class="mock-roster-cell empty" data-team-id="${team.id}">Open</div>`; return `<div class="mock-roster-cell" data-team-id="${team.id}"><strong class="${positionClass(player.position)}">${escapeHtml(player.player)}</strong><span>${escapeHtml(player.position)}${player.team ? ' ' + escapeHtml(player.team) : ''} - $${Math.round(player.paid ?? player.auction_value)}</span></div>`; }).join('')}`).join('');
+	const rows = slotNames.map((slot, idx) => `<div class="mock-slot-label">${escapeHtml(slot)}</div>${teamSlots.map(({team, slots}) => { const player = slots[idx]?.player; if (!player) return `<div class="mock-roster-cell empty" data-team-id="${team.id}">Open</div>`; return `<div class="mock-roster-cell" data-team-id="${team.id}"><strong class="${positionClass(player.position)}">${escapeHtml(player.player)}</strong><span>${escapeHtml(auctionSourceTierLabel(player))}${player.team ? ' · ' + escapeHtml(player.team) : ''} - $${Math.round(player.paid ?? player.auction_value)}</span></div>`; }).join('')}`).join('');
 	root.innerHTML = `<div class="mock-board-grid">${heads}${rows}</div>`;
 	root.dataset.boardSignature = signature;
 	restoreBoardScroll(root, 'mockDraftBoardScroll');
@@ -5867,7 +5878,7 @@ function renderSlowDraftBoard(m) {
 	const slotNames = assignRosterSlots([]).map(s => s.slot);
 	const teamSlots = m.teams.map(team => ({team, slots:assignRosterSlots(team.roster)}));
 	const heads = `<div class="mock-slot-head">Slot</div>${m.teams.map(team => `<button type="button" class="mock-team-head ${m.selectedTeamId === team.id ? 'active' : ''}" data-slow-board-team-id="${team.id}"><strong>${escapeHtml(team.name)}</strong><div class="budget-line">$${team.budget} left - committed $${slowTeamCommitted(team)} - max $${slowTeamMaxBid(team)} - ${team.roster.length}/${AUCTION_CONFIG.rosterSpots}</div></button>`).join('')}`;
-	const rows = slotNames.map((slot, idx) => `<div class="mock-slot-label">${escapeHtml(slot)}</div>${teamSlots.map(({team, slots}) => { const player = slots[idx]?.player; if (!player) return `<div class="mock-roster-cell empty" data-slow-board-team-id="${team.id}">Open</div>`; return `<div class="mock-roster-cell" data-slow-board-team-id="${team.id}"><strong class="${positionClass(player.position)}">${escapeHtml(player.player)}</strong><span>${escapeHtml(player.position)}${player.team ? ' ' + escapeHtml(player.team) : ''} - $${Math.round(player.paid ?? player.auction_value)}</span></div>`; }).join('')}`).join('');
+	const rows = slotNames.map((slot, idx) => `<div class="mock-slot-label">${escapeHtml(slot)}</div>${teamSlots.map(({team, slots}) => { const player = slots[idx]?.player; if (!player) return `<div class="mock-roster-cell empty" data-slow-board-team-id="${team.id}">Open</div>`; return `<div class="mock-roster-cell" data-slow-board-team-id="${team.id}"><strong class="${positionClass(player.position)}">${escapeHtml(player.player)}</strong><span>${escapeHtml(auctionSourceTierLabel(player))}${player.team ? ' · ' + escapeHtml(player.team) : ''} - $${Math.round(player.paid ?? player.auction_value)}</span></div>`; }).join('')}`).join('');
 	root.innerHTML = `<div class="mock-board-grid">${heads}${rows}</div>`;
 	root.dataset.boardSignature = signature;
 	restoreBoardScroll(root, 'slowDraftBoardScroll');
@@ -5889,10 +5900,10 @@ function auctionResultHtml(result) {
 	const deltaText = delta === null ? 'value n/a' : delta === 0 ? 'at projected value' : `${delta > 0 ? '+' : '-'}$${Math.abs(delta)} vs projected`;
 	const pctTextValue = pct === null ? 'n/a' : `${pct > 0 ? '+' : ''}${pct}%`;
 	const bidText = Number.isFinite(Number(result.bidCount)) ? `${Math.round(Number(result.bidCount))} bid${Math.round(Number(result.bidCount)) === 1 ? '' : 's'}` : 'bids n/a';
-	const tier = result.auction_tier || player?.auction_tier || '';
+	const tier = auctionSourceTierLabel(player || result);
 	const humanWin = auctionResultIsHuman(result);
 	const winPill = humanWin ? '<span class="result-win-pill">You won</span>' : '';
-	return `<div class="result-item result-rich ${humanWin ? 'human-win' : ''}"><div class="result-main"><span class="result-player-wrap">${teamLogoHtml(result.team, `${result.team || ''} logo`)}<strong class="${positionClass(result.position)}">${escapeHtml(result.player)}</strong></span><span>${escapeHtml(result.position)}${result.team ? ' ' + escapeHtml(result.team) : ''} · ${escapeHtml(result.buyer || '')}${result.slot ? ' · ' + escapeHtml(result.slot) : ''}</span></div><div class="result-price"><strong>$${paid}</strong>${winPill}<span class="${deltaClass}">${escapeHtml(pctTextValue)}</span></div><div class="result-stats"><span>${escapeHtml(deltaText)}</span><span>${value ? `$${value} value` : 'no value match'}</span><span>${escapeHtml(bidText)}</span>${tier ? `<span>${escapeHtml(tier)}</span>` : ''}</div></div>`;
+	return `<div class="result-item result-rich ${humanWin ? 'human-win' : ''}"><div class="result-main"><span class="result-player-wrap">${teamLogoHtml(result.team, `${result.team || ''} logo`)}<strong class="${positionClass(result.position)}">${escapeHtml(result.player)}</strong></span><span>${escapeHtml(tier)}${result.team ? ' · ' + escapeHtml(result.team) : ''} · ${escapeHtml(result.buyer || '')}${result.slot ? ' · ' + escapeHtml(result.slot) : ''}</span></div><div class="result-price"><strong>$${paid}</strong>${winPill}<span class="${deltaClass}">${escapeHtml(pctTextValue)}</span></div><div class="result-stats"><span>${escapeHtml(deltaText)}</span><span>${value ? `$${value} value` : 'no value match'}</span><span>${escapeHtml(bidText)}</span></div></div>`;
 }
 function renderMockResults(m) {
 	const root = document.getElementById('mockResults'); if (!root) return;
@@ -6101,7 +6112,7 @@ function renderLeagueTycoonDraftBoard(m) {
 	const slotNames = assignRosterSlots([]).map(slot => slot.slot);
 	const teamSlots = m.teams.map(team => ({team, slots:assignRosterSlots(team.roster)}));
 	const heads = `<div class="mock-slot-head">Slot</div>${m.teams.map(team => `<button type="button" class="mock-team-head ${m.selectedTeamId === team.id ? 'active' : ''}" data-lt-team-id="${team.id}"><strong>${escapeHtml(team.name)}</strong><div class="budget-line">$${team.budget} left - max $${leagueTycoonTeamMaxBid(team)} - ${team.roster.length}/${AUCTION_CONFIG.rosterSpots}</div></button>`).join('')}`;
-	const rows = slotNames.map((slot, idx) => `<div class="mock-slot-label">${escapeHtml(slot)}</div>${teamSlots.map(({team, slots}) => { const player = slots[idx]?.player; if (!player) return `<div class="mock-roster-cell empty" data-lt-team-id="${team.id}">Open</div>`; return `<div class="mock-roster-cell" data-lt-team-id="${team.id}"><strong class="${positionClass(player.position)}">${escapeHtml(player.player)}</strong><span>${escapeHtml(player.position)}${player.team ? ' ' + escapeHtml(player.team) : ''} - $${Math.round(player.paid ?? player.auction_value)}</span></div>`; }).join('')}`).join('');
+	const rows = slotNames.map((slot, idx) => `<div class="mock-slot-label">${escapeHtml(slot)}</div>${teamSlots.map(({team, slots}) => { const player = slots[idx]?.player; if (!player) return `<div class="mock-roster-cell empty" data-lt-team-id="${team.id}">Open</div>`; return `<div class="mock-roster-cell" data-lt-team-id="${team.id}"><strong class="${positionClass(player.position)}">${escapeHtml(player.player)}</strong><span>${escapeHtml(auctionSourceTierLabel(player))}${player.team ? ' · ' + escapeHtml(player.team) : ''} - $${Math.round(player.paid ?? player.auction_value)}</span></div>`; }).join('')}`).join('');
 	root.innerHTML = `<div class="mock-board-grid">${heads}${rows}</div>`;
 	root.dataset.boardSignature = signature;
 	restoreBoardScroll(root, 'ltDraftBoardScroll');
@@ -6131,7 +6142,7 @@ function renderLeagueTycoonSelectedTeam(m) {
 function renderLeagueTycoonResults(m) {
 	const root = document.getElementById('ltResults');
 	if (!root) return;
-	root.innerHTML = m.results.length ? m.results.map(result => `<div class="result-item"><strong>${escapeHtml(result.player)}</strong> <span class="small">${escapeHtml(result.position)}${result.team ? ' ' + escapeHtml(result.team) : ''}</span><br><span class="small">$${result.paid} to ${escapeHtml(result.buyer)}${result.slot ? ' - ' + escapeHtml(result.slot) : ''}</span></div>`).join('') : '<div class="mock-empty">No pasted LeagueTycoon results yet.</div>';
+	root.innerHTML = m.results.length ? m.results.map(result => `<div class="result-item"><strong class="${positionClass(result.position)}">${escapeHtml(result.player)}</strong> <span class="small">${escapeHtml(auctionBucketTierLabel(result))}${result.team ? ' · ' + escapeHtml(result.team) : ''}</span><br><span class="small">$${result.paid} to ${escapeHtml(result.buyer)}${result.slot ? ' - ' + escapeHtml(result.slot) : ''}</span></div>`).join('') : '<div class="mock-empty">No pasted LeagueTycoon results yet.</div>';
 }
 function renderLeagueTycoonLots(m) {
 	const root = document.getElementById('ltLots');
@@ -6140,7 +6151,7 @@ function renderLeagueTycoonLots(m) {
 	if (!lots.length) { root.innerHTML = '<div class="mock-empty">No active bids tracked. Add a LeagueTycoon player above for bid advice.</div>'; return; }
 	root.innerHTML = lots.map(lot => {
 		const strategy = auctionStrategy(lot.player, m.teams[m.yourTeamId] || m.teams[0], lot.currentBid, leagueTycoonTeamMaxBid(m.teams[m.yourTeamId] || m.teams[0]));
-		return `<div class="lt-lot-card ${m.selectedLotId === lot.id ? 'active' : ''}" data-lt-lot="${lot.id}" role="button" tabindex="0"><h3 class="${positionClass(lot.player.position)}">${escapeHtml(lot.player.player)}</h3><div>${queueBadgeHtml(lot.player)}</div><div class="small">${escapeHtml(lot.player.position)}${lot.player.team ? ' ' + escapeHtml(lot.player.team) : ''} - ${escapeHtml(lot.player.auction_tier || '')}</div><div class="position-player-row"><span>Current $${lot.currentBid} / room $${Math.round(n(lot.player.auction_value))} / model $${Math.round(n(lot.player.auction_model_value || lot.player.auction_value))}</span><strong>${strategy ? '$' + strategy.recommended : '-'}</strong></div></div>`;
+		return `<div class="lt-lot-card ${m.selectedLotId === lot.id ? 'active' : ''}" data-lt-lot="${lot.id}" role="button" tabindex="0"><h3 class="${positionClass(lot.player.position)}">${escapeHtml(lot.player.player)}</h3><div>${queueBadgeHtml(lot.player)}</div><div class="small">${escapeHtml(auctionSourceTierLabel(lot.player))}${lot.player.team ? ' · ' + escapeHtml(lot.player.team) : ''}</div><div class="position-player-row"><span>Current $${lot.currentBid} / room $${Math.round(n(lot.player.auction_value))} / model $${Math.round(n(lot.player.auction_model_value || lot.player.auction_value))}</span><strong>${strategy ? '$' + strategy.recommended : '-'}</strong></div></div>`;
 	}).join('');
 	root.querySelectorAll('[data-lt-lot]').forEach(card => card.addEventListener('click', () => { m.selectedLotId = Number(card.dataset.ltLot); renderLeagueTycoon(); }));
 }
