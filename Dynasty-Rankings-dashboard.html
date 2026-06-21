@@ -335,8 +335,14 @@ button.tendency-chip:hover, button.tendency-chip:focus-visible { border-color:#9
 .par-editor { display:grid; gap:14px; }
 .par-editor-topbar, .par-editor-sheetbar, .par-editor-actions, .par-slot-addbar { display:flex; flex-wrap:wrap; gap:8px; align-items:center; }
 .par-editor-topbar { justify-content:space-between; }
-.par-editor-sheetbar { margin-top:2px; }
+.par-editor-sheetbar { margin-top:2px; padding:10px; border:1px solid var(--line); border-radius:10px; background:var(--panel-2); }
+.par-editor-actions { padding:10px; border:1px solid var(--line); border-radius:10px; background:var(--panel-2); }
+.par-editor-actions .small { color:var(--muted); font-weight:800; }
+.par-editor-actions .inline-control { min-width:170px; }
 .par-editor-summary { display:grid; grid-template-columns:repeat(auto-fit, minmax(180px, 1fr)); gap:10px; }
+.par-editor-summary .metric { background:var(--panel-2); border:1px solid var(--line); color:var(--ink); }
+.par-editor-summary .metric span { color:var(--muted); }
+.par-editor-summary .metric strong { color:var(--ink); }
 .par-sheet-tab { display:inline-flex; align-items:center; gap:6px; }
 .par-sheet-tab small { color:var(--muted); font-size:11px; }
 .par-sheet-tab.active-sheet { border-color:var(--blue); box-shadow:0 0 0 2px rgba(37,99,235,.14); }
@@ -379,6 +385,9 @@ button.tendency-chip:hover, button.tendency-chip:focus-visible { border-color:#9
 .par-delta.over { color:#b91c1c; font-weight:850; }
 .par-delta.under { color:#047857; font-weight:850; }
 .par-delta.even { color:#475569; font-weight:850; }
+.auction-active-tier-left { color:var(--muted); font-size:13px; font-weight:600; white-space:nowrap; }
+.auction-active-tier-left.warn { color:#f8b84e; }
+.auction-active-tier-left.danger { color:#ff6b6b; }
 .lt-paste { width:100%; min-height:130px; resize:vertical; font-family:inherit; }
 .lt-two-col { display:grid; grid-template-columns:minmax(620px, 1.35fr) minmax(330px, .75fr); gap:14px; align-items:start; }
 .lt-lot-grid { display:grid; grid-template-columns:repeat(auto-fit, minmax(240px, 1fr)); gap:10px; margin-top:10px; }
@@ -504,7 +513,8 @@ button.tendency-chip:hover, button.tendency-chip:focus-visible { border-color:#9
 @media (max-width: 900px) { .auction-card-head { flex-direction:column; gap:6px; } .auction-directions { max-width:none; text-align:left; } }
 @media (max-width: 1200px) { .mock-grid, .mock-draft-layout, .slow-auction-layout, .lt-two-col { grid-template-columns:1fr; } .mock-board { grid-template-columns:repeat(3, minmax(120px, 1fr)); } .slow-topbar { grid-template-columns:1fr; } .strategy-panel, .tier-drop-grid { grid-template-columns:repeat(2, minmax(180px, 1fr)); } }
 @media (max-width: 900px) { main { padding:8px 10px 28px; } .tabs { position:sticky; top:0; z-index:30; background:rgba(245,247,251,.96); backdrop-filter:blur(8px); margin:0 -2px 10px; padding:8px 0 6px; } .grid { grid-template-columns:1fr; } .card { padding:12px; } input[type=search] { min-width:100%; max-width:none; } .tabs, .subtabs { flex-wrap:nowrap; overflow-x:auto; padding-bottom:4px; -webkit-overflow-scrolling:touch; } .tab, .subtab { white-space:nowrap; font-size:13px; padding:8px 10px; } .toolbar { gap:8px; } table { font-size:12px; min-width:880px; } th, td { padding:7px; } svg { min-width:0; } .table-wrap { max-height:none; -webkit-overflow-scrolling:touch; } .current-auction { padding:12px; } .winning-bid { align-items:flex-start; flex-direction:column; } .winning-bid em { text-align:left; } .strategy-panel { grid-template-columns:1fr 1fr; } #mockAuction > .card > .toolbar, #slowAuction > .card > .toolbar { background:rgba(255,255,255,.97); border:1px solid var(--line); border-radius:8px; padding:8px; } .auction-settings-wrap { flex:1 1 100%; } .auction-settings-menu { position:static; width:100%; max-height:none; margin-top:8px; box-shadow:none; align-content:flex-start; align-items:flex-start; overflow:visible; } .auction-settings-menu-head { position:static; top:auto; } .slow-lot-grid { max-height:none; } }
-@media (max-width: 520px) { input, select, button { font-size:13px; min-height:36px; } .toolbar { gap:7px; } .toolbar select, .toolbar button, .age-range-filter, .inline-control { flex:1 1 140px; } .inline-control input, .inline-control select { width:100%; min-width:0; } .range-row input[type=range] { width:74px; } .card h2 { font-size:18px; } .scoring-settings { gap:7px; padding:9px; } .scoring-settings strong { flex-basis:100%; padding-bottom:0; } .scoring-settings input { width:74px; font-size:12px; min-height:34px; } table { font-size:11px; min-width:760px; } th, td { padding:6px; } #cheatsTable { min-width:860px; } #mockPlayerTable, #slowPlayerTable, #ltPlayerTable { min-width:760px; } #teamY1Table, #teamY2Table { min-width:1260px; } #teamY1Table th:nth-child(1), #teamY1Table td:nth-child(1), #teamY2Table th:nth-child(1), #teamY2Table td:nth-child(1) { width:48px; min-width:48px; max-width:48px; } #teamY1Table th:nth-child(2), #teamY1Table td:nth-child(2), #teamY2Table th:nth-child(2), #teamY2Table td:nth-child(2) { left:48px; width:122px; min-width:122px; max-width:122px; } .metric-grid, .mock-board, .current-auction .metric-grid, .strategy-panel, .tier-drop-grid { grid-template-columns:1fr 1fr; } .metric, .strategy-card { padding:8px; } .metric strong, .strategy-card strong { font-size:17px; } .current-auction h3 { font-size:22px; } .current-auction .metric { padding:9px; } .current-auction .metric strong { font-size:18px; } .mock-board-grid { grid-template-columns:72px repeat(12, minmax(132px, 1fr)); min-width:1656px; } .mock-slot-head, .mock-team-head, .mock-slot-label, .mock-roster-cell { min-height:46px; } .slow-lot-grid { grid-template-columns:repeat(auto-fill, minmax(168px, 1fr)); } .slow-lot { min-height:0; } .slow-lot-controls { grid-template-columns:1fr 1fr; } .tier-drop-row summary { grid-template-columns:1fr; } .tier-drop-score { text-align:left; } .tier-player-list { padding-left:10px; } }
+@media (max-width: 900px) { .par-rollup-grid { grid-template-columns:repeat(2, minmax(140px, 1fr)); } .par-slot-head { grid-template-columns:repeat(2, minmax(0, 1fr)); align-items:start; } .par-slot-title, .par-slot-actions, .par-slot-flag { grid-column:1/-1; } .par-slot-actions { justify-content:flex-start; } .par-slot-preview-grid { grid-template-columns:1fr; } }
+@media (max-width: 520px) { input, select, button { font-size:13px; min-height:36px; } .toolbar { gap:7px; } .toolbar select, .toolbar button, .age-range-filter, .inline-control { flex:1 1 140px; } .inline-control input, .inline-control select { width:100%; min-width:0; } .range-row input[type=range] { width:74px; } .card h2 { font-size:18px; } .scoring-settings { gap:7px; padding:9px; } .scoring-settings strong { flex-basis:100%; padding-bottom:0; } .scoring-settings input { width:74px; font-size:12px; min-height:34px; } table { font-size:11px; min-width:760px; } th, td { padding:6px; } #cheatsTable { min-width:860px; } #mockPlayerTable, #slowPlayerTable, #ltPlayerTable { min-width:760px; } #teamY1Table, #teamY2Table { min-width:1260px; } #teamY1Table th:nth-child(1), #teamY1Table td:nth-child(1), #teamY2Table th:nth-child(1), #teamY2Table td:nth-child(1) { width:48px; min-width:48px; max-width:48px; } #teamY1Table th:nth-child(2), #teamY1Table td:nth-child(2), #teamY2Table th:nth-child(2), #teamY2Table td:nth-child(2) { left:48px; width:122px; min-width:122px; max-width:122px; } .metric-grid, .mock-board, .current-auction .metric-grid, .strategy-panel, .tier-drop-grid { grid-template-columns:1fr 1fr; } .metric, .strategy-card { padding:8px; } .metric strong, .strategy-card strong { font-size:17px; } .current-auction h3 { font-size:22px; } .current-auction .metric { padding:9px; } .current-auction .metric strong { font-size:18px; } .mock-board-grid { grid-template-columns:72px repeat(12, minmax(132px, 1fr)); min-width:1656px; } .mock-slot-head, .mock-team-head, .mock-slot-label, .mock-roster-cell { min-height:46px; } .slow-lot-grid { grid-template-columns:repeat(auto-fill, minmax(168px, 1fr)); } .slow-lot { min-height:0; } .slow-lot-controls { grid-template-columns:1fr 1fr; } .tier-drop-row summary { grid-template-columns:1fr; } .tier-drop-score { text-align:left; } .tier-player-list { padding-left:10px; } .par-editor-summary, .par-rollup-grid, .par-slot-head, .par-slot-preview-grid { grid-template-columns:1fr; } .par-editor-actions, .par-editor-sheetbar, .par-slot-addbar { align-items:stretch; padding:8px; } .par-editor-actions .inline-control { min-width:100%; } .par-slot-actions { justify-content:stretch; } .par-slot-actions button { flex:1 1 calc(50% - 6px); } .auction-active-tier-left { font-size:12px; } }
 @media (max-width: 520px) { .initial-bid-control { grid-template-columns:1fr; min-width:118px; } #slowTendencies { min-width:700px; font-size:10.5px; } #slowTendencies th, #slowTendencies td { padding:5px 6px; } #slowTendencies th:first-child, #slowTendencies td:first-child { width:76px; min-width:76px; max-width:76px; } #slowTendencies td:last-child { min-width:150px; } }
 @media (max-width: 520px) { .auction-action-grid, .slow-lot-guidance { grid-template-columns:1fr; } .result-rich { grid-template-columns:1fr; } .result-price { justify-items:start; } }
 @media (max-width: 520px) { .queue-summary { grid-template-columns:1fr; } .queue-controls { flex-direction:column; align-items:flex-start; } .queue-btn { min-width:52px; } }
@@ -787,7 +797,12 @@ th::after { color:#7f8ca5; }
 .pressure-item,
 .par-tier-cell,
 .par-tier-player,
+.queue-tier-pill,
 .queue-card,
+.par-rollup-card,
+.par-slot-card,
+.par-slot-preview-item,
+.par-readonly-row,
 .tier-player-list,
 .mock-empty,
 .mock-roster-cell,
@@ -795,6 +810,41 @@ th::after { color:#7f8ca5; }
 .tier-drop-card {
 	background:var(--panel-2);
 	border-color:var(--line);
+	color:var(--ink);
+}
+.queue-tier-pill strong {
+	color:var(--ink);
+}
+.queue-tier-pill em {
+	color:var(--muted);
+}
+.queue-tier-pill.empty {
+	background:rgba(20,29,47,.94);
+	border-color:rgba(62,76,110,.42);
+	color:#a8b7ce;
+}
+.par-slot-preview,
+.par-readonly-table {
+	background:var(--panel-2);
+	border-color:var(--line);
+}
+.par-slot-head,
+.par-readonly-row.header {
+	background:var(--panel-3);
+	color:var(--ink);
+}
+.par-slot-preview summary,
+.par-rollup-card span,
+.par-slot-title span,
+.par-slot-preview-item span,
+.par-slot-preview-item .par-slot-preview-range,
+.par-readonly-row.header,
+.par-readonly-row span {
+	color:var(--muted);
+}
+.par-rollup-card strong,
+.par-slot-preview-item strong,
+.par-readonly-row strong {
 	color:var(--ink);
 }
 .slow-lot .slow-lot-bid,
@@ -4312,9 +4362,9 @@ function attachAuctionStatusFilters(root, stateKey, renderFn) {
 		renderFn?.();
 	}));
 }
-function auctionActiveBidCardHtml({player, currentBid=0, highName='-', highIsHuman=false, timeText='', timeSeconds=null, bidCount=null, strategy=null, teams=[], maxBidForTeam=null, ownTeam=null, committed=0, controls='', attrs='', className=''}) {
+function auctionActiveBidCardHtml({player, currentBid=0, highName='-', highIsHuman=false, timeText='', timeSeconds=null, bidCount=null, strategy=null, teams=[], maxBidForTeam=null, ownTeam=null, committed=0, controls='', attrs='', className='', tierRemainingText='', tierRemainingClass=''}) {
 	if (!player) return '';
-	const tier = player.auction_tier || player.position || '';
+	const tier = auctionSourceTierLabel(player);
 	const badges = `${queueBadgeHtml(player)}${renderBidSignal(player) || ''}`;
 	const timeClass = auctionTimerClass(timeSeconds);
 	const bidLeader = highName || '-';
@@ -4324,7 +4374,7 @@ function auctionActiveBidCardHtml({player, currentBid=0, highName='-', highIsHum
 		<div class="auction-active-top">
 			<div class="auction-active-player">
 				<div class="auction-active-name-row"><span class="auction-active-name-wrap">${logo}<strong class="auction-active-name ${positionClass(player.position)}">${escapeHtml(player.player || displayPlayer(player))}</strong></span><span class="auction-active-badges">${badges}</span></div>
-				<div class="auction-active-meta"><span class="auction-active-tier">${escapeHtml(tier)}</span></div>
+				<div class="auction-active-meta"><span class="auction-active-tier">${escapeHtml(tier)}</span>${tierRemainingText ? `<span class="auction-active-tier-left ${escapeHtml(tierRemainingClass)}">${escapeHtml(tierRemainingText)}</span>` : ''}</div>
 				${timeText ? `<div class="auction-active-timer ${timeClass}" data-active-timer>${escapeHtml(timeText)}</div>` : ''}
 			</div>
 			<div class="auction-active-bid ${highIsHuman ? 'human-winning' : ''}"><div><strong>$${Math.round(n(currentBid))}</strong> <span>${escapeHtml(bidLeader)}</span></div><div class="auction-active-band-row"><span class="auction-active-band">${escapeHtml(band)}</span>${bidCount ? `<span class="auction-active-bid-count">${escapeHtml(`${bidCount} bids`)}</span>` : ''}</div></div>
@@ -4932,6 +4982,8 @@ function renderMockCurrent(m) {
 		teams:m.teams,
 		maxBidForTeam:team => mockTeamMaxBid(team),
 		ownTeam:m.teams[0],
+		tierRemainingText:auctionTierRemainingText(m.current, m.results),
+		tierRemainingClass:auctionTierRemainingClass(m.current, m.results),
 		controls,
 		className:tooExpensive ? 'too-expensive' : ''
 	}) : '<div class="mock-empty">No active bid matches this filter.</div>';
@@ -5126,8 +5178,14 @@ const PAR_SHEET_PRESETS = {
 	}
 };
 function deepClone(value) { return JSON.parse(JSON.stringify(value)); }
-const SLOT_PAR_VERSION = 3;
+const SLOT_PAR_VERSION = 5;
 const SLOT_PAR_POSITIONS = ['QB','RB','WR','TE'];
+const SLOT_PAR_ONE_DOLLAR_START = {QB:3, RB:4, WR:6, TE:3};
+const SLOT_PAR_BANDS = [
+	{key:'elite', label:'T1-2', min:1, max:2},
+	{key:'core', label:'T3-4', min:3, max:4},
+	{key:'depth', label:'T5+', min:5, max:8}
+];
 const SLOT_PAR_TEMPLATE_DEFS = {
 	balanced: {
 		name:'Balanced',
@@ -5184,14 +5242,101 @@ function slotParClampTier(value) {
 }
 function slotParSheetId() { return `sheet-${Math.random().toString(36).slice(2, 10)}`; }
 function slotParSlotId() { return `slot-${Math.random().toString(36).slice(2, 10)}`; }
+function slotParIsDollarDepthSlot(position, ordinal) {
+	const start = SLOT_PAR_ONE_DOLLAR_START[position];
+	return Number.isFinite(start) && ordinal >= start;
+}
 function slotParTemplateSlots(templateKey='balanced') {
 	const def = SLOT_PAR_TEMPLATE_DEFS[templateKey] || SLOT_PAR_TEMPLATE_DEFS.balanced;
-	return def.slots.map(([position, tier]) => ({id:slotParSlotId(), position, tier:slotParClampTier(tier), manual:false, price:1, autoPrice:1, expanded:true}));
+	const counts = Object.fromEntries(SLOT_PAR_POSITIONS.map(pos => [pos, 0]));
+	return def.slots.map(([position, tier]) => {
+		counts[position] += 1;
+		const ordinal = counts[position];
+		const dollarDepth = slotParIsDollarDepthSlot(position, ordinal);
+		return {
+			id:slotParSlotId(),
+			position,
+			tier:slotParClampTier(tier),
+			manual:dollarDepth,
+			locked:dollarDepth,
+			price:1,
+			autoPrice:1,
+			expanded:true
+		};
+	});
+}
+function parSheetAuctionResults() {
+	return [
+		...(state.mock?.results || []),
+		...(state.slow?.results || []),
+		...(state.lt?.results || [])
+	];
+}
+function slotParRoomPositionMultiplier(position, results=parSheetAuctionResults()) {
+	const pricing = dashboardRoomPricingByPos(results)[position];
+	if (!pricing?.sales) return 1;
+	return Math.max(0.72, Math.min(1.35, 1 + (-n(pricing.delta) / 18)));
+}
+function slotParBalanceSheetBudget(sheet, budget=AUCTION_CONFIG.budget, options={}) {
+	const roomAdjusted = Boolean(options.roomAdjusted);
+	slotParNormalizeSheetSlots(sheet);
+	sheet.slots.forEach(slot => { slot.autoPrice = slotParTierPrice(slot.position, slot.tier); });
+	const lockedSlots = sheet.slots.filter(slot => slot.locked);
+	const adjustableSlots = sheet.slots.filter(slot => !slot.locked);
+	const lockedSum = lockedSlots.reduce((sum, slot) => sum + Math.max(1, Math.round(n(slot.price) || 1)), 0);
+	if (!adjustableSlots.length) return sheet;
+	let remaining = Math.max(adjustableSlots.length, Math.round(n(budget) || AUCTION_CONFIG.budget) - lockedSum);
+	const extras = remaining - adjustableSlots.length;
+	const weights = adjustableSlots.map(slot => {
+		const base = Math.max(1, n(slot.manual ? slot.price : slot.autoPrice) || 1);
+		return roomAdjusted ? base * slotParRoomPositionMultiplier(slot.position) : base;
+	});
+	const totalWeight = weights.reduce((sum, value) => sum + value, 0) || adjustableSlots.length;
+	const allocations = adjustableSlots.map((slot, index) => {
+		const raw = extras > 0 ? (weights[index] / totalWeight) * extras : 0;
+		return {slot, base:1, extra:Math.floor(raw), frac:raw - Math.floor(raw)};
+	});
+	const used = allocations.reduce((sum, row) => sum + row.extra, 0);
+	if (used < extras) {
+		allocations
+			.slice()
+			.sort((a,b)=>b.frac-a.frac || n(b.slot.autoPrice)-n(a.slot.autoPrice))
+			.slice(0, extras - used)
+			.forEach(row => { row.extra += 1; });
+	}
+	allocations.forEach(row => {
+		row.slot.price = Math.max(1, row.base + row.extra);
+		row.slot.manual = true;
+	});
+	return sheet;
+}
+function slotParApplyTemplateDefaults(sheet, shouldBalance=true) {
+	slotParNormalizeSheetSlots(sheet);
+	const counts = Object.fromEntries(SLOT_PAR_POSITIONS.map(pos => [pos, 0]));
+	sheet.slots.forEach(slot => {
+		counts[slot.position] += 1;
+		const ordinal = counts[slot.position];
+		if (slotParIsDollarDepthSlot(slot.position, ordinal)) {
+			slot.manual = true;
+			slot.locked = true;
+			slot.price = 1;
+		}
+	});
+	slotParRepriceSheet(sheet);
+	if (shouldBalance) slotParBalanceSheetBudget(sheet);
+	return sheet;
+}
+function slotParLoadTemplateIntoSheet(sheet, templateKey='balanced') {
+	const fresh = slotParCreateSheet(templateKey, sheet.name);
+	sheet.templateKey = templateKey;
+	sheet.description = SLOT_PAR_TEMPLATE_DEFS[templateKey]?.description || sheet.description;
+	sheet.slots = fresh.slots.map(slot => ({...slot, id:slotParSlotId()}));
+	return slotParApplyTemplateDefaults(sheet, true);
 }
 function slotParCreateSheet(templateKey='balanced', name='') {
 	const def = SLOT_PAR_TEMPLATE_DEFS[templateKey] || SLOT_PAR_TEMPLATE_DEFS.balanced;
 	const sheet = {id:slotParSheetId(), name:name || def.name, description:def.description, autoEligible:def.autoEligible !== false, templateKey, slots:slotParTemplateSlots(templateKey)};
-	slotParRepriceSheet(sheet);
+	slotParApplyTemplateDefaults(sheet, true);
 	return sheet;
 }
 function slotParPositionTierPlayers(position, tier, source=selectedTierSource()) {
@@ -5222,7 +5367,7 @@ function slotParNormalizeSheetSlots(sheet) {
 	const groups = Object.fromEntries(SLOT_PAR_POSITIONS.map(pos => [pos, []]));
 	(sheet.slots || []).forEach(slot => {
 		const position = SLOT_PAR_POSITIONS.includes(slot.position) ? slot.position : 'WR';
-		groups[position].push({...slot, position, tier:slotParClampTier(slot.tier), manual:Boolean(slot.manual), expanded:slot.expanded !== false});
+		groups[position].push({...slot, position, tier:slotParClampTier(slot.tier), manual:Boolean(slot.manual), locked:Boolean(slot.locked), expanded:slot.expanded !== false});
 	});
 	sheet.slots = SLOT_PAR_POSITIONS.flatMap(position => groups[position].map((slot, index) => ({...slot, label:`${position}${index + 1}`})));
 	return sheet;
@@ -5239,11 +5384,14 @@ function slotParRepriceSheet(sheet) {
 function slotParSheetSummary(sheet) {
 	const counts = Object.fromEntries(SLOT_PAR_POSITIONS.map(pos => [pos, 0]));
 	const spent = Object.fromEntries(SLOT_PAR_POSITIONS.map(pos => [pos, 0]));
+	const bandSpend = Object.fromEntries(SLOT_PAR_BANDS.map(band => [band.key, 0]));
 	(sheet.slots || []).forEach(slot => {
 		counts[slot.position] += 1;
 		spent[slot.position] += Math.max(1, Math.round(n(slot.price) || 1));
+		const band = SLOT_PAR_BANDS.find(item => slot.tier >= item.min && slot.tier <= item.max);
+		if (band) bandSpend[band.key] += Math.max(1, Math.round(n(slot.price) || 1));
 	});
-	return {counts, spent, totalSlots:(sheet.slots || []).length, totalSpend:(sheet.slots || []).reduce((sum, slot) => sum + Math.max(1, Math.round(n(slot.price) || 1)), 0)};
+	return {counts, spent, bandSpend, totalSlots:(sheet.slots || []).length, totalSpend:(sheet.slots || []).reduce((sum, slot) => sum + Math.max(1, Math.round(n(slot.price) || 1)), 0)};
 }
 function slotParSheetValidity(sheet) {
 	const summary = slotParSheetSummary(sheet);
@@ -5323,17 +5471,56 @@ function dashboardRoomPricingByPos(results=[]) {
 	return rows;
 }
 function slotParAvailableCounts(results=[], commitments=[]) {
+	return slotParAvailableCountsForSource(selectedTierSource(), results, commitments);
+}
+function slotParAvailableCountsForSource(source=selectedTierSource(), results=[], commitments=[]) {
 	const soldIds = new Set((results || []).map(row => row.playerId).filter(Boolean));
 	(commitments || []).forEach(item => { if (item?.player?.id) soldIds.add(item.player.id); });
 	const available = new Map();
-	tierSourceRows(selectedTierSource()).forEach(player => {
+	tierSourceRows(source).forEach(player => {
 		if (soldIds.has(player.id)) return;
-		const entry = tierSourceGroups(selectedTierSource()).byKey.get(rankKey(player));
+		const entry = tierSourceGroups(source).byKey.get(rankKey(player));
 		if (!entry) return;
 		const key = `${player.position}|${entry.tier}`;
 		available.set(key, (available.get(key) || 0) + 1);
 	});
 	return available;
+}
+function auctionDisplayTierIndex(player) {
+	const direct = Number(player?.auction_tier_index);
+	if (Number.isFinite(direct) && direct > 0) return Math.max(1, Math.min(8, Math.round(direct)));
+	const match = String(player?.auction_tier || '').match(/T(\d+)/i);
+	const tier = match ? Number(match[1]) : NaN;
+	return Number.isFinite(tier) && tier > 0 ? Math.max(1, Math.min(8, Math.round(tier))) : NaN;
+}
+function auctionTierRemainingInfo(player, results=[], commitments=[], source=selectedTierSource()) {
+	const position = String(player?.position || '').toUpperCase();
+	if (!position) return null;
+	const entry = tierSourceGroups(source).byKey.get(rankKey(player));
+	const tier = Number(entry?.tier);
+	if (!Number.isFinite(tier) || tier < 1) return null;
+	const available = slotParAvailableCountsForSource(source, results, commitments);
+	const count = available.get(`${position}|${tier}`) || 0;
+	return { position, tier, count, source };
+}
+function auctionTierRemainingText(player, results=[], commitments=[], source=selectedTierSource()) {
+	const info = auctionTierRemainingInfo(player, results, commitments, source);
+	return info ? `${info.count} left` : '';
+}
+function auctionTierRemainingClass(player, results=[], commitments=[], source=selectedTierSource()) {
+	const info = auctionTierRemainingInfo(player, results, commitments, source);
+	if (!info) return '';
+	if (info.count <= 2) return 'danger';
+	if (info.count <= 5) return 'warn';
+	return '';
+}
+function auctionSourceTierLabel(player, source=selectedTierSource()) {
+	const position = String(player?.position || '').toUpperCase();
+	const entry = tierSourceGroups(source).byKey.get(rankKey(player));
+	const tier = Number(entry?.tier);
+	if (!position) return player?.auction_tier || player?.position || '';
+	if (Number.isFinite(tier) && tier > 0) return `${position} T${tier}`;
+	return player?.auction_tier || position;
 }
 function slotParDemandCounts(sheet) {
 	const demand = new Map();
@@ -5346,7 +5533,7 @@ function slotParDemandCounts(sheet) {
 function dashboardParStrategyState(team, results=[], commitments=[]) {
 	const strategy = ensureDashboardParStrategy();
 	const signature = JSON.stringify({
-		sheets:strategy.sheets.map(sheet => ({id:sheet.id, autoEligible:sheet.autoEligible, slots:(sheet.slots || []).map(slot => [slot.position, slot.tier, slot.price, slot.manual])})),
+		sheets:strategy.sheets.map(sheet => ({id:sheet.id, autoEligible:sheet.autoEligible, slots:(sheet.slots || []).map(slot => [slot.position, slot.tier, slot.price, slot.manual, slot.locked])})),
 		mode:strategy.mode,
 		results:(results || []).map(row => [row.playerId || row.player || '', row.paid || row.amount || 0]),
 		commitments:(commitments || []).map(item => [item.player?.id || '', item.currentBid || 0]),
@@ -5426,6 +5613,10 @@ function renderParSheetRollups(sheet) {
 	const summary = slotParSheetSummary(sheet);
 	return SLOT_PAR_POSITIONS.map(pos => `<div class="par-rollup-card"><strong class="${positionClass(pos)}">${pos} ${summary.counts[pos]}</strong><span>$${summary.spent[pos]} planned</span></div>`).join('');
 }
+function renderParSheetBandRollups(sheet) {
+	const summary = slotParSheetSummary(sheet);
+	return SLOT_PAR_BANDS.map(band => `<div class="par-rollup-card"><strong>${band.label}</strong><span>$${summary.bandSpend[band.key] || 0} planned</span></div>`).join('');
+}
 function renderParSheetsPanel() {
 	const root = document.getElementById('parSheetsRoot');
 	if (!root) return;
@@ -5435,7 +5626,7 @@ function renderParSheetsPanel() {
 	const validity = slotParSheetValidity(activeSheet);
 	const summary = slotParSheetSummary(activeSheet);
 	const recommended = strategy.recommendation?.sheetId;
-	root.innerHTML = `<div class="par-editor"><div class="par-editor-topbar"><div><strong>${escapeHtml(strategy.mode === 'manual' ? `Manual: ${activeSheet.name}` : `Auto: ${activeSheet.name}`)}</strong><div class="small">${escapeHtml(activeSheet.description || '')}</div></div><div class="par-editor-actions"><button type="button" data-par-mode="auto" ${strategy.mode === 'auto' ? 'disabled' : ''}>Auto</button><button type="button" data-par-mode="manual" ${strategy.mode === 'manual' ? 'disabled' : ''}>Manual</button><button type="button" data-par-add-sheet>Duplicate active</button><button type="button" data-par-add-template="balanced">Add Balanced</button><button type="button" data-par-add-template="qbPremium">Add QB Premium</button><button type="button" data-par-add-template="wrPremium">Add WR Premium</button><button type="button" data-par-add-template="valueFallback">Add Value / Depth</button></div></div><div class="par-editor-sheetbar">${slotParSheets().map(sheet => `<button type="button" class="par-sheet-tab ${sheet.id === activeSheet.id ? 'active-sheet' : ''} ${sheet.autoEligible ? 'auto-eligible' : ''}" data-par-sheet-id="${sheet.id}">${escapeHtml(sheet.name)}${recommended === sheet.id ? ' *' : ''}</button>`).join('')}</div><div class="par-editor-actions"><label class="inline-control">Sheet name<input id="parSheetName" type="text" value="${escapeHtml(activeSheet.name)}"></label><label class="inline-control">Description<input id="parSheetDescription" type="text" value="${escapeHtml(activeSheet.description || '')}"></label><label class="inline-control"><input id="parSheetAutoEligible" type="checkbox" ${activeSheet.autoEligible ? 'checked' : ''}>Auto-eligible</label><button type="button" data-par-delete-sheet ${slotParSheets().length <= 1 ? 'disabled' : ''}>Delete sheet</button><button type="button" data-par-reset-sheet>Reset to template</button></div><div class="par-editor-summary"><div class="metric"><span>Status</span><strong class="par-validation ${validity.valid ? 'good' : 'bad'}">${validity.valid ? 'Valid' : 'Needs fixes'}</strong></div><div class="metric"><span>Roster spots</span><strong>${summary.totalSlots}/25</strong></div><div class="metric"><span>Total budget</span><strong>$${summary.totalSpend}/200</strong></div><div class="metric"><span>Active recommendation</span><strong>${escapeHtml(slotParSheetById(recommended)?.name || '-')}</strong></div></div><div class="par-rollup-grid">${renderParSheetRollups(activeSheet)}</div><div class="par-slot-addbar"><span class="small">Add slot</span><button type="button" data-par-add-slot="QB">QB</button><button type="button" data-par-add-slot="RB">RB</button><button type="button" data-par-add-slot="WR">WR</button><button type="button" data-par-add-slot="TE">TE</button></div><div class="par-slot-list">${slotParNormalizeSheetSlots(activeSheet).slots.map(slot => { const availableTiers = slotParAvailableTiers(slot.position); if (!availableTiers.includes(slot.tier)) slot.tier = availableTiers[0]; const preview = slotParPositionTierPlayers(slot.position, slot.tier).slice(0, 18); return `<div class="par-slot-card"><div class="par-slot-head"><div class="par-slot-title"><strong class="${positionClass(slot.position)}">${escapeHtml(slot.label)}</strong><span>${escapeHtml(slot.position)} Tier ${slot.tier}</span></div><label class="inline-control">Pos<select data-par-slot-pos="${slot.id}">${SLOT_PAR_POSITIONS.map(pos => `<option value="${pos}" ${slot.position === pos ? 'selected' : ''}>${pos}</option>`).join('')}</select></label><label class="inline-control">Tier<select data-par-slot-tier="${slot.id}">${availableTiers.map(tier => `<option value="${tier}" ${slot.tier === tier ? 'selected' : ''}>Tier ${tier}</option>`).join('')}</select></label><label class="inline-control">Slot $<input type="number" min="1" max="200" step="1" value="${Math.max(1, Math.round(n(slot.price) || 1))}" data-par-slot-price="${slot.id}"></label><span class="par-slot-flag ${slot.manual ? 'manual' : 'auto'}">${slot.manual ? 'Manual' : `Tier avg $${Math.max(1, Math.round(n(slot.autoPrice) || 1))}`}</span><div class="par-slot-actions"><button type="button" data-par-slot-auto="${slot.id}" ${slot.manual ? '' : 'disabled'}>Use auto</button><button type="button" data-par-slot-remove="${slot.id}" ${activeSheet.slots.length <= 1 ? 'disabled' : ''}>Remove</button></div></div><details class="par-slot-preview" data-par-slot-expanded="${slot.id}" ${slot.expanded !== false ? 'open' : ''}><summary>${preview.length} player${preview.length === 1 ? '' : 's'} in ${slot.position} Tier ${slot.tier}</summary><div class="par-slot-preview-body"><div class="par-slot-preview-grid">${preview.map(player => { const low = Math.round(n(player.price_5) || n(player.auction_value) || 0); const high = Math.round(n(player.price_10) || n(player.auction_value) || low); const range = low && high ? `$${low}-$${high}` : `$${Math.round(n(player.auction_value) || 0)}`; return `<div class="par-slot-preview-item"><div class="par-slot-preview-meta"><strong class="${positionClass(player.position)}">${escapeHtml(player.player)}</strong><span>${escapeHtml(player.team || '')} · ${rawFmt(n(player.auction_points))} fpts</span><span class="par-slot-preview-range">${range} projected bid range</span></div><div>$${Math.round(n(player.auction_value))}</div></div>`; }).join('') || '<span class="small">No players in this tier.</span>'}</div></div></details></div>`; }).join('')}</div></div>`;
+	root.innerHTML = `<div class="par-editor"><div class="par-editor-topbar"><div><strong>${escapeHtml(strategy.mode === 'manual' ? `Manual: ${activeSheet.name}` : `Auto: ${activeSheet.name}`)}</strong><div class="small">${escapeHtml(activeSheet.description || '')}</div></div><div class="par-editor-actions"><button type="button" data-par-mode="auto" ${strategy.mode === 'auto' ? 'disabled' : ''}>Auto</button><button type="button" data-par-mode="manual" ${strategy.mode === 'manual' ? 'disabled' : ''}>Manual</button><button type="button" data-par-add-sheet>Duplicate active</button><button type="button" data-par-add-template="balanced">Add Balanced</button><button type="button" data-par-add-template="qbPremium">Add QB Premium</button><button type="button" data-par-add-template="wrPremium">Add WR Premium</button><button type="button" data-par-add-template="valueFallback">Add Value / Depth</button></div></div><div class="par-editor-sheetbar">${slotParSheets().map(sheet => `<button type="button" class="par-sheet-tab ${sheet.id === activeSheet.id ? 'active-sheet' : ''} ${sheet.autoEligible ? 'auto-eligible' : ''}" data-par-sheet-id="${sheet.id}">${escapeHtml(sheet.name)}${recommended === sheet.id ? ' *' : ''}</button>`).join('')}</div><div class="par-editor-actions"><label class="inline-control">Sheet name<input id="parSheetName" type="text" value="${escapeHtml(activeSheet.name)}"></label><label class="inline-control">Description<input id="parSheetDescription" type="text" value="${escapeHtml(activeSheet.description || '')}"></label><label class="inline-control"><input id="parSheetAutoEligible" type="checkbox" ${activeSheet.autoEligible ? 'checked' : ''}>Auto-eligible</label><button type="button" data-par-balance-sheet>Balance to $200</button><button type="button" data-par-balance-room>Balance + room</button><button type="button" data-par-delete-sheet ${slotParSheets().length <= 1 ? 'disabled' : ''}>Delete sheet</button><button type="button" data-par-reset-sheet>Reset to template</button></div><div class="par-editor-actions"><span class="small">Rebuild active</span><button type="button" data-par-load-template="balanced">Balanced</button><button type="button" data-par-load-template="qbPremium">QB Premium</button><button type="button" data-par-load-template="wrPremium">WR Premium</button><button type="button" data-par-load-template="valueFallback">Value / Depth</button></div><div class="par-editor-summary"><div class="metric"><span>Status</span><strong class="par-validation ${validity.valid ? 'good' : 'bad'}">${validity.valid ? 'Valid' : 'Needs fixes'}</strong></div><div class="metric"><span>Roster spots</span><strong>${summary.totalSlots}/25</strong></div><div class="metric"><span>Total budget</span><strong>$${summary.totalSpend}/200</strong></div><div class="metric"><span>Active recommendation</span><strong>${escapeHtml(slotParSheetById(recommended)?.name || '-')}</strong></div></div><div class="par-rollup-grid">${renderParSheetRollups(activeSheet)}</div><div class="par-rollup-grid">${renderParSheetBandRollups(activeSheet)}</div><div class="par-slot-addbar"><span class="small">Add slot</span><button type="button" data-par-add-slot="QB">QB</button><button type="button" data-par-add-slot="RB">RB</button><button type="button" data-par-add-slot="WR">WR</button><button type="button" data-par-add-slot="TE">TE</button></div><div class="par-slot-list">${slotParNormalizeSheetSlots(activeSheet).slots.map(slot => { const availableTiers = slotParAvailableTiers(slot.position); if (!availableTiers.includes(slot.tier)) slot.tier = availableTiers[0]; const preview = slotParPositionTierPlayers(slot.position, slot.tier).slice(0, 18); return `<div class="par-slot-card"><div class="par-slot-head"><div class="par-slot-title"><strong class="${positionClass(slot.position)}">${escapeHtml(slot.label)}</strong><span>${escapeHtml(slot.position)} Tier ${slot.tier}</span></div><label class="inline-control">Pos<select data-par-slot-pos="${slot.id}">${SLOT_PAR_POSITIONS.map(pos => `<option value="${pos}" ${slot.position === pos ? 'selected' : ''}>${pos}</option>`).join('')}</select></label><label class="inline-control">Tier<select data-par-slot-tier="${slot.id}">${availableTiers.map(tier => `<option value="${tier}" ${slot.tier === tier ? 'selected' : ''}>Tier ${tier}</option>`).join('')}</select></label><label class="inline-control">Slot $<input type="number" min="1" max="200" step="1" value="${Math.max(1, Math.round(n(slot.price) || 1))}" data-par-slot-price="${slot.id}"></label><span class="par-slot-flag ${slot.locked ? 'manual' : slot.manual ? 'manual' : 'auto'}">${slot.locked ? 'Locked' : slot.manual ? 'Manual' : `Tier avg $${Math.max(1, Math.round(n(slot.autoPrice) || 1))}`}</span><div class="par-slot-actions"><button type="button" data-par-slot-lock="${slot.id}">${slot.locked ? 'Unlock' : 'Lock'}</button><button type="button" data-par-slot-copy="${slot.id}" ${activeSheet.slots.length >= AUCTION_CONFIG.rosterSpots ? 'disabled' : ''}>Copy</button><button type="button" data-par-slot-auto="${slot.id}" ${slot.manual ? '' : 'disabled'}>Use auto</button><button type="button" data-par-slot-remove="${slot.id}" ${activeSheet.slots.length <= 1 ? 'disabled' : ''}>Remove</button></div></div><details class="par-slot-preview" data-par-slot-expanded="${slot.id}" ${slot.expanded !== false ? 'open' : ''}><summary>${preview.length} player${preview.length === 1 ? '' : 's'} in ${slot.position} Tier ${slot.tier}</summary><div class="par-slot-preview-body"><div class="par-slot-preview-grid">${preview.map(player => { const low = Math.round(n(player.price_5) || n(player.auction_value) || 0); const high = Math.round(n(player.price_10) || n(player.auction_value) || low); const range = low && high ? `$${low}-$${high}` : `$${Math.round(n(player.auction_value) || 0)}`; return `<div class="par-slot-preview-item"><div class="par-slot-preview-meta"><strong class="${positionClass(player.position)}">${escapeHtml(player.player)}</strong><span>${escapeHtml(player.team || '')} · ${rawFmt(n(player.auction_points))} fpts</span><span class="par-slot-preview-range">${range} projected bid range</span></div><div>$${Math.round(n(player.auction_value))}</div></div>`; }).join('') || '<span class="small">No players in this tier.</span>'}</div></div></details></div>`; }).join('')}</div></div>`;
 	root.querySelectorAll('[data-par-sheet-id]').forEach(btn => btn.addEventListener('click', () => {
 		const id = btn.dataset.parSheetId;
 		if (!id) return;
@@ -5488,10 +5679,25 @@ function renderParSheetsPanel() {
 		strategy.cache = null;
 		renderCurrentTables();
 	});
+	root.querySelector('[data-par-balance-sheet]')?.addEventListener('click', () => {
+		slotParBalanceSheetBudget(activeSheet);
+		strategy.cache = null;
+		renderCurrentTables();
+	});
+	root.querySelector('[data-par-balance-room]')?.addEventListener('click', () => {
+		slotParBalanceSheetBudget(activeSheet, AUCTION_CONFIG.budget, {roomAdjusted:true});
+		strategy.cache = null;
+		renderCurrentTables();
+	});
+	root.querySelectorAll('[data-par-load-template]').forEach(btn => btn.addEventListener('click', () => {
+		slotParLoadTemplateIntoSheet(activeSheet, btn.dataset.parLoadTemplate || 'balanced');
+		strategy.cache = null;
+		renderCurrentTables();
+	}));
 	root.querySelectorAll('[data-par-add-slot]').forEach(btn => btn.addEventListener('click', () => {
 		if (activeSheet.slots.length >= AUCTION_CONFIG.rosterSpots) return;
 		activeSheet.slots.push({id:slotParSlotId(), position:btn.dataset.parAddSlot, tier:3, manual:false, price:1, autoPrice:1, expanded:true});
-		slotParRepriceSheet(activeSheet);
+		slotParApplyTemplateDefaults(activeSheet, true);
 		strategy.cache = null;
 		renderCurrentTables();
 	}));
@@ -5516,8 +5722,31 @@ function renderParSheetsPanel() {
 		const slot = activeSheet.slots.find(item => item.id === input.dataset.parSlotPrice);
 		if (!slot) return;
 		slot.manual = true;
+		slot.locked = false;
 		slot.price = Math.max(1, Math.round(n(input.value) || 1));
 		slotParRepriceSheet(activeSheet);
+		strategy.cache = null;
+		renderCurrentTables();
+	}));
+	root.querySelectorAll('[data-par-slot-lock]').forEach(btn => btn.addEventListener('click', () => {
+		const slot = activeSheet.slots.find(item => item.id === btn.dataset.parSlotLock);
+		if (!slot) return;
+		slot.locked = !slot.locked;
+		if (slot.locked) {
+			slot.manual = true;
+			slot.price = Math.max(1, Math.round(n(slot.price) || n(slot.autoPrice) || 1));
+		}
+		strategy.cache = null;
+		renderCurrentTables();
+	}));
+	root.querySelectorAll('[data-par-slot-copy]').forEach(btn => btn.addEventListener('click', () => {
+		const idx = activeSheet.slots.findIndex(slot => slot.id === btn.dataset.parSlotCopy);
+		if (idx < 0 || activeSheet.slots.length >= AUCTION_CONFIG.rosterSpots) return;
+		const source = activeSheet.slots[idx];
+		activeSheet.slots.splice(idx + 1, 0, {...deepClone(source), id:slotParSlotId(), expanded:true});
+		slotParNormalizeSheetSlots(activeSheet);
+		slotParRepriceSheet(activeSheet);
+		slotParBalanceSheetBudget(activeSheet);
 		strategy.cache = null;
 		renderCurrentTables();
 	}));
@@ -5525,6 +5754,7 @@ function renderParSheetsPanel() {
 		const slot = activeSheet.slots.find(item => item.id === btn.dataset.parSlotAuto);
 		if (!slot) return;
 		slot.manual = false;
+		slot.locked = false;
 		slotParRepriceSheet(activeSheet);
 		strategy.cache = null;
 		renderCurrentTables();
@@ -6491,6 +6721,8 @@ function renderSlowLots(m) {
 			maxBidForTeam:team => slowTeamMaxBid(team, lot.id),
 			ownTeam:m.teams[0],
 			committed:slowTeamCommitted(m.teams[0], lot.id),
+			tierRemainingText:auctionTierRemainingText(lot.player, m.results),
+			tierRemainingClass:auctionTierRemainingClass(lot.player, m.results),
 			controls,
 			className:classes,
 			attrs:`data-slow-lot="${lot.id}" role="button" tabindex="0"`
