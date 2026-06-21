@@ -3137,6 +3137,7 @@ function renderCell(r, key, type) {
 	if (type === 'queue') return renderQueueControls(r);
 	if (key === 'player') return playerNameSpan(r);
 	if (key === 'position') return `<span class="${positionClass(r?.position)}">${escapeHtml(fmt(r[key], type))}</span>`;
+	if (key === 'auction_tier') return escapeHtml(auctionBucketTierLabel(r));
 	return escapeHtml(fmt(r[key], type));
 }
 function defaultSortFor(id, cols) { if (id === 'cheatsTable') { const mode = currentCheatMode(); if (mode === 'combined') return {key:'combined_rank', dir:1}; if (mode === 'compare') return {key:'consensus_score', dir:-1}; return {key:'rank', dir:1}; } return DEFAULT_SORTS[id] || { key: cols[0][0], dir: 1 }; }
@@ -4067,7 +4068,7 @@ function auctionRoomMarketRows(m) {
 function auctionMarketSummaryHtml(m) {
 	const rows = auctionRoomMarketRows(m).slice(0, 6);
 	if (!rows.length) return `<div class="auction-insight"><h4>Market Calibration</h4><p class="small">No completed sales yet. Treat values as anchors until the room shows a pattern.</p></div>`;
-	return `<div class="auction-insight"><h4>Market Calibration</h4><div class="auction-mini-list">${rows.map(row => `<div class="auction-mini-row"><span><strong>${escapeHtml(row.pos)} ${escapeHtml(row.tier)}</strong><small>${escapeHtml(row.action)}</small></span><b class="${row.className}">${row.deltaPct > 0 ? '+' : ''}${row.deltaPct}%</b></div>`).join('')}</div></div>`;
+	return `<div class="auction-insight"><h4>Market Calibration</h4><div class="auction-mini-list">${rows.map(row => `<div class="auction-mini-row"><span><strong><span class="${positionClass(row.pos)}">${escapeHtml(row.pos)}</span> ${escapeHtml(row.tier)}</strong><small>${escapeHtml(row.action)}</small></span><b class="${row.className}">${row.deltaPct > 0 ? '+' : ''}${row.deltaPct}%</b></div>`).join('')}</div></div>`;
 }
 function auctionAvailablePool(m, activeIds=new Set()) {
 	return auctionPool().filter(player => !m?.drafted?.has?.(player.id) && !activeIds.has(player.id));
@@ -4089,7 +4090,7 @@ function auctionTierScarcityHtml(m, activeIds=new Set()) {
 		});
 	});
 	const shown = rows.sort((a,b)=>b.score-a.score || a.count-b.count).slice(0, 6);
-	return `<div class="auction-insight"><h4>Tier Scarcity</h4><div class="auction-mini-list">${shown.map(row => `<div class="auction-mini-row"><span><strong>${escapeHtml(row.pos)} T${row.tier}</strong><small>${row.teamsNeeding} teams still need ${escapeHtml(row.pos)} depth</small></span><b class="${row.className}">${row.count} available</b></div>`).join('')}</div></div>`;
+	return `<div class="auction-insight"><h4>Tier Scarcity</h4><div class="auction-mini-list">${shown.map(row => `<div class="auction-mini-row"><span><strong><span class="${positionClass(row.pos)}">${escapeHtml(row.pos)}</span> T${row.tier}</strong><small>${row.teamsNeeding} teams still need ${escapeHtml(row.pos)} depth</small></span><b class="${row.className}">${row.count} available</b></div>`).join('')}</div></div>`;
 }
 function auctionEndgameLeverageHtml(m, maxBidForTeam) {
 	const teams = m?.teams || [], human = teams[0];
@@ -4141,7 +4142,7 @@ function auctionPostSummaryHtml(m) {
 	const topOver = rows.slice().sort((a,b)=>(b.paid-b.value)-(a.paid-a.value))[0];
 	const totalPaid = rows.reduce((sum, row) => sum + row.paid, 0), totalValue = rows.reduce((sum, row) => sum + row.value, 0);
 	const avg = totalValue ? Math.round((totalPaid / totalValue - 1) * 100) : 0;
-	return `<div class="auction-insight"><h4>Post-Auction Summary</h4><div class="auction-mini-list"><div class="auction-mini-row"><span><strong>Room pricing</strong><small>${rows.length} completed sale${rows.length === 1 ? '' : 's'} against projected values</small></span><b class="${avg > 0 ? 'over' : avg < 0 ? 'under' : 'fair'}">${avg > 0 ? '+' : ''}${avg}%</b></div><div class="auction-mini-row"><span><strong>${escapeHtml(topOver?.player?.player || topOver?.result?.player || 'Top overpay')}</strong><small>Largest premium so far</small></span><b class="over">+$${Math.max(0, topOver.paid - topOver.value)}</b></div><div class="auction-mini-row"><span><strong>${escapeHtml(bestValue?.player?.player || bestValue?.result?.player || 'Best value')}</strong><small>Best discount so far</small></span><b class="under">-$${Math.max(0, bestValue.value - bestValue.paid)}</b></div></div></div>`;
+	return `<div class="auction-insight"><h4>Post-Auction Summary</h4><div class="auction-mini-list"><div class="auction-mini-row"><span><strong>Room pricing</strong><small>${rows.length} completed sale${rows.length === 1 ? '' : 's'} against projected values</small></span><b class="${avg > 0 ? 'over' : avg < 0 ? 'under' : 'fair'}">${avg > 0 ? '+' : ''}${avg}%</b></div><div class="auction-mini-row"><span><strong class="${positionClass(topOver?.player?.position || topOver?.result?.position || '')}">${escapeHtml(topOver?.player?.player || topOver?.result?.player || 'Top overpay')}</strong><small>Largest premium so far</small></span><b class="over">+$${Math.max(0, topOver.paid - topOver.value)}</b></div><div class="auction-mini-row"><span><strong class="${positionClass(bestValue?.player?.position || bestValue?.result?.position || '')}">${escapeHtml(bestValue?.player?.player || bestValue?.result?.player || 'Best value')}</strong><small>Best discount so far</small></span><b class="under">-$${Math.max(0, bestValue.value - bestValue.paid)}</b></div></div></div>`;
 }
 function ensureAuctionRoomTools(rootId, afterId) {
 	let root = document.getElementById(rootId);
@@ -7326,7 +7327,7 @@ function tierDropPlayerLabel(player) {
 }
 function tierDropSummaryMetric(row) {
 	const valueNote = row.dropValue ? `$${Math.round(row.dropValue)} price gap` : 'same price bucket';
-	return `<div class="metric"><span>${escapeHtml(row.pos)} T${row.tier} -> T${row.tier + 1}</span><strong>${rawFmt(row.dropPoints)} pts</strong><span>${escapeHtml(valueNote)}</span></div>`;
+	return `<div class="metric"><span><span class="${positionClass(row.pos)}">${escapeHtml(row.pos)}</span> T${row.tier} -> T${row.tier + 1}</span><strong>${rawFmt(row.dropPoints)} pts</strong><span>${escapeHtml(valueNote)}</span></div>`;
 }
 function renderTierDropOffs() {
 	const summary = document.getElementById('tierDropSummary'), charts = document.getElementById('tierDropCharts');
@@ -7344,7 +7345,7 @@ function renderTierDropOffs() {
 			const nextLine = `Next tier starts: ${tierDropPlayerLabel(row.next)} - $${Math.round(n(row.next.auction_value))} - ${rawFmt(n(row.next.tier_points))} fpts`;
 			return `<details class="tier-drop-row"><summary><div><span class="tier-drop-kicker">T${row.tier} -> T${row.tier + 1} cliff</span><strong>${from}</strong><span>${escapeHtml(meta)}</span></div><div class="tier-drop-score"><strong>${rawFmt(row.dropPoints)} pts</strong><span>point gap</span><strong>${escapeHtml(valueDrop)}</strong></div></summary><div class="tier-player-list">${tierDropPlayerList(row.players)}<div class="tier-next-start">${nextLine}</div></div></details>`;
 		}).join('') : '<div class="tier-drop-row"><span>No cliffs</span></div>';
-		return `<div class="tier-drop-card"><h3>${pos}</h3>${body}</div>`;
+		return `<div class="tier-drop-card"><h3><span class="${positionClass(pos)}">${pos}</span></h3>${body}</div>`;
 	}).join('');
 }
 const playerCols = [['player','Player'],['queue_sort','Queue','queue'],['position','Pos'],['team','Team'],['age','Age','int'],['ppr','PPR'],['half_ppr','Half PPR'],['non_ppr','Non-PPR'],['rank','Rank','int'],['tier','Tier'],['auction_tier','Price Tier'],['auction_value','Auction','money'],['bid_signal','Bid','bid'],['upside','Upside'],['downside','Downside'],['comment','Comment']];
