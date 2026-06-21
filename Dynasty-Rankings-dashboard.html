@@ -2869,9 +2869,20 @@ function rawFmt(v) { if (v === null || v === undefined || v === '') return ''; i
 function fmt(v, type) { if (v === null || v === undefined || v === '') return ''; const n = Number(v); if (type === 'money' && !Number.isNaN(n)) return `$${Math.round(n)}`; if (type === 'pct' && !Number.isNaN(n)) return `${(n*100).toFixed(1)}%`; if (type === 'int' && !Number.isNaN(n)) return String(Math.round(n)); if (!Number.isNaN(n) && typeof v === 'number') return Number.isInteger(v) ? String(v) : v.toFixed(type === 'rate' ? 2 : 1).replace(/\.0$/, ''); return String(v); }
 function norm(v) { return String(v ?? '').toLowerCase(); }
 function playerKey(name) { let s = String(name || '').replace(/\*/g, '').trim(); if (s.includes(',')) { const parts = s.split(','); s = `${parts.slice(1).join(' ')} ${parts[0]}`; } return s.toLowerCase().replace(/\b(jr|sr|ii|iii|iv)\.?\b/g, '').replace(/[^a-z0-9]/g, '').replace('jaxsonsmithnjigba', 'jaxonsmithnjigba').replace('tremcbride', 'treymcbride').replace('chubahubbard', 'chubbahubbard'); }
-const PLAYER_CORRECTIONS = {'TE|klare':{player:'Max Klare', team:'LAR'}};
+const PLAYER_CORRECTIONS = {
+	'TE|klare':{player:'Max Klare', team:'LAR'},
+	'*|malikwillis':{team:'MIA', position:'QB'},
+	'*|taylengreen':{team:'CLE', position:'QB'},
+	'*|keandrelambertsmith':{team:'LAC', position:'WR'},
+	'*|carsonwentz':{position:'QB'},
+	'*|danielbellinger':{team:'TEN', position:'TE'},
+	'*|austinhooper':{team:'ATL', position:'TE'}
+};
 const PLAYER_QUEUE_ID_CORRECTIONS = {'TE|klare':'TE|maxklare'};
-function playerCorrectionFor(row) { return PLAYER_CORRECTIONS[`${row?.position || ''}|${playerKey(row?.player)}`]; }
+function playerCorrectionFor(row) {
+	const key = playerKey(row?.player);
+	return PLAYER_CORRECTIONS[`${row?.position || ''}|${key}`] || PLAYER_CORRECTIONS[`*|${key}`];
+}
 function correctedPlayerRow(row) { const correction = playerCorrectionFor(row); return correction ? {...row, ...correction} : row; }
 function rankKey(row) { const corrected = correctedPlayerRow(row); return `${corrected.position}|${playerKey(corrected.player)}`; }
 function stableHash(text) { let hash = 2166136261; String(text || '').split('').forEach(ch => { hash ^= ch.charCodeAt(0); hash = Math.imul(hash, 16777619); }); return hash >>> 0; }
